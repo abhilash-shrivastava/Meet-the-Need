@@ -15,6 +15,7 @@ var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var service_provider_component_1 = require("./service-provider/service-provider.component");
 var parcel_sender_component_1 = require("./parcel-sender/parcel-sender.component");
+var service_provider_crud_service_1 = require('./services/service-provider-crud.service');
 var AppComponent = (function () {
     function AppComponent() {
         this.title = 'Meet The Need';
@@ -26,7 +27,8 @@ var AppComponent = (function () {
             styleUrls: ['app/app.component.css'],
             directives: [router_deprecated_1.ROUTER_DIRECTIVES],
             providers: [
-                router_deprecated_1.ROUTER_PROVIDERS
+                router_deprecated_1.ROUTER_PROVIDERS,
+                service_provider_crud_service_1.ServiceProviderCRUDService
             ]
         }),
         router_deprecated_1.RouteConfig([

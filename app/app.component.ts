@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
 import {ServiceProviderComponent} from "./service-provider/service-provider.component";
 import {ParcelSenderComponent} from "./parcel-sender/parcel-sender.component";
+import { ServiceProviderCRUDService }         from './services/service-provider-crud.service';
 
 
 @Component({
@@ -20,7 +21,8 @@ import {ParcelSenderComponent} from "./parcel-sender/parcel-sender.component";
     styleUrls: ['app/app.component.css'],
     directives: [ROUTER_DIRECTIVES],
     providers: [
-        ROUTER_PROVIDERS
+        ROUTER_PROVIDERS,
+        ServiceProviderCRUDService
     ]
 
 })
