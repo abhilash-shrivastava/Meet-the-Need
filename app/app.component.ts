@@ -3,11 +3,41 @@
  */
 
 import { Component } from '@angular/core';
+import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import {ServiceProviderComponent} from "./service-provider/service-provider.component";
+import {ParcelSenderComponent} from "./parcel-sender/parcel-sender.component";
+
+
 @Component({
     selector: 'my-app',
-    template: 
-        '<h1>{{tittle}}</h1>'
+    template: `
+                <h1>{{title}}</h1>
+                <nav>
+                <a [routerLink]="['ServiceProvider']">Service Provider</a>
+                <a [routerLink]="['ParcelSender']">Parcel Sender</a>
+                </nav>
+                <router-outlet></router-outlet>        `,
+    styleUrls: ['app/app.component.css'],
+    directives: [ROUTER_DIRECTIVES],
+    providers: [
+        ROUTER_PROVIDERS
+    ]
+
 })
+//noinspection TypeScriptValidateTypes
+@RouteConfig([
+    {
+        path: '/service-provider',
+        name: 'ServiceProvider',
+        component: ServiceProviderComponent
+    },
+    {
+        path: '/parcel-sender',
+        name: 'ParcelSender',
+        component: ParcelSenderComponent
+    }
+])
+
 export class AppComponent {
-    tittle = 'Meet The Need'
+    title = 'Meet The Need'
 }
