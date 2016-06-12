@@ -1,5 +1,7 @@
 <html>
 <head>
+    <!-- Auth0 Lock script -->
+    <script src="//cdn.auth0.com/js/lock-9.1.min.js"></script>
     <script>document.write('<base href="/" />');</script>
     <title>Meet The Need</title>
     <meta charset="UTF-8">
@@ -15,6 +17,16 @@
     <script src="systemjs.config.js"></script>
     <script>
         System.import('app').catch(function(err){ console.error(err); });
+    </script>
+    <script>
+        //configure system loader
+        System.config({
+            defaultJSExtensions: true,
+            map: {
+                "angular2-jwt": "node_modules/angular2-jwt/angular2-jwt",
+                "rxjs": "node_modules/rxjs"
+            }
+        });
     </script>
 </head>
 <!-- 3. Display the application -->
