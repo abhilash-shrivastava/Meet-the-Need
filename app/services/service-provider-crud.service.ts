@@ -11,7 +11,7 @@ import { ServiceProviderDetails } from './service-provider-details';
 @Injectable()
 export class ServiceProviderCRUDService{
 
-    private serviceProvidersUrl = 'app/services';  // URL to web api
+    private serviceProvidersUrl = 'http:localhost:9000/service-confirm';  // URL to web api
     constructor(private http: Http) { }
 
     save(serviceProviderDetails: ServiceProviderDetails): Promise<ServiceProviderDetails>  {

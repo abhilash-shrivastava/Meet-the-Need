@@ -12,7 +12,9 @@ import { ServiceProviderCRUDService } from './../services/service-provider-crud.
 @Component({
     selector: 'service-provider',
     templateUrl: 'app/service-provider/service-provider.component.html',
-    styleUrls: ['app/service-provider/service-provider.component.css']
+    styleUrls: ['app/service-provider/service-provider.component.css'],
+    providers: [ServiceProviderCRUDService]
+
 })
 
 export class ServiceProviderComponent {

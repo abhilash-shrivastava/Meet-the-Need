@@ -56,7 +56,8 @@ var ServiceProviderComponent = (function () {
         core_1.Component({
             selector: 'service-provider',
             templateUrl: 'app/service-provider/service-provider.component.html',
-            styleUrls: ['app/service-provider/service-provider.component.css']
+            styleUrls: ['app/service-provider/service-provider.component.css'],
+            providers: [service_provider_crud_service_1.ServiceProviderCRUDService]
         }), 
         __metadata('design:paramtypes', [service_provider_crud_service_1.ServiceProviderCRUDService, router_deprecated_1.RouteParams])
     ], ServiceProviderComponent);

@@ -17,7 +17,7 @@ require('rxjs/add/operator/toPromise');
 var ServiceProviderCRUDService = (function () {
     function ServiceProviderCRUDService(http) {
         this.http = http;
-        this.serviceProvidersUrl = 'app/services'; // URL to web api
+        this.serviceProvidersUrl = 'http:localhost:9000/service-confirm'; // URL to web api
     }
     ServiceProviderCRUDService.prototype.save = function (serviceProviderDetails) {
         if (serviceProviderDetails.id) {
