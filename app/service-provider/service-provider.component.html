@@ -5,59 +5,74 @@
     <title>Service Provider</title>
 </head>
 <body>
-<div class="form-style-10">
-    <h1>Details Needed<span>Please provide the following details to offer parcel service!</span></h1>
-    <form>
-        <div class="section"><span>1</span>General Information</div>
-        <div class="inner-wrap">
-            <label>Your Full Name <input type="text" name="field1" /></label>
-            <label>Email Address <input type="email" name="field3" /></label>
-            <label>Phone Number <input type="text" name="field4" /></label>
-        </div>
+<div  [hidden]="submitted">
+    <div class="form-style-10">
+        <h1>Details Needed<span>Please provide the following details to offer parcel service!</span></h1>
+        <form (ngSubmit)="onSubmit()" #serviceProviderDetailsForm="ngForm">
+            <div class="section"><span>1</span>General Information</div>
+            <div class="inner-wrap">
+                <label>Your Full Name <input type="text" [(ngModel)]="model.name" required ngControl="name"  #name="ngForm"/>
+                    <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                        Name is required
+                    </div>
+                </label>
+                <label>Email Address <input type="email" [(ngModel)]="model.email" required/>{{model.email}}</label>
+                <label>Phone Number <input type="text" [(ngModel)]="model.phone" required/>{{model.phone}}</label>
+            </div>
 
-        <div class="section"><span>2</span>Current Address</div>
-        <div class="inner-wrap">
-            <label>Address line 1 <input type="text" name="field2"></label>
-            <label>Address line 2 <input type="text" name="field9"></label>
-            <label>City <input type="text" name="field10"></label>
-            <label>State <input type="text" name="field11"></label>
-            <label>Zip <input type="number" name="field12"></label>
+            <div class="section"><span>2</span>Current Address</div>
+            <div class="inner-wrap">
+                <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required>{{model.currentAddressaddressLine1}}</label>
+                <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddressaddressLine2" ></label>
+                <label>City <input type="text" [(ngModel)]="model.city" required></label>
+                <label>State <input type="text" [(ngModel)]="model.state" required></label>
+                <label>Zip <input type="number" [(ngModel)]="model.zip" required></label>
 
-        </div>
+            </div>
 
-        <div class="section"><span>3</span>Destination Address</div>
-        <div class="inner-wrap">
-            <label>Address line 1 <input type="text" name="field13"></label>
-            <label>Address line 2 <input type="text" name="field14"></label>
-            <label>City <input type="text" name="field15"></label>
-            <label>State <input type="text" name="field16"></label>
-            <label>Zip <input type="number" name="field17"></label>
+            <div class="section"><span>3</span>Destination Address</div>
+            <div class="inner-wrap">
+                <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" required></label>
+                <label>Address line 2 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine2"></label>
+                <label>City <input type="text" [(ngModel)]="model.city" required></label>
+                <label>State <input type="text" [(ngModel)]="model.state" required></label>
+                <label>Zip <input type="number" [(ngModel)]="model.zip" required></label>
 
-        </div>
+            </div>
 
-        <div class="section"><span>4</span>Date &amp; Time</div>
-        <div class="inner-wrap">
-            <label>Journey Date <input type="date" name="field5" /></label>
-            <label>Availability Time</label>
-            <label>From  <input type="time" name="field6" /></label>
-            <label>To  <input type="time" name="field6" /></label>
-        </div>
+            <div class="section"><span>4</span>Date &amp; Time</div>
+            <div class="inner-wrap">
+                <label>Journey Date <input type="date" [(ngModel)]="model.journeyDate" required/></label>
+                <label>Availability Time</label>
+                <label>From  <input type="time" [(ngModel)]="model.availabilityFrom" required/></label>
+                <label>To  <input type="time" [(ngModel)]="model.availabilityTo" required/></label>
+            </div>
 
-        <div class="section"><span>5</span>Parcel Carrying Capacity</div>
-        <div class="inner-wrap">
-            <label>Max. Parcel Weight (in ounce) <input type="text" name="field18"></label>
-            <label>Max Parcel Dimensions (in cm)</label>
-            <label>Height (approx.) <input type="number" name="field19"></label>
-            <label>Length (approx.) <input type="number" name="field20"></label>
-            <label>Width (approx.) <input type="number" name="field21"></label>
-        </div>
+            <div class="section"><span>5</span>Parcel Carrying Capacity</div>
+            <div class="inner-wrap">
+                <label>Max. Parcel Weight (in ounce) <input type="text" [(ngModel)]="model.parcelWeight" required></label>
+                <label>Max Parcel Dimensions (in cm)</label>
+                <label>Height (approx.) <input type="number" [(ngModel)]="model.parcelHeight" required></label>
+                <label>Length (approx.) <input type="number" [(ngModel)]="model.parcelLength" required></label>
+                <label>Width (approx.) <input type="number" [(ngModel)]="model.parcelWidth" required></label>
+            </div>
 
-        <div class="button-section">
-            <input type="submit" name="Submit" />
+            <div class="button-section">
+                <input type="submit" name="Submit" [disabled]="!serviceProviderDetailsForm.form.valid"/>
      <span class="privacy-policy">
      <input type="checkbox" name="field7">You agree to our Terms and Policy.
      </span>
-        </div>
-    </form>
-</div></body>
+            </div>
+        </form>
+    </div>
+</div>
+<div [hidden]="!submitted">
+    <h2>You submitted the following:</h2>
+    <div class="row">
+        <div class="col-xs-3">Name</div>
+        <div class="col-xs-9  pull-left">{{ model.name }}</div>
+    </div>
+    <button class="btn btn-default" (click)="submitted=false">Edit</button>
+</div>
+</body>
 </html>
