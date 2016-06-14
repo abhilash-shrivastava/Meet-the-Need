@@ -13,7 +13,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
-var http_2 = require('@angular/http');
 require('rxjs/add/operator/toPromise');
 var Observable_1 = require('rxjs/Observable');
 var ServiceProviderCRUDService = (function () {
@@ -26,17 +25,17 @@ var ServiceProviderCRUDService = (function () {
         var body = JSON.stringify(serviceProviderDetails);
         console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
-        var options = new http_2.RequestOptions({ headers: headers });
+        var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)
-            .map(this.extractData)
+            .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
-    //noinspection TypeScriptUnresolvedVariable
-    ServiceProviderCRUDService.prototype.extractData = function (res) {
-        //noinspection TypeScriptUnresolvedFunction
-        var body = res.json();
-        return body.data || {};
-    };
+    // //noinspection TypeScriptUnresolvedVariable
+    // private extractData(res: Response) {
+    //     //noinspection TypeScriptUnresolvedFunction
+    //     let body = res.json();
+    //     return body.data || { };
+    // }
     ServiceProviderCRUDService.prototype.handleError = function (error) {
         // In a real world app, we might use a remote logging infrastructure
         // We'd also dig deeper into the error to get a better message

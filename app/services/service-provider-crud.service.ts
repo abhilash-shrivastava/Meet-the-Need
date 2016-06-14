@@ -2,8 +2,7 @@
  * Created by Abhi on 6/11/16.
  */
 import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
-import { Headers, RequestOptions } from '@angular/http';
+import { Headers, Http, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { Observable }     from 'rxjs/Observable';
 
@@ -23,16 +22,16 @@ export class ServiceProviderCRUDService{
         let options = new RequestOptions({ headers: headers });
 
         return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)
-            .map(this.extractData)
+            .map(res => res.json())
             .catch(this.handleError);
     }
 
-    //noinspection TypeScriptUnresolvedVariable
-    private extractData(res: Response) {
-        //noinspection TypeScriptUnresolvedFunction
-        let body = res.json();
-        return body.data || { };
-    }
+    // //noinspection TypeScriptUnresolvedVariable
+    // private extractData(res: Response) {
+    //     //noinspection TypeScriptUnresolvedFunction
+    //     let body = res.json();
+    //     return body.data || { };
+    // }
 
     private handleError (error: any) {
         // In a real world app, we might use a remote logging infrastructure
