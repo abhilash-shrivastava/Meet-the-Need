@@ -13,61 +13,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
+var http_2 = require('@angular/http');
 require('rxjs/add/operator/toPromise');
+var Observable_1 = require('rxjs/Observable');
 var ServiceProviderCRUDService = (function () {
     function ServiceProviderCRUDService(http) {
         this.http = http;
-        this.serviceProvidersUrl = 'http:localhost:9000/service-confirm'; // URL to web api
+        this.serviceProviderDetailsSaveUrl = 'http://localhost:9000/service-confirm';
     }
     ServiceProviderCRUDService.prototype.save = function (serviceProviderDetails) {
-        if (serviceProviderDetails.id) {
-            return this.put(serviceProviderDetails);
-        }
-        return this.post(serviceProviderDetails);
-    };
-    ServiceProviderCRUDService.prototype.getServiceProviders = function () {
-        return this.http.get(this.serviceProvidersUrl)
-            .toPromise()
-            .then(function (response) { return response.json().data; })
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(serviceProviderDetails);
+        console.log(body);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var options = new http_2.RequestOptions({ headers: headers });
+        return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)
+            .map(this.extractData)
             .catch(this.handleError);
     };
-    ServiceProviderCRUDService.prototype.getServiceProvider = function (id) {
-        return this.getServiceProviders()
-            .then(function (heroes) { return heroes.filter(function (hero) { return hero.id === id; })[0]; });
-    };
-    ServiceProviderCRUDService.prototype.delete = function (serviceProviderDetails) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        var url = this.serviceProvidersUrl + "/" + serviceProviderDetails.id;
-        return this.http
-            .delete(url, headers)
-            .toPromise()
-            .catch(this.handleError);
-    };
-    // Add new serice provider
-    ServiceProviderCRUDService.prototype.post = function (serviceProviderDetails) {
-        var headers = new http_1.Headers({
-            'Content-Type': 'application/json' });
-        return this.http
-            .post(this.serviceProvidersUrl, JSON.stringify(serviceProviderDetails), { headers: headers })
-            .toPromise()
-            .then(function (res) { return res.json().data; })
-            .catch(this.handleError);
-    };
-    // Update existing service provider
-    ServiceProviderCRUDService.prototype.put = function (serviceProviderDetails) {
-        var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        var url = this.serviceProvidersUrl + "/" + serviceProviderDetails.id;
-        return this.http
-            .put(url, JSON.stringify(serviceProviderDetails), { headers: headers })
-            .toPromise()
-            .then(function () { return serviceProviderDetails; })
-            .catch(this.handleError);
+    //noinspection TypeScriptUnresolvedVariable
+    ServiceProviderCRUDService.prototype.extractData = function (res) {
+        //noinspection TypeScriptUnresolvedFunction
+        var body = res.json();
+        return body.data || {};
     };
     ServiceProviderCRUDService.prototype.handleError = function (error) {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
+        // In a real world app, we might use a remote logging infrastructure
+        // We'd also dig deeper into the error to get a better message
+        var errMsg = (error.message) ? error.message :
+            error.status ? error.status + " - " + error.statusText : 'Server error';
+        console.error(errMsg); // log to console instead
+        return Observable_1.Observable.throw(errMsg);
     };
     ServiceProviderCRUDService = __decorate([
         core_1.Injectable(), 

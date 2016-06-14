@@ -8,14 +8,28 @@ app.use(bodyParser.urlencoded({extended: true}));
 const MongoClient = require('mongodb').MongoClient;
 
 var db;
+app.use(bodyParser.json());
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
+response = {
+  status: 'Saved'
+}
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 });
 
 app.post('/service-confirm', (req, res) => {
   console.log(req.body);
-  res.send('Hi');
+  db.collection('serviceProvider').save(req.body, (err, result) => {
+    if (err) return console.log(err)
+    console.log('saved to database');
+    res.send(JSON.stringify(response));
+})
 });
 
 MongoClient.connect('mongodb://abhilash.shrivastava:ab#ILASH0@ds019471.mlab.com:19471/meet-the-need-db', (err, database) => {
