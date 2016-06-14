@@ -47,7 +47,7 @@ declare var Auth0Lock;
 export class AppComponent {
     title = 'Meet The Need';
 
-    lock = new Auth0Lock('LRhhXTSa1WjZFnbW0uDzH2GDtWucVlnJ', 'abhilashshrivastava.auth0.com');
+    lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
     jwtHelper = new JwtHelper();
 
     logout() {

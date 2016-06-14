@@ -20,7 +20,7 @@ var angular2_jwt_1 = require('angular2-jwt');
 var AppComponent = (function () {
     function AppComponent() {
         this.title = 'Meet The Need';
-        this.lock = new Auth0Lock('LRhhXTSa1WjZFnbW0uDzH2GDtWucVlnJ', 'abhilashshrivastava.auth0.com');
+        this.lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
         this.jwtHelper = new angular2_jwt_1.JwtHelper();
     }
     AppComponent.prototype.logout = function () {
