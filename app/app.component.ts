@@ -2,7 +2,7 @@
  * Created by Abhi on 6/8/16.
  */
 
-import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router } from '@angular/router-deprecated';
 import {ServiceProviderComponent} from "./service-provider/service-provider.component";
 import {ParcelSenderComponent} from "./parcel-sender/parcel-sender.component";
 import {ProfileComponent} from "./profile/profile.component";
@@ -25,6 +25,7 @@ declare var Auth0Lock;
                 <a *ngIf="loggedIn()" [routerLink]="['Profile']">Profile</a>&nbsp;
                 <a *ngIf="!loggedIn()" (click)="signin()">Sign In</a>
                 <a *ngIf="!loggedIn()" (click)="signup()">Sign Up</a>
+                <a *ngIf="!loggedIn()" (click)="resetPassword()">Reset Password</a>
                 <a *ngIf="loggedIn()" (click)="logout()">Logout</a>
                 </nav>
                 <router-outlet></router-outlet>        `,
@@ -61,7 +62,7 @@ export class AppComponent {
     errorMessage: string;
     status: string;
     mode = 'Observable';
-    constructor(private userCRUDService: UserCRUDService) {
+    constructor(private userCRUDService: UserCRUDService, private router: Router) {
     }
     lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
     jwtHelper = new JwtHelper();
@@ -70,6 +71,7 @@ export class AppComponent {
         var self = this;
         localStorage.removeItem('profile');
         localStorage.removeItem('id_token');
+        this.router.navigate(['ServiceProvider']);
         self.loggedIn();
     }
 
@@ -83,8 +85,9 @@ export class AppComponent {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
+            self.loggedIn();
         });
-        self.loggedIn();
+
     }
 
     signup(){
@@ -97,9 +100,20 @@ export class AppComponent {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
-            this.saveUserDetails(profile)
+            this.saveUserDetails(profile);
+            self.loggedIn();
+
         })
-        self.loggedIn();
+    }
+
+    resetPassword() {
+        var self = this;
+        this.lock.showReset((err: string, profile: string, id_token: string) => {
+            if (err) {
+                throw new Error(err);
+            }
+            self.loggedIn();
+        });
     }
     loggedIn() {
         return tokenNotExpired();

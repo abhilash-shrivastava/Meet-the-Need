@@ -20,8 +20,9 @@ var user_crud_service_1 = require('./services/user-crud.service');
 require('./rxjs-operators');
 var core_1 = require('@angular/core');
 var AppComponent = (function () {
-    function AppComponent(userCRUDService) {
+    function AppComponent(userCRUDService, router) {
         this.userCRUDService = userCRUDService;
+        this.router = router;
         this.title = 'Meet The Need';
         this.mode = 'Observable';
         this.lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
@@ -31,6 +32,7 @@ var AppComponent = (function () {
         var self = this;
         localStorage.removeItem('profile');
         localStorage.removeItem('id_token');
+        this.router.navigate(['ServiceProvider']);
         self.loggedIn();
     };
     AppComponent.prototype.signin = function () {
@@ -43,8 +45,8 @@ var AppComponent = (function () {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
+            self.loggedIn();
         });
-        self.loggedIn();
     };
     AppComponent.prototype.signup = function () {
         var _this = this;
@@ -58,8 +60,17 @@ var AppComponent = (function () {
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
             _this.saveUserDetails(profile);
+            self.loggedIn();
         });
-        self.loggedIn();
+    };
+    AppComponent.prototype.resetPassword = function () {
+        var self = this;
+        this.lock.showReset(function (err, profile, id_token) {
+            if (err) {
+                throw new Error(err);
+            }
+            self.loggedIn();
+        });
     };
     AppComponent.prototype.loggedIn = function () {
         return angular2_jwt_1.tokenNotExpired();
@@ -76,7 +87,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: "\n                <h1>{{title}}</h1>\n                <nav>\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['ServiceProvider']\">Service Provider</a>&nbsp;\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['ParcelSender']\">Parcel Sender</a>&nbsp;\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['Profile']\">Profile</a>&nbsp;\n                <a *ngIf=\"!loggedIn()\" (click)=\"signin()\">Sign In</a>\n                <a *ngIf=\"!loggedIn()\" (click)=\"signup()\">Sign Up</a>\n                <a *ngIf=\"loggedIn()\" (click)=\"logout()\">Logout</a>\n                </nav>\n                <router-outlet></router-outlet>        ",
+            template: "\n                <h1>{{title}}</h1>\n                <nav>\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['ServiceProvider']\">Service Provider</a>&nbsp;\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['ParcelSender']\">Parcel Sender</a>&nbsp;\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['Profile']\">Profile</a>&nbsp;\n                <a *ngIf=\"!loggedIn()\" (click)=\"signin()\">Sign In</a>\n                <a *ngIf=\"!loggedIn()\" (click)=\"signup()\">Sign Up</a>\n                <a *ngIf=\"!loggedIn()\" (click)=\"resetPassword()\">Reset Password</a>\n                <a *ngIf=\"loggedIn()\" (click)=\"logout()\">Logout</a>\n                </nav>\n                <router-outlet></router-outlet>        ",
             styleUrls: ['app/app.component.css'],
             directives: [router_deprecated_1.ROUTER_DIRECTIVES],
             providers: [
@@ -101,7 +112,7 @@ var AppComponent = (function () {
                 component: parcel_sender_component_1.ParcelSenderComponent
             }
         ]), 
-        __metadata('design:paramtypes', [user_crud_service_1.UserCRUDService])
+        __metadata('design:paramtypes', [user_crud_service_1.UserCRUDService, router_deprecated_1.Router])
     ], AppComponent);
     return AppComponent;
 }());
