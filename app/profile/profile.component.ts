@@ -4,14 +4,17 @@
 import {Component, OnInit, OnDestroy, AfterContentInit} from '@angular/core';
 import {tokenNotExpired} from 'angular2-jwt';
 import {AuthHttp} from 'angular2-jwt';
+import {tokenNotExpired} from 'angular2-jwt';
 
 
 @Component({
     selector: 'profile',
     template: `
-	 <img src="{{profile.picture}}" style="width: 50px" /> {{profile.name}}
+    <div *ngIf="loggedIn()">
+    <img src="{{profile.picture}}" style="width: 50px" /> {{profile.name}}
 	 <h2>Message from server</h2>
    {{message}}
+    </div>
 	`
 })
 
@@ -47,5 +50,9 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                 err => console.log(err),
                 () => console.log('Complete')
             );
+    }
+
+    loggedIn() {
+        return tokenNotExpired();
     }
 }

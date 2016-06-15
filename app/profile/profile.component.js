@@ -13,6 +13,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require('@angular/core');
 var angular2_jwt_1 = require('angular2-jwt');
+var angular2_jwt_2 = require('angular2-jwt');
 var ProfileComponent = (function () {
     function ProfileComponent(authHttp) {
         this.authHttp = authHttp;
@@ -36,12 +37,15 @@ var ProfileComponent = (function () {
             _this.message = data.json();
         }, function (err) { return console.log(err); }, function () { return console.log('Complete'); });
     };
+    ProfileComponent.prototype.loggedIn = function () {
+        return angular2_jwt_1.tokenNotExpired();
+    };
     ProfileComponent = __decorate([
         core_1.Component({
             selector: 'profile',
-            template: "\n\t <img src=\"{{profile.picture}}\" style=\"width: 50px\" /> {{profile.name}}\n\t <h2>Message from server</h2>\n   {{message}}\n\t"
+            template: "\n    <div *ngIf=\"loggedIn()\">\n    <img src=\"{{profile.picture}}\" style=\"width: 50px\" /> {{profile.name}}\n\t <h2>Message from server</h2>\n   {{message}}\n    </div>\n\t"
         }), 
-        __metadata('design:paramtypes', [angular2_jwt_1.AuthHttp])
+        __metadata('design:paramtypes', [angular2_jwt_2.AuthHttp])
     ], ProfileComponent);
     return ProfileComponent;
 }());
