@@ -22,7 +22,6 @@ import {tokenNotExpired} from 'angular2-jwt';
 })
 
 export class ServiceProviderComponent {
-    //model = new ServiceProvider('Abhilash', 'abhilash.shrivastava@hotmail.com', 2485679221, {'50 Chumasero Drive', 'Apt 4k', 'San Francisco', 'CA'}, {'50 Chumasero Drive', 'Apt 4k', 'San Francisco', 'CA'}, '15 Jun 2016', {'8 PM', '10 PM'}, 20, 10, 10, 10);
     errorMessage: string;
     mode = 'Observable';
     model = new ServiceProviderDetails();
@@ -58,25 +57,4 @@ export class ServiceProviderComponent {
     loggedIn() {
         return tokenNotExpired();
     }
-    // ngOnInit() {
-    //     if (this.routeParams.get('id') !== null) {
-    //         let id = +this.routeParams.get('id');
-    //         this.navigated = true;
-    //         this.serviceProviderCRUDService.getServiceProvider(id)
-    //             .then(serviceProviderDetails => this.serviceProviderDetails = serviceProviderDetails);
-    //     } else {
-    //         this.navigated = false;
-    //         this.serviceProviderDetails = new ServiceProviderDetails();
-    //     }
-    // }
-    //
-    // save() {
-    //     this.serviceProviderCRUDService
-    //         .save(this.serviceProviderDetails)
-    //         .then(serviceProviderDetails => {
-    //             this.serviceProviderDetails = serviceProviderDetails; // saved hero, w/ id if new
-    //         })
-    //         .catch(error => this.error = error); // TODO: Display error message
-    // }
-
 }

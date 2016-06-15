@@ -49,6 +49,16 @@ app.post('/service-confirm', (req, res) => {
 })
 });
 
+app.use('/order-confirm', jwtCheck);
+app.post('/order-confirm', (req, res) => {
+  console.log(req.body);
+  db.collection('parcelSender').save(req.body, (err, result) => {
+  if (err) return console.log(err)
+  console.log('saved to database');
+res.send(JSON.stringify(response));
+})
+});
+
 MongoClient.connect('mongodb://abhilash.shrivastava:ab#ILASH0@ds019471.mlab.com:19471/meet-the-need-db', (err, database) => {
   if (err) return console.log(err)
   db = database
