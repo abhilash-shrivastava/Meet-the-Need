@@ -24,7 +24,7 @@ var ServiceProviderCRUDService = (function () {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(serviceProviderDetails);
         console.log(body);
-        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)
             .map(function (res) { return res.json(); })

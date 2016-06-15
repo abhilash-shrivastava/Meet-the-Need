@@ -18,7 +18,7 @@ export class ServiceProviderCRUDService{
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(serviceProviderDetails);
         console.log(body);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
         return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)

@@ -39,6 +39,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 });
 
+app.use('/service-confirm', jwtCheck);
 app.post('/service-confirm', (req, res) => {
   console.log(req.body);
   db.collection('serviceProvider').save(req.body, (err, result) => {
