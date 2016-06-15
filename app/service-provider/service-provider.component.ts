@@ -9,6 +9,7 @@ import { RouteParams } from '@angular/router-deprecated';
 import { ServiceProviderDetails }        from './../services/service-provider-details';
 import { ServiceProviderCRUDService } from './../services/service-provider-crud.service';
 import './../rxjs-operators';
+import {tokenNotExpired} from 'angular2-jwt';
 
 //var fetch = require('node-fetch');
 
@@ -52,6 +53,10 @@ export class ServiceProviderComponent {
                 error =>  this.errorMessage = <any>error
             );
 
+    }
+
+    loggedIn() {
+        return tokenNotExpired();
     }
     // ngOnInit() {
     //     if (this.routeParams.get('id') !== null) {

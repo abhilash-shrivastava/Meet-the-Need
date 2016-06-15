@@ -16,6 +16,7 @@ var router_deprecated_1 = require('@angular/router-deprecated');
 var service_provider_details_1 = require('./../services/service-provider-details');
 var service_provider_crud_service_1 = require('./../services/service-provider-crud.service');
 require('./../rxjs-operators');
+var angular2_jwt_1 = require('angular2-jwt');
 //var fetch = require('node-fetch');
 var ServiceProviderComponent = (function () {
     function ServiceProviderComponent(serviceProviderCRUDService, routeParams) {
@@ -40,6 +41,9 @@ var ServiceProviderComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(function (data) { return _this.status = JSON.stringify(data); }, function (error) { return _this.errorMessage = error; });
+    };
+    ServiceProviderComponent.prototype.loggedIn = function () {
+        return angular2_jwt_1.tokenNotExpired();
     };
     __decorate([
         core_1.Input(), 

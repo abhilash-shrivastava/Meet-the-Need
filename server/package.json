@@ -10,7 +10,9 @@
   "author": "Abhilash Shrivastava",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.7.1",
     "express": "^4.13.4",
+    "express-jwt": "^3.4.0",
     "mongodb": "^2.1.18"
   },
   "devDependencies": {

@@ -2,10 +2,26 @@
  * Created by Abhi on 6/12/16.
  */
 const express = require('express');
+var cors = require('cors');
 const bodyParser= require('body-parser');
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 const MongoClient = require('mongodb').MongoClient;
+app.use(cors());
+
+var jwt = require('express-jwt');
+var auth0Settings = require('./auth0.json');
+
+var jwtCheck = jwt({
+  secret: new Buffer(auth0Settings.secret, 'base64'),
+  audience: auth0Settings.audience
+});
+
+app.use('/user-profile', jwtCheck);
+
+app.get('/user-profile', function (req, res) {
+  res.json("I will provide the user details");
+});
 
 var db;
 app.use(bodyParser.json());

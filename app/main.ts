@@ -1,10 +1,8 @@
 // Imports for loading & configuring the in-memory web api
-import { provide }    from '@angular/core';
-import { XHRBackend } from '@angular/http';
+import {bind, provide} from '@angular/core';
+import {AuthHttp, AuthConfig} from 'angular2-jwt';
+import { LocationStrategy, HashLocationStrategy} from '@angular/common';
 
-import { InMemoryBackendService, SEED_DATA } from 'angular2-in-memory-web-api';
-//noinspection TypeScriptCheckImport
-import { InMemoryDataService }               from './services/in-memory-data.service';
 
 // The usual bootstrapping imports
 import { bootstrap }      from '@angular/platform-browser-dynamic';
@@ -14,5 +12,10 @@ import { AppComponent }   from './app.component';
 
 //noinspection TypeScriptValidateTypes
 bootstrap(AppComponent, [
-    HTTP_PROVIDERS
+    HTTP_PROVIDERS,
+    provide(AuthConfig, { useFactory: () => {
+        return new AuthConfig();
+    }}),
+    AuthHttp,
+    bind(LocationStrategy).toClass(HashLocationStrategy),
 ]);

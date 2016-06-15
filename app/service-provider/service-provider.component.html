@@ -5,7 +5,7 @@
     <title>Service Provider</title>
 </head>
 <body>
-<div  [hidden]="submitted">
+<div *ngIf="loggedIn()" [hidden]="submitted">
     <div class="form-style-10">
         <h1>Details Needed<span>Please provide the following details to offer parcel service!</span></h1>
         <form (ngSubmit)="onSubmit()" #serviceProviderDetailsForm="ngForm">
@@ -66,7 +66,7 @@
         </form>
     </div>
 </div>
-<div [hidden]="!submitted">
+<div *ngIf="loggedIn()" [hidden]="!submitted">
     <h2>You submitted the following:</h2>
     <div class="row">
         <div class="col-xs-3">Name</div>
