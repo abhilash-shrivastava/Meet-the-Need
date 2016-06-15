@@ -2,7 +2,6 @@
  * Created by Abhi on 6/14/16.
  */
 import {Component, OnInit, OnDestroy, AfterContentInit} from '@angular/core';
-import {tokenNotExpired} from 'angular2-jwt';
 import {AuthHttp} from 'angular2-jwt';
 import {tokenNotExpired} from 'angular2-jwt';
 

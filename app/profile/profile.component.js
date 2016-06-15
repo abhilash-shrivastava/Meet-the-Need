@@ -38,14 +38,14 @@ var ProfileComponent = (function () {
         }, function (err) { return console.log(err); }, function () { return console.log('Complete'); });
     };
     ProfileComponent.prototype.loggedIn = function () {
-        return angular2_jwt_1.tokenNotExpired();
+        return angular2_jwt_2.tokenNotExpired();
     };
     ProfileComponent = __decorate([
         core_1.Component({
             selector: 'profile',
             template: "\n    <div *ngIf=\"loggedIn()\">\n    <img src=\"{{profile.picture}}\" style=\"width: 50px\" /> {{profile.name}}\n\t <h2>Message from server</h2>\n   {{message}}\n    </div>\n\t"
         }), 
-        __metadata('design:paramtypes', [angular2_jwt_2.AuthHttp])
+        __metadata('design:paramtypes', [angular2_jwt_1.AuthHttp])
     ], ProfileComponent);
     return ProfileComponent;
 }());

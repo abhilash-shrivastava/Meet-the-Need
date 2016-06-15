@@ -2,7 +2,6 @@
  * Created by Abhi on 6/11/16.
  */
 
-import { Component } from '@angular/core';
 import {tokenNotExpired} from 'angular2-jwt';
 import {ParcelSenderDetails} from "../services/parcel-sender-details";
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';

@@ -11,10 +11,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
 var angular2_jwt_1 = require('angular2-jwt');
 var parcel_sender_details_1 = require("../services/parcel-sender-details");
-var core_2 = require('@angular/core');
+var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var parcel_sender_crud_service_1 = require('./../services/parcel-sender-crud.service');
 var ParcelSenderComponent = (function () {
@@ -24,7 +23,7 @@ var ParcelSenderComponent = (function () {
         this.mode = 'Observable';
         this.model = new parcel_sender_details_1.ParcelSenderDetails();
         this.submitted = false;
-        this.close = new core_2.EventEmitter();
+        this.close = new core_1.EventEmitter();
         this.navigated = false; // true if navigated here
     }
     ParcelSenderComponent.prototype.onSubmit = function () {
@@ -45,11 +44,11 @@ var ParcelSenderComponent = (function () {
         return angular2_jwt_1.tokenNotExpired();
     };
     __decorate([
-        core_2.Input(), 
+        core_1.Input(), 
         __metadata('design:type', parcel_sender_details_1.ParcelSenderDetails)
     ], ParcelSenderComponent.prototype, "parcelSenderDetails", void 0);
     __decorate([
-        core_2.Output(), 
+        core_1.Output(), 
         __metadata('design:type', Object)
     ], ParcelSenderComponent.prototype, "close", void 0);
     ParcelSenderComponent = __decorate([
