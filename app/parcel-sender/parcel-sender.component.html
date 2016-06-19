@@ -31,9 +31,9 @@
         <div class="inner-wrap">
             <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required>{{model.currentAddressaddressLine1}}</label>
             <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddressaddressLine2" ></label>
-            <label>City <input type="text" [(ngModel)]="model.city" required></label>
-            <label>State <input type="text" [(ngModel)]="model.state" required></label>
-            <label>Zip <input type="number" [(ngModel)]="model.zip" required></label>
+            <label>City <input type="text" [(ngModel)]="model.currentCity" required></label>
+            <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
+            <label>Zip <input type="number" [(ngModel)]="model.currentZip" required></label>
 
         </div>
 
@@ -41,15 +41,15 @@
         <div class="inner-wrap">
             <label>Address line 1 <input type="text" [(ngModel)]="model.deliveryAddreddaddressLine1" required></label>
             <label>Address line 2 <input type="text" [(ngModel)]="model.deliveryAddreddaddressLine2"></label>
-            <label>City <input type="text" [(ngModel)]="model.city" required></label>
-            <label>State <input type="text" [(ngModel)]="model.state" required></label>
-            <label>Zip <input type="number" [(ngModel)]="model.zip" required></label>
+            <label>City <input type="text" [(ngModel)]="model.deliveryCity" required></label>
+            <label>State <input type="text" [(ngModel)]="model.deliveryState" required></label>
+            <label>Zip <input type="number" [(ngModel)]="model.deliveryZip" required></label>
 
         </div>
 
         <div class="section"><span>4</span>Parcel Details</div>
         <div class="inner-wrap">
-            <label>Max. Parcel Weight (in ounce) <input type="text" [(ngModel)]="model.parcelWeight" required></label>
+            <label>Max. Parcel Weight (in ounce) <input type="number" [(ngModel)]="model.parcelWeight" required></label>
             <label>Max Parcel Dimensions (in cm)</label>
             <label>Height (approx.) <input type="number" [(ngModel)]="model.parcelHeight" required></label>
             <label>Length (approx.) <input type="number" [(ngModel)]="model.parcelLength" required></label>

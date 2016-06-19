@@ -13,6 +13,7 @@
     "cors": "^2.7.1",
     "express": "^4.13.4",
     "express-jwt": "^3.4.0",
+    "jwt-decode": "^2.0.1",
     "mongodb": "^2.1.18"
   },
   "devDependencies": {

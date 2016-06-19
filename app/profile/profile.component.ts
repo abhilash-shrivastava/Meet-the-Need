@@ -8,13 +8,7 @@ import {tokenNotExpired} from 'angular2-jwt';
 
 @Component({
     selector: 'profile',
-    template: `
-    <div *ngIf="loggedIn()">
-    <img src="{{profile.picture}}" style="width: 50px" /> {{profile.name}}
-	 <h2>Message from server</h2>
-   {{message}}
-    </div>
-	`
+    templateUrl: 'app/profile/profile.html'
 })
 
 export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {

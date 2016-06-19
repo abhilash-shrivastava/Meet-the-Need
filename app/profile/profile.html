@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<div *ngIf="loggedIn()">
+    <img src="{{profile.picture}}" style="width: 50px" /> {{profile.name}}
+    <h2>Message from server</h2>
+    {{message}}
+</div>
+<div></div>
+</body>
+</html>

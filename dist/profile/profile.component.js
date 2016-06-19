@@ -43,7 +43,7 @@ var ProfileComponent = (function () {
     ProfileComponent = __decorate([
         core_1.Component({
             selector: 'profile',
-            template: "\n    <div *ngIf=\"loggedIn()\">\n    <img src=\"{{profile.picture}}\" style=\"width: 50px\" /> {{profile.name}}\n\t <h2>Message from server</h2>\n   {{message}}\n    </div>\n\t"
+            templateUrl: 'app/profile/profile.html'
         }), 
         __metadata('design:paramtypes', [angular2_jwt_1.AuthHttp])
     ], ProfileComponent);
