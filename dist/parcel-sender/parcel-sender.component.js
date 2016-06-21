@@ -38,7 +38,7 @@ var ParcelSenderComponent = (function () {
         }
         //noinspection TypeScriptUnresolvedFunction
         this.parcelSenderCRUDService.save(parcelSenderDetails)
-            .subscribe(function (data) { return _this.status = JSON.stringify(data); }, function (error) { return _this.errorMessage = error; });
+            .subscribe(function (data) { return _this.message = JSON.stringify(data); }, function (error) { return _this.errorMessage = error; });
     };
     ParcelSenderComponent.prototype.loggedIn = function () {
         return angular2_jwt_1.tokenNotExpired();

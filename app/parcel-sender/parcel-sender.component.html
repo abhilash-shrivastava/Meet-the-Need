@@ -67,6 +67,7 @@
 </div>
 <div class="form-style-10" *ngIf="loggedIn()" [hidden]="!submitted">
     <h2>You submitted the parcel sending order successfully</h2>
+    <div>{{message}}</div>
     <button class="btn btn-default" (click)="submitted=false">Send Another Parcel</button>
 </div>
 </body>

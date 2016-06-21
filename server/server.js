@@ -22,6 +22,9 @@ var jwtCheck = jwt({
 
 
 var db;
+var responseToSender = [];
+var responseToProvider = [];
+
 app.use(bodyParser.json());
 app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -52,9 +55,11 @@ app.use('/order-confirm', jwtCheck);
 app.post('/order-confirm', (req, res) => {
   db.collection('parcelSender').save(req.body, (err, result) => {
   if (err) return console.log(err)
-  console.log('saved to database');
-res.send(JSON.stringify(response));
-})
+    assignSender(req.body, (responseToSender) => {
+      console.log(responseToSender);
+      res.send(JSON.stringify(responseToSender));
+    });
+  })
 });
 
 app.use('/save-user', jwtCheck);
@@ -90,12 +95,13 @@ res.send(JSON.stringify(response));
 //   "maxParcelWidth": 70
 // };
 
+
 MongoClient.connect(LocalDbUrl, (err, database) => {
   if (err) return console.log(err)
   db = database
   app.listen(9000, () => {
     console.log('listening on 9000');
-})
+  })
 })
 
 app.use('/user-profile', jwtCheck);
@@ -107,22 +113,11 @@ app.get('/user-profile', function (req, res) {
 })
 });
 
-var responseToProvider = [];
-// var matchSender = function(data) {
-//   var cursor =db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: data.maxParcelWeight}, "parcelHeight": { $lt: data.maxParcelHeight}, "parcelLength": { $lt: data.maxParcelLength}, "parcelWidth": { $lt: data.maxParcelWidth}, "serviceProvider": {$exists: false} } ).sort({parcelWeight: -1}).limit(1);
-//   cursor.each(function(err, doc) {
-//     assert.equal(err, null);
-//     if (doc != null) {
-//       db.collection('parcelSender').updateOne({"_id" : doc._id}, {$set: {"serviceProvider" : data.email }}).aggregate
-//     }
-//   });
-// };
 var assignProvider =  function (data, callback) {
-  var cursorone = db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).sort({parcelWeight: -1}).limit(1);
+  var cursorone = db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
   cursorone.each(function(err, sender){
     if (sender != null){
-      if (!sender["providerId"]){
-        sender["providerId"] = data._id.$oid;
+      if (!sender["providerEmail"]){
         sender["providerEmail"] = data.email;
         sender["status"] = "Assigned";
       }
@@ -135,7 +130,7 @@ var assignProvider =  function (data, callback) {
           data.maxParcelHeight -= sender.parcelHeight;
           data.maxParcelLength -= sender.parcelLength;
           data.maxParcelWidth -= sender.parcelWidth;
-          responseToProvider.push(sender)
+          responseToProvider.push(sender);
           console.log('saved to database');
           cursorone.close();
           db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).count(function (e, count) {
@@ -150,7 +145,45 @@ var assignProvider =  function (data, callback) {
     })
     }
   })
-}
+};
+
+
+var assignSender =  function (data, callback) {
+  var cursorone = db.collection('serviceProvider').find( { "destinationCity": data.deliveryCity, "maxParcelWeight": { $gte: (data.parcelWeight) }, "maxParcelHeight": { $gte: (data.parcelHeight)}, "maxParcelLength": { $gte: (data.parcelLength)}, "maxParcelWidth": { $gte: (data.parcelWidth)}, "journeyDate" : { $gt: new Date(new Date()).toISOString().split('T')[0] } } ).sort({maxParcelWeight: + 1}).limit(1);
+  cursorone.each(function(err, provider){
+    if (provider != null){
+      if (!data["providerEmail"]){
+        data["providerEmail"] = provider.email;
+        data["status"] = "Assigned";
+      }
+      db.collection('providerAssigned').save(data, (err, result) => {
+        if (err) return console.log(err);
+      responseToSender.push(provider);
+      callback(responseToSender);
+      cursorone.close();
+      provider.maxParcelWeight -= data.parcelWeight;
+      provider.maxParcelHeight -= data.parcelHeight;
+      provider.maxParcelLength -= data.parcelLength;
+      provider.maxParcelWidth -= data.parcelWidth;
+        if ((provider.maxParcelWeight < 1) || (provider.maxParcelHeight < 1) || (provider.maxParcelLength < 1) || (provider.maxParcelWidth < 1) ) {
+          db.collection('serviceProvided').save( provider, function(err, results) {
+            console.log('saved to database');
+          });
+        }else {
+          db.collection('serviceProvider').updateOne(
+            { "email" : provider.email },
+            {
+              $set: { "maxParcelWeight": provider.maxParcelWeight, "maxParcelHeight": provider.maxParcelHeight, "maxParcelLength": provider.maxParcelLength, "maxParcelWidth": provider.maxParcelWidth },
+            }, function(err, results) {
+              console.log('saved to database');
+            });
+        }
+      })
+    }
+  })
+};
+
+
 
 
 var request = function (data, callback) {

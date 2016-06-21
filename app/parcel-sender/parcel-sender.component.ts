@@ -18,6 +18,7 @@ import { ParcelSenderCRUDService } from './../services/parcel-sender-crud.servic
 
 export class ParcelSenderComponent {
     errorMessage: string;
+    message: any;
     mode = 'Observable';
     model = new ParcelSenderDetails();
 
@@ -43,7 +44,7 @@ export class ParcelSenderComponent {
         //noinspection TypeScriptUnresolvedFunction
         this.parcelSenderCRUDService.save(parcelSenderDetails)
             .subscribe(
-                data  => this.status = JSON.stringify(data),
+                data  => this.message = JSON.stringify(data),
                 error =>  this.errorMessage = <any>error
             );
 
