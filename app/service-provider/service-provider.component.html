@@ -68,6 +68,7 @@
 </div>
 <div class="form-style-10" *ngIf="loggedIn()" [hidden]="!submitted">
     <h2>You submitted the service providing request successfully</h2>
+    <div>{{message}}</div>
     <button class="btn btn-default" (click)="submitted=false">Submit Another Request</button>
 </div>
 </body>

@@ -24,6 +24,7 @@ import {tokenNotExpired} from 'angular2-jwt';
 
 export class ServiceProviderComponent {
     errorMessage: string;
+    message: any;
     mode = 'Observable';
     model = new ServiceProviderDetails();
     
@@ -49,7 +50,7 @@ export class ServiceProviderComponent {
         //noinspection TypeScriptUnresolvedFunction
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(
-                data  => this.status = JSON.stringify(data),
+                data  => this.message = JSON.stringify(data),
                 error =>  this.errorMessage = <any>error
             );
 

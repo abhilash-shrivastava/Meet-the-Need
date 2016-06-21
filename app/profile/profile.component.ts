@@ -37,8 +37,8 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.authHttp.get('http://localhost:9000/user-profile')
             .subscribe(
                 data => {
-                    console.log(data.json());
-                    this.message = data.json();
+                    console.log(data);
+                    this.message = JSON.stringify(data.json());
                 },
                 err => console.log(err),
                 () => console.log('Complete')

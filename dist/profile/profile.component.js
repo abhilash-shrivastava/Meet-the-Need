@@ -33,8 +33,8 @@ var ProfileComponent = (function () {
         var _this = this;
         this.authHttp.get('http://localhost:9000/user-profile')
             .subscribe(function (data) {
-            console.log(data.json());
-            _this.message = data.json();
+            console.log(data);
+            _this.message = JSON.stringify(data.json());
         }, function (err) { return console.log(err); }, function () { return console.log('Complete'); });
     };
     ProfileComponent.prototype.loggedIn = function () {

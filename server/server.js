@@ -13,17 +13,13 @@ var auth0Settings = require('./auth0.json');
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var DBurl = 'mongodb://abhilash.shrivastava:ab#ILASH0@ds019471.mlab.com:19471/meet-the-need-db';
-var LocalDbUrl = 'mongodb://localhost:27017/test'
+var LocalDbUrl = 'mongodb://localhost:27017/test';
 var jwtCheck = jwt({
   secret: new Buffer(auth0Settings.secret, 'base64'),
   audience: auth0Settings.audience
 });
 
-app.use('/user-profile', jwtCheck);
 
-app.get('/user-profile', function (req, res) {
-  res.json("I will provide the user details");
-});
 
 var db;
 app.use(bodyParser.json());
@@ -45,11 +41,11 @@ app.use('/service-confirm', jwtCheck);
 app.post('/service-confirm', (req, res) => {
   db.collection('serviceProvider').save(req.body, (err, result) => {
     if (err) return console.log(err)
-    console.log(data);
-    console.log('saved to database');
-    //matchSender(req.body);
-    res.send(JSON.stringify(response));
-})
+    assignProvider(req.body, (responseToProvider) => {
+      console.log(responseToProvider);
+    res.send(JSON.stringify(responseToProvider));
+    });
+  })
 });
 
 app.use('/order-confirm', jwtCheck);
@@ -70,40 +66,48 @@ res.send(JSON.stringify(response));
 })
 });
 
-var data = {
-  "_id": {
-    "$oid": "5765f26cbfc8e0bd94e0a5d0"
-  },
-  "name": "Abhilash Shrivastava",
-  "phone": "2485679221",
-  "currentAddreddaddressLine1": "50 Chumasero Drive",
-  "currentCity": "San Francisco",
-  "currentState": "CA",
-  "currentZip": 94132,
-  "email": "provider@provider.com",
-  "destinationAddreddaddressLine1": "19th ",
-  "destinationCity": "Hillsboro",
-  "destinationState": "OR",
-  "destinationZip": 12345,
-  "journeyDate": "2016-06-24",
-  "availabilityFrom": "20:00",
-  "availabilityTo": "22:00",
-  "maxParcelWeight": 50,
-  "maxParcelHeight": 70,
-  "maxParcelLength": 70,
-  "maxParcelWidth": 70
-};
+// var data = {
+//   "_id": {
+//     "$oid": "5765f26cbfc8e0bd94e0a5d0"
+//   },
+//   "name": "Abhilash Shrivastava",
+//   "phone": "2485679221",
+//   "currentAddreddaddressLine1": "50 Chumasero Drive",
+//   "currentCity": "San Francisco",
+//   "currentState": "CA",
+//   "currentZip": 94132,
+//   "email": "provider@provider.com",
+//   "destinationAddreddaddressLine1": "19th ",
+//   "destinationCity": "Hillsboro",
+//   "destinationState": "OR",
+//   "destinationZip": 12345,
+//   "journeyDate": "2016-06-24",
+//   "availabilityFrom": "20:00",
+//   "availabilityTo": "22:00",
+//   "maxParcelWeight": 50,
+//   "maxParcelHeight": 70,
+//   "maxParcelLength": 70,
+//   "maxParcelWidth": 70
+// };
 
 MongoClient.connect(LocalDbUrl, (err, database) => {
   if (err) return console.log(err)
   db = database
   app.listen(9000, () => {
     console.log('listening on 9000');
-    assignProvider(data);
 })
 })
 
-var sender = [];
+app.use('/user-profile', jwtCheck);
+
+app.get('/user-profile', function (req, res) {
+  request(data, (requests) => {
+    console.log(requests);
+    res.send(JSON.stringify(requests));
+})
+});
+
+var responseToProvider = [];
 // var matchSender = function(data) {
 //   var cursor =db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: data.maxParcelWeight}, "parcelHeight": { $lt: data.maxParcelHeight}, "parcelLength": { $lt: data.maxParcelLength}, "parcelWidth": { $lt: data.maxParcelWidth}, "serviceProvider": {$exists: false} } ).sort({parcelWeight: -1}).limit(1);
 //   cursor.each(function(err, doc) {
@@ -113,20 +117,15 @@ var sender = [];
 //     }
 //   });
 // };
-
 var assignProvider =  function (data, callback) {
-  console.log(data);
-  var cursor = db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).sort({parcelWeight: -1}).limit(1);
-  cursor.each(function(err, sender){
+  var cursorone = db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).sort({parcelWeight: -1}).limit(1);
+  cursorone.each(function(err, sender){
     if (sender != null){
-      console.log(sender);
-      //console.log(data);
-      //delete data["_id"];
-      console.log(data);
       if (!sender["providerId"]){
         sender["providerId"] = data._id.$oid;
+        sender["providerEmail"] = data.email;
+        sender["status"] = "Assigned";
       }
-      console.log(sender)
       db.collection('providerAssigned').save(sender, (err, result) => {
         if (err) return console.log(err);
         db.collection('parcelSender').deleteOne(
@@ -136,13 +135,33 @@ var assignProvider =  function (data, callback) {
           data.maxParcelHeight -= sender.parcelHeight;
           data.maxParcelLength -= sender.parcelLength;
           data.maxParcelWidth -= sender.parcelWidth;
-          console.log(data);
+          responseToProvider.push(sender)
           console.log('saved to database');
-          cursor.close()
-          assignProvider(data);
+          cursorone.close();
+          db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).count(function (e, count) {
+            if (count == 0){
+              callback(sender);
+            }else {
+              assignProvider(data, callback);
+            }
+          });
         }
       );
     })
+    }
+  })
+}
+
+
+var request = function (data, callback) {
+  var requests = [];
+  var cursor = db.collection('providerAssigned').find( { "providerEmail": data.email} );
+  cursor.each(function(err, request){
+    if (request != null) {
+      requests.push(request);
+      console.log(requests);
+    }else {
+      callback(requests)
     }
   })
 }
