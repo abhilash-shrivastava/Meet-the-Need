@@ -18,7 +18,8 @@ import { RequestsService } from './../services/request.service';
 export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
 
     profile: any;
-    serviceRequests: any;
+    unassignedServiceRequests: any;
+    assignedServiceRequests:any
     parcelRequests: any;
     errorMessage: string;
     public arrayOfKeys;
@@ -62,17 +63,17 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         console.log('ngAfterContentInit() called');
     }
 
-    getSecretThing() {
-        this.authHttp.get('http://localhost:9000/service-request')
-            .subscribe(
-                data => {
-                    console.log(data);
-                    this.serviceRequests = JSON.stringify(data.json());
-                },
-                err => console.log(err),
-                () => console.log('Complete')
-            );
-    }
+    // getSecretThing() {
+    //     this.authHttp.get('http://localhost:9000/service-request')
+    //         .subscribe(
+    //             data => {
+    //                 console.log(data);
+    //                 this.serviceRequests = JSON.stringify(data.json());
+    //             },
+    //             err => console.log(err),
+    //             () => console.log('Complete')
+    //         );
+    // }
 
     getAssignedServiceRequests(data){
         if (!this.profile.email) { return; }
@@ -80,15 +81,17 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.requestsService.getAssignedServiceRequests(data)
             .subscribe(
                 data  => {
-                    this.serviceRequests = data;
-                    console.log(this.serviceRequests);
+                    this.assignedServiceRequests = data;
+                    console.log(this.assignedServiceRequests);
                     console.log(this.parcelRequests);
-                    if(this.serviceRequests.length > 0){
+                    if(this.assignedServiceRequests.length > 0){
                         delete this.parcelRequests;
+                        delete this.unassignedServiceRequests;
                         this.showDetails = true;
                         this.requestType = true;
                     }else{
                         delete this.parcelRequests;
+                        delete this.unassignedServiceRequests;
                         this.showDetails = false;
                         this.requestType = true;
                     }
@@ -104,15 +107,17 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.requestsService.getUnassignedServiceRequests(data)
             .subscribe(
                 data  => {
-                    this.serviceRequests = data;
-                    console.log(this.serviceRequests);
+                    this.unassignedServiceRequests = data;
+                    console.log(this.unassignedServiceRequests);
                     console.log(this.parcelRequests);
-                    if(this.serviceRequests.length > 0){
+                    if(this.unassignedServiceRequests.length > 0){
                         delete this.parcelRequests;
+                        delete this.assignedServiceRequests;
                         this.showDetails = true;
                         this.requestType = true;
                     }else{
                         delete this.parcelRequests;
+                        delete this.assignedServiceRequests;
                         this.showDetails = false;
                         this.requestType = true;
                     }
@@ -129,14 +134,16 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
             .subscribe(
                 data  => {
                     this.parcelRequests = data;
-                    console.log(this.serviceRequests);
                     console.log(this.parcelRequests);
                     if(this.parcelRequests.length > 0){
-                        delete this.serviceRequests;
+                        delete this.unassignedServiceRequests;
+                        delete this.assignedServiceRequests;
+
                         this.showDetails = true;
                         this.requestType = false;
                     }else{
-                        delete this.serviceRequests;
+                        delete this.unassignedServiceRequests;
+                        delete this.assignedServiceRequests;
                         this.showDetails = false;
                         this.requestType = false;
                     }
@@ -153,12 +160,15 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
             .subscribe(
                 data  => {
                     this.parcelRequests = data;
-                    console.log(this.serviceRequests);
                     console.log(this.parcelRequests);
                     if(this.parcelRequests.length > 0){
+                        delete this.unassignedServiceRequests;
+                        delete this.assignedServiceRequests;
                         this.showDetails = true;
                         this.requestType = false;
                     }else{
+                        delete this.unassignedServiceRequests;
+                        delete this.assignedServiceRequests;
                         this.showDetails = false;
                         this.requestType = false;
                     }

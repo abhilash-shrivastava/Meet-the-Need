@@ -48,14 +48,17 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.ngAfterContentInit = function () {
         console.log('ngAfterContentInit() called');
     };
-    ProfileComponent.prototype.getSecretThing = function () {
-        var _this = this;
-        this.authHttp.get('http://localhost:9000/service-request')
-            .subscribe(function (data) {
-            console.log(data);
-            _this.serviceRequests = JSON.stringify(data.json());
-        }, function (err) { return console.log(err); }, function () { return console.log('Complete'); });
-    };
+    // getSecretThing() {
+    //     this.authHttp.get('http://localhost:9000/service-request')
+    //         .subscribe(
+    //             data => {
+    //                 console.log(data);
+    //                 this.serviceRequests = JSON.stringify(data.json());
+    //             },
+    //             err => console.log(err),
+    //             () => console.log('Complete')
+    //         );
+    // }
     ProfileComponent.prototype.getAssignedServiceRequests = function (data) {
         var _this = this;
         if (!this.profile.email) {
@@ -64,16 +67,18 @@ var ProfileComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction
         this.requestsService.getAssignedServiceRequests(data)
             .subscribe(function (data) {
-            _this.serviceRequests = data;
-            console.log(_this.serviceRequests);
+            _this.assignedServiceRequests = data;
+            console.log(_this.assignedServiceRequests);
             console.log(_this.parcelRequests);
-            if (_this.serviceRequests.length > 0) {
+            if (_this.assignedServiceRequests.length > 0) {
                 delete _this.parcelRequests;
+                delete _this.unassignedServiceRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
             }
             else {
                 delete _this.parcelRequests;
+                delete _this.unassignedServiceRequests;
                 _this.showDetails = false;
                 _this.requestType = true;
             }
@@ -87,16 +92,18 @@ var ProfileComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction
         this.requestsService.getUnassignedServiceRequests(data)
             .subscribe(function (data) {
-            _this.serviceRequests = data;
-            console.log(_this.serviceRequests);
+            _this.unassignedServiceRequests = data;
+            console.log(_this.unassignedServiceRequests);
             console.log(_this.parcelRequests);
-            if (_this.serviceRequests.length > 0) {
+            if (_this.unassignedServiceRequests.length > 0) {
                 delete _this.parcelRequests;
+                delete _this.assignedServiceRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
             }
             else {
                 delete _this.parcelRequests;
+                delete _this.assignedServiceRequests;
                 _this.showDetails = false;
                 _this.requestType = true;
             }
@@ -111,15 +118,16 @@ var ProfileComponent = (function () {
         this.requestsService.getAssignedSenderRequests(data)
             .subscribe(function (data) {
             _this.parcelRequests = data;
-            console.log(_this.serviceRequests);
             console.log(_this.parcelRequests);
             if (_this.parcelRequests.length > 0) {
-                delete _this.serviceRequests;
+                delete _this.unassignedServiceRequests;
+                delete _this.assignedServiceRequests;
                 _this.showDetails = true;
                 _this.requestType = false;
             }
             else {
-                delete _this.serviceRequests;
+                delete _this.unassignedServiceRequests;
+                delete _this.assignedServiceRequests;
                 _this.showDetails = false;
                 _this.requestType = false;
             }
@@ -134,13 +142,16 @@ var ProfileComponent = (function () {
         this.requestsService.getUnassignedSenderRequests(data)
             .subscribe(function (data) {
             _this.parcelRequests = data;
-            console.log(_this.serviceRequests);
             console.log(_this.parcelRequests);
             if (_this.parcelRequests.length > 0) {
+                delete _this.unassignedServiceRequests;
+                delete _this.assignedServiceRequests;
                 _this.showDetails = true;
                 _this.requestType = false;
             }
             else {
+                delete _this.unassignedServiceRequests;
+                delete _this.assignedServiceRequests;
                 _this.showDetails = false;
                 _this.requestType = false;
             }

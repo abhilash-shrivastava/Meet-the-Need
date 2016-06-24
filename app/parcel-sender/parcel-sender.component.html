@@ -68,6 +68,7 @@
 <div class="form-style-10" *ngIf="loggedIn()" [hidden]="!submitted">
     <h2>You submitted the parcel sending order successfully</h2>
     <div *ngIf="requests" [hidden]="!showDetails">
+        <h2>Following Service Provider Request is Assigned to You</h2>
         <ul *ngFor="let request of requests ">
             <h3>Request Details:</h3>
             <li>Parcel Dispatch Date:   {{request.journeyDate}}</li>

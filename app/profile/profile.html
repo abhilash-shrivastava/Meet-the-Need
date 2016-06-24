@@ -14,10 +14,10 @@
         <button class="btn btn-default" (click)="onUnassignedSenderClick()">Unassigned Parcel request</button>
     </div>
 <div>
-    <div *ngIf="serviceRequests" [hidden]="!showDetails">
-        <ul *ngFor="let request of serviceRequests ">
+    <div *ngIf="unassignedServiceRequests" [hidden]="!showDetails">
+        <ul *ngFor="let request of unassignedServiceRequests ">
             <h3>Request Details:</h3>
-            <li>Journey Date:   {{request.journeyDate}}</li>
+            <li>Journey Date:   <b>{{request.journeyDate}}</b></li>
             <h4>Parcel Details:</h4>
             <li>Parcel Weight Capacity :  <b>{{request.maxParcelWeight}}</b> ounce</li>
             <li>Parcel Height Dimension : <b>{{request.maxParcelHeight}}</b> cm.</li>
@@ -26,15 +26,43 @@
             -----------------------------------**********--------------------------------------------
         </ul>
     </div>
-    <div *ngIf="serviceRequests" [hidden]="showDetails"><h3>No Service Requests</h3></div>
+    <div *ngIf="unassignedServiceRequests" [hidden]="showDetails"><h3>No Service Requests</h3></div>
+
+    <div *ngIf="assignedServiceRequests" [hidden]="!showDetails">
+        <ul *ngFor="let request of assignedServiceRequests ">
+            <h3>Request Details:</h3>
+            <h4>Parcel Details:</h4>
+            <li>Parcel Description : <b>{{request.parcelDisclosure}}</b></li>
+            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> ounce</li>
+            <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
+            <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
+            <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
+            <h4>Sender Details</h4>
+            <li>Sender Name : <b>{{request.senderName}}</b></li>
+            <li>Sender Email : <b>{{request.senderEmail}}</b></li>
+            <li>Sender Contact Number :   <b>{{request.senderPhone}}</b></li>
+            <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
+            <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li>City : <b>{{request.currentCity}}</b></li>
+            <h4>Receiver Details</h4>
+            <li>Receiver Name : <b>{{request.receiverName}}</b></li>
+            <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
+            <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
+            <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
+            <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
+            <li>City : <b>{{request.deliveryCity}}</b></li>
+            -----------------------------------**********--------------------------------------------
+        </ul>
+    </div>
+    <div *ngIf="assignedServiceRequests" [hidden]="showDetails"><h3>No Service Requests</h3></div>
 
     <div *ngIf="parcelRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of parcelRequests ">
             <h3>Request Details:</h3>
-            <li>Receiver Name : {{request.receiverName}}</li>
-            <li>Parcel Details : {{request.parcelDisclosure}}</li>
-            <li>Delivery City : {{request.deliveryCity}}</li>
-            <li>Service Provider Email:   {{request.providerEmail}}</li>
+            <li>Receiver Name : <b>{{request.receiverName}}</b></li>
+            <li>Parcel Details : <b>{{request.parcelDisclosure}}</b></li>
+            <li>Delivery City : <b>{{request.deliveryCity}}</b></li>
+            <li>Service Provider Email:   <b>{{request.providerEmail}}</b></li>
             <h4>Parcel Details:</h4>
             <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> ounce</li>
             <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>

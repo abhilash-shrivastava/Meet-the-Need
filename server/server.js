@@ -1,3 +1,4 @@
+
 /**
  * Created by Abhi on 6/12/16.
  */
@@ -45,7 +46,7 @@ app.post('/service-confirm', (req, res) => {
   res.connection.setTimeout(0);
 assignProvider(req.body, (responseToProvider) => {
   console.log(responseToProvider);
-  res.send(JSON.stringify(responseToProvider));
+res.send(JSON.stringify(responseToProvider));
 });
 });
 
@@ -54,16 +55,16 @@ app.post('/order-confirm', (req, res) => {
   res.connection.setTimeout(0);
 assignSender(req.body, (responseToSender) => {
   console.log(responseToSender);
-  res.send(JSON.stringify(responseToSender));
+res.send(JSON.stringify(responseToSender));
 });
 });
 
 app.use('/save-user', jwtCheck);
 app.post('/save-user', (req, res) => {
-db.collection('user').save(req.body, (err, result) => {
+  db.collection('user').save(req.body, (err, result) => {
   res.connection.setTimeout(0);
 if (err) return console.log(err)
-  console.log('saved to database');
+console.log('saved to database');
 res.send(JSON.stringify(response));
 })
 });
@@ -72,9 +73,9 @@ res.send(JSON.stringify(response));
 MongoClient.connect(LocalDbUrl, (err, database) => {
   if (err) return console.log(err)
   db = database
-  app.listen(9000, () => {
-    console.log('listening on 9000');
-  })
+app.listen(9000, () => {
+  console.log('listening on 9000');
+})
 })
 
 app.use('/assigned-service-request', jwtCheck);
@@ -82,7 +83,8 @@ app.use('/assigned-service-request', jwtCheck);
 app.post('/assigned-service-request', function (req, res) {
   res.connection.setTimeout(0);
   assignedServiceRequest(req.body, (requests) => {
-    res.send(JSON.stringify(requests));
+    console.log(requests);
+  res.send(JSON.stringify(requests));
 })
 });
 
@@ -91,7 +93,7 @@ app.use('/unassigned-service-request', jwtCheck);
 app.post('/unassigned-service-request', function (req, res) {
   res.connection.setTimeout(0);
   unassignedServiceRequest(req.body, (requests) => {
-  res.send(JSON.stringify(requests));
+    res.send(JSON.stringify(requests));
 })
 });
 
@@ -100,7 +102,7 @@ app.use('/assigned-sender-request', jwtCheck);
 app.post('/assigned-sender-request', function (req, res) {
   res.connection.setTimeout(0);
   assignedSenderRequest(req.body, (requests) => {
-  res.send(JSON.stringify(requests));
+    res.send(JSON.stringify(requests));
 })
 });
 
@@ -109,7 +111,7 @@ app.use('/unassigned-sender-request', jwtCheck);
 app.post('/unassigned-sender-request', function (req, res) {
   res.connection.setTimeout(0);
   unassignedSenderRequest(req.body, (requests) => {
-  res.send(JSON.stringify(requests));
+    res.send(JSON.stringify(requests));
 })
 });
 
@@ -127,8 +129,8 @@ var assignProvider =  function (data, callback) {
     else {
       cursorone.each(function(err, sender){
         if (sender !== null){
-          if (!sender["providerEmail"]){
-            sender["providerEmail"] = data.email;
+          if (!sender["serviceProvider"]){
+            sender["serviceProvider"] = data;
             sender["status"] = "Assigned";
           }
           db.collection('providerAssigned').insertOne(sender, (err, result) => {
@@ -141,6 +143,7 @@ var assignProvider =  function (data, callback) {
               data.maxParcelHeight -= sender.parcelHeight;
               data.maxParcelLength -= sender.parcelLength;
               data.maxParcelWidth -= sender.parcelWidth;
+              console.log(data);
               responseToProvider.push(sender);
               db.collection('serviceProvided').insertOne( data, function(err, results) {
                 console.log('saved to serviceProvided');
@@ -177,8 +180,8 @@ var assignSender =  function (data, callback) {
     else{
       cursorone.each(function(err, provider){
         if (provider !== null){
-          if (!data["providerEmail"]){
-            data["providerEmail"] = provider.email;
+          if (!data["serviceProvider"]){
+            data["serviceProvider"] = provider;
             data["status"] = "Assigned";
           }
           db.collection('providerAssigned').insertOne(data, (err, result) => {
@@ -196,7 +199,6 @@ var assignSender =  function (data, callback) {
               { "_id": provider._id },
               function(err, results) {
                 console.log("Deleted from serviceProvider");
-                delete provider["_id"];
                 db.collection('serviceProvided').insertOne( provider, function(err, results) {
                   console.log('saved to serviceProvided');
                 });
@@ -208,7 +210,6 @@ var assignSender =  function (data, callback) {
                 $set: { "maxParcelWeight": provider.maxParcelWeight, "maxParcelHeight": provider.maxParcelHeight, "maxParcelLength": provider.maxParcelLength, "maxParcelWidth": provider.maxParcelWidth },
               }, function(err, results) {
                 console.log('updated serviceProvider');
-                delete provider["_id"];
                 db.collection('serviceProvided').insertOne( provider, function(err, results) {
                   console.log('saved to serviceProvided');
                 });
@@ -226,7 +227,7 @@ var assignSender =  function (data, callback) {
 
 var assignedServiceRequest = function (data, callback) {
   var assignedServiceRequests = [];
-  var cursor = db.collection('serviceProvided').find( { "email": data.email} );
+  var cursor = db.collection('providerAssigned').find( { "serviceProvider.email": data.email} );
   cursor.each(function(err, request){
     if (request !== null) {
       assignedServiceRequests.push(request);
