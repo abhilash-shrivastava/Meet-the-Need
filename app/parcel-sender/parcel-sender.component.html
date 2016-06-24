@@ -67,7 +67,21 @@
 </div>
 <div class="form-style-10" *ngIf="loggedIn()" [hidden]="!submitted">
     <h2>You submitted the parcel sending order successfully</h2>
-    <div>{{message}}</div>
+    <div *ngIf="requests" [hidden]="!showDetails">
+        <ul *ngFor="let request of requests ">
+            <h3>Request Details:</h3>
+            <li>Parcel Dispatch Date:   {{request.journeyDate}}</li>
+            <h4>Service Provider Details:</h4>
+            <li>Name :  <b>{{request.name}}</b></li>
+            <li>Email Id : <b>{{request.email}}</b></li>
+            <li>Contact Number : <b>{{request.phone}}</b></li>
+            <li>Address :  <b>{{request.currentAddressLine1}}</b></li>
+            <li><b>{{request.currentAddressLine2}}</b></li>
+            <li>City : {{request.currentCity}}</li>
+            -----------------------------------**********--------------------------------------------
+        </ul>
+    </div>
+    <div *ngIf="requests" [hidden]="showDetails"><h3>No Suitable Service Requests Found</h3></div>
     <button class="btn btn-default" (click)="submitted=false">Send Another Parcel</button>
 </div>
 </body>

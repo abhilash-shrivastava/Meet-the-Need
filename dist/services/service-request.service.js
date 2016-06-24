@@ -9,26 +9,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 /**
- * Created by Abhi on 6/11/16.
+ * Created by Abhi on 6/23/16.
  */
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
 require('rxjs/add/operator/toPromise');
 var Observable_1 = require('rxjs/Observable');
-var ServiceProviderCRUDService = (function () {
-    function ServiceProviderCRUDService(http) {
+var ServiceRequestsService = (function () {
+    function ServiceRequestsService(http) {
         this.http = http;
-        this.serviceProviderDetailsSaveUrl = 'http://localhost:9000/service-confirm';
+        this.getServiceRequestsUrl = 'http://localhost:9000/assigned-service-request';
     }
-    ServiceProviderCRUDService.prototype.save = function (serviceProviderDetails) {
-        var body = JSON.stringify(serviceProviderDetails);
+    ServiceRequestsService.prototype.getServiceRequests = function (data) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(data);
+        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
-        return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)
+        return this.http.post(this.getServiceRequestsUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
-    ServiceProviderCRUDService.prototype.handleError = function (error) {
+    ServiceRequestsService.prototype.handleError = function (error) {
         // In a real world app, we might use a remote logging infrastructure
         // We'd also dig deeper into the error to get a better message
         var errMsg = (error.message) ? error.message :
@@ -36,11 +38,11 @@ var ServiceProviderCRUDService = (function () {
         console.error(errMsg); // log to console instead
         return Observable_1.Observable.throw(errMsg);
     };
-    ServiceProviderCRUDService = __decorate([
+    ServiceRequestsService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
-    ], ServiceProviderCRUDService);
-    return ServiceProviderCRUDService;
+    ], ServiceRequestsService);
+    return ServiceRequestsService;
 }());
-exports.ServiceProviderCRUDService = ServiceProviderCRUDService;
-//# sourceMappingURL=service-provider-crud.service.js.map
+exports.ServiceRequestsService = ServiceRequestsService;
+//# sourceMappingURL=service-request.service.js.map

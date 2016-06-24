@@ -21,7 +21,9 @@ var ServiceProviderCRUDService = (function () {
         this.serviceProviderDetailsSaveUrl = 'http://localhost:9000/service-confirm';
     }
     ServiceProviderCRUDService.prototype.save = function (serviceProviderDetails) {
+        //console.log(serviceProviderDetails);
         var body = JSON.stringify(serviceProviderDetails);
+        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)

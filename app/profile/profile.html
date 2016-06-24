@@ -7,9 +7,49 @@
 <body>
 <div *ngIf="loggedIn()">
     <img src="{{profile.picture}}" style="width: 50px" /> {{profile.name}}
-    <h2>Message from server</h2>
-    {{message}}
+    <div>
+        <button class="btn btn-default" (click)="onAssignedServiceClick()">Assigned Service request</button>
+        <button class="btn btn-default" (click)="onUnassignedServiceClick()">Unassigned Service request</button>
+        <button class="btn btn-default" (click)="onAssignedSenderClick()">Assigned Parcel request</button>
+        <button class="btn btn-default" (click)="onUnassignedSenderClick()">Unassigned Parcel request</button>
+    </div>
+<div>
+    <div *ngIf="serviceRequests" [hidden]="!showDetails">
+        <ul *ngFor="let request of serviceRequests ">
+            <h3>Request Details:</h3>
+            <li>Journey Date:   {{request.journeyDate}}</li>
+            <h4>Parcel Details:</h4>
+            <li>Parcel Weight Capacity :  <b>{{request.maxParcelWeight}}</b> ounce</li>
+            <li>Parcel Height Dimension : <b>{{request.maxParcelHeight}}</b> cm.</li>
+            <li>Parcel length Dimension : <b>{{request.maxParcelLength}}</b> cm.</li>
+            <li>Parcel Width Dimension :  <b>{{request.maxParcelWidth}}</b> cm.</li>
+            -----------------------------------**********--------------------------------------------
+        </ul>
+    </div>
+    <div *ngIf="serviceRequests" [hidden]="showDetails"><h3>No Service Requests</h3></div>
+
+    <div *ngIf="parcelRequests" [hidden]="!showDetails">
+        <ul *ngFor="let request of parcelRequests ">
+            <h3>Request Details:</h3>
+            <li>Receiver Name : {{request.receiverName}}</li>
+            <li>Parcel Details : {{request.parcelDisclosure}}</li>
+            <li>Delivery City : {{request.deliveryCity}}</li>
+            <li>Service Provider Email:   {{request.providerEmail}}</li>
+            <h4>Parcel Details:</h4>
+            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> ounce</li>
+            <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
+            <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
+            <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
+             -----------------------------------**********--------------------------------------------
+        </ul>
+    </div>
+    <div *ngIf="parcelRequests" [hidden]="showDetails"><h3>No Parcel Requests</h3></div>
 </div>
-<div></div>
+</div>
+<!--<ul>-->
+    <!--<li *ngFor="#doc of message">-->
+        <!--{{doc.senderEmail}}-->
+    <!--</li>-->
+<!--</ul>-->
 </body>
 </html>

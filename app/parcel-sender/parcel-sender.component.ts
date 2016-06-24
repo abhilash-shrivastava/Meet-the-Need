@@ -18,20 +18,19 @@ import { ParcelSenderCRUDService } from './../services/parcel-sender-crud.servic
 
 export class ParcelSenderComponent {
     errorMessage: string;
-    message: any;
     mode = 'Observable';
     model = new ParcelSenderDetails();
+    requests: any;
+    showDetails = false;
+
 
     submitted = false;
     onSubmit() { this.submitted = true;
-        console.log(this.model);
-        this.saveParcelSenderDetails(this.model);
+        if (this.model !== null){
+            this.saveParcelSenderDetails(this.model);
+        }        
     }
-    // TODO: Remove this when we're done
-    @Input() parcelSenderDetails: ParcelSenderDetails;
-    @Output() close = new EventEmitter();
     error: any;
-    navigated = false; // true if navigated here
 
     status: string;
     constructor(
@@ -41,10 +40,19 @@ export class ParcelSenderComponent {
 
     saveParcelSenderDetails(parcelSenderDetails: ParcelSenderDetails){
         if (!parcelSenderDetails) { return; }
-        //noinspection TypeScriptUnresolvedFunction
+        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
         this.parcelSenderCRUDService.save(parcelSenderDetails)
             .subscribe(
-                data  => this.message = JSON.stringify(data),
+                data  => {
+                    console.log(data);
+                    this.requests = data;
+                    console.log(this.requests);
+                    if(this.requests.length > 0){
+                        this.showDetails = true;
+                    }else{
+                        this.showDetails = false;
+                    }
+                },
                 error =>  this.errorMessage = <any>error
             );
 

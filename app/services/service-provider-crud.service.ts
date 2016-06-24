@@ -15,9 +15,7 @@ export class ServiceProviderCRUDService{
 
     private serviceProviderDetailsSaveUrl = 'http://localhost:9000/service-confirm';
     save (serviceProviderDetails: ServiceProviderDetails ): Observable<ServiceProviderDetails> {
-        //console.log(serviceProviderDetails);
         let body = JSON.stringify(serviceProviderDetails);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 

@@ -24,37 +24,35 @@ var ServiceProviderComponent = (function () {
         this.routeParams = routeParams;
         this.mode = 'Observable';
         this.model = new service_provider_details_1.ServiceProviderDetails();
-        this.showDetails = false;
         this.submitted = false;
+        this.close = new core_1.EventEmitter();
+        this.navigated = false; // true if navigated here
     }
     ServiceProviderComponent.prototype.onSubmit = function () {
         this.submitted = true;
-        if (this.model !== null) {
-            this.saveServiceProviderDetails(this.model);
-        }
+        console.log(this.model);
+        this.saveServiceProviderDetails(this.model);
     };
     ServiceProviderComponent.prototype.saveServiceProviderDetails = function (serviceProviderDetails) {
         var _this = this;
         if (!serviceProviderDetails) {
             return;
         }
-        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+        //noinspection TypeScriptUnresolvedFunction
         this.serviceProviderCRUDService.save(serviceProviderDetails)
-            .subscribe(function (data) {
-            console.log(data);
-            _this.requests = data;
-            console.log(_this.requests);
-            if (_this.requests.length > 0) {
-                _this.showDetails = true;
-            }
-            else {
-                _this.showDetails = false;
-            }
-        }, function (error) { return _this.errorMessage = error; });
+            .subscribe(function (data) { return _this.message = JSON.stringify(data); }, function (error) { return _this.errorMessage = error; });
     };
     ServiceProviderComponent.prototype.loggedIn = function () {
         return angular2_jwt_1.tokenNotExpired();
     };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', service_provider_details_1.ServiceProviderDetails)
+    ], ServiceProviderComponent.prototype, "serviceProviderDetails", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], ServiceProviderComponent.prototype, "close", void 0);
     ServiceProviderComponent = __decorate([
         core_1.Component({
             selector: 'service-provider',

@@ -32,8 +32,7 @@ var AppComponent = (function () {
         var self = this;
         localStorage.removeItem('profile');
         localStorage.removeItem('id_token');
-        sessionStorage.clear();
-        window.location.reload();
+        this.router.navigate(['ServiceProvider']);
         self.loggedIn();
     };
     AppComponent.prototype.signin = function () {
@@ -46,7 +45,6 @@ var AppComponent = (function () {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
-            window.location.reload();
             self.loggedIn();
         });
     };

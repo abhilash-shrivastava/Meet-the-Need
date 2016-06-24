@@ -42,58 +42,31 @@ app.get('/', (req, res) => {
 
 app.use('/service-confirm', jwtCheck);
 app.post('/service-confirm', (req, res) => {
-  db.collection('serviceProvider').save(req.body, (err, result) => {
-    if (err) return console.log(err)
-    assignProvider(req.body, (responseToProvider) => {
-      console.log(responseToProvider);
-    res.send(JSON.stringify(responseToProvider));
-    });
-  })
+  res.connection.setTimeout(0);
+assignProvider(req.body, (responseToProvider) => {
+  console.log(responseToProvider);
+  res.send(JSON.stringify(responseToProvider));
+});
 });
 
 app.use('/order-confirm', jwtCheck);
 app.post('/order-confirm', (req, res) => {
-  db.collection('parcelSender').save(req.body, (err, result) => {
-  if (err) return console.log(err)
-    assignSender(req.body, (responseToSender) => {
-      console.log(responseToSender);
-      res.send(JSON.stringify(responseToSender));
-    });
-  })
+  res.connection.setTimeout(0);
+assignSender(req.body, (responseToSender) => {
+  console.log(responseToSender);
+  res.send(JSON.stringify(responseToSender));
+});
 });
 
 app.use('/save-user', jwtCheck);
 app.post('/save-user', (req, res) => {
 db.collection('user').save(req.body, (err, result) => {
-  if (err) return console.log(err)
+  res.connection.setTimeout(0);
+if (err) return console.log(err)
   console.log('saved to database');
 res.send(JSON.stringify(response));
 })
 });
-
-// var data = {
-//   "_id": {
-//     "$oid": "5765f26cbfc8e0bd94e0a5d0"
-//   },
-//   "name": "Abhilash Shrivastava",
-//   "phone": "2485679221",
-//   "currentAddreddaddressLine1": "50 Chumasero Drive",
-//   "currentCity": "San Francisco",
-//   "currentState": "CA",
-//   "currentZip": 94132,
-//   "email": "provider@provider.com",
-//   "destinationAddreddaddressLine1": "19th ",
-//   "destinationCity": "Hillsboro",
-//   "destinationState": "OR",
-//   "destinationZip": 12345,
-//   "journeyDate": "2016-06-24",
-//   "availabilityFrom": "20:00",
-//   "availabilityTo": "22:00",
-//   "maxParcelWeight": 50,
-//   "maxParcelHeight": 70,
-//   "maxParcelLength": 70,
-//   "maxParcelWidth": 70
-// };
 
 
 MongoClient.connect(LocalDbUrl, (err, database) => {
@@ -104,45 +77,86 @@ MongoClient.connect(LocalDbUrl, (err, database) => {
   })
 })
 
-app.use('/user-profile', jwtCheck);
+app.use('/assigned-service-request', jwtCheck);
 
-app.get('/user-profile', function (req, res) {
-  request(data, (requests) => {
-    console.log(requests);
+app.post('/assigned-service-request', function (req, res) {
+  res.connection.setTimeout(0);
+  assignedServiceRequest(req.body, (requests) => {
     res.send(JSON.stringify(requests));
+})
+});
+
+app.use('/unassigned-service-request', jwtCheck);
+
+app.post('/unassigned-service-request', function (req, res) {
+  res.connection.setTimeout(0);
+  unassignedServiceRequest(req.body, (requests) => {
+  res.send(JSON.stringify(requests));
+})
+});
+
+app.use('/assigned-sender-request', jwtCheck);
+
+app.post('/assigned-sender-request', function (req, res) {
+  res.connection.setTimeout(0);
+  assignedSenderRequest(req.body, (requests) => {
+  res.send(JSON.stringify(requests));
+})
+});
+
+app.use('/unassigned-sender-request', jwtCheck);
+
+app.post('/unassigned-sender-request', function (req, res) {
+  res.connection.setTimeout(0);
+  unassignedSenderRequest(req.body, (requests) => {
+  res.send(JSON.stringify(requests));
 })
 });
 
 var assignProvider =  function (data, callback) {
   var cursorone = db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
-  cursorone.each(function(err, sender){
-    if (sender != null){
-      if (!sender["providerEmail"]){
-        sender["providerEmail"] = data.email;
-        sender["status"] = "Assigned";
-      }
-      db.collection('providerAssigned').save(sender, (err, result) => {
+  cursorone.count(function (e, count) {
+
+    if (count == 0){
+      db.collection('serviceProvider').insertOne(data, (err, result) => {
         if (err) return console.log(err);
-        db.collection('parcelSender').deleteOne(
-        { "_id": sender._id },
-        function(err, results) {
-          data.maxParcelWeight -= sender.parcelWeight;
-          data.maxParcelHeight -= sender.parcelHeight;
-          data.maxParcelLength -= sender.parcelLength;
-          data.maxParcelWidth -= sender.parcelWidth;
-          responseToProvider.push(sender);
-          console.log('saved to database');
-          cursorone.close();
-          db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).count(function (e, count) {
-            if (count == 0){
-              callback(sender);
-            }else {
-              assignProvider(data, callback);
-            }
-          });
-        }
-      );
+      console.log("saved to serviceProvider");
+      return;
     })
+    }
+    else {
+      cursorone.each(function(err, sender){
+        if (sender !== null){
+          if (!sender["providerEmail"]){
+            sender["providerEmail"] = data.email;
+            sender["status"] = "Assigned";
+          }
+          db.collection('providerAssigned').insertOne(sender, (err, result) => {
+            if (err) return console.log(err);
+          db.collection('parcelSender').deleteOne(
+            { "_id": sender._id },
+            function(err, results) {
+              console.log('deleted from parcelSender');
+              data.maxParcelWeight -= sender.parcelWeight;
+              data.maxParcelHeight -= sender.parcelHeight;
+              data.maxParcelLength -= sender.parcelLength;
+              data.maxParcelWidth -= sender.parcelWidth;
+              responseToProvider.push(sender);
+              db.collection('serviceProvided').insertOne( data, function(err, results) {
+                console.log('saved to serviceProvided');
+                cursorone.close();
+                db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).count(function (e, count) {
+                  if (count == 0){
+                    callback(responseToProvider);
+                  }else {
+                    assignProvider(data, callback);
+                  }
+                });
+              });
+            });
+        })
+        }
+      });
     }
   })
 };
@@ -150,33 +164,57 @@ var assignProvider =  function (data, callback) {
 
 var assignSender =  function (data, callback) {
   var cursorone = db.collection('serviceProvider').find( { "destinationCity": data.deliveryCity, "maxParcelWeight": { $gte: (data.parcelWeight) }, "maxParcelHeight": { $gte: (data.parcelHeight)}, "maxParcelLength": { $gte: (data.parcelLength)}, "maxParcelWidth": { $gte: (data.parcelWidth)}, "journeyDate" : { $gt: new Date(new Date()).toISOString().split('T')[0] } } ).sort({maxParcelWeight: + 1}).limit(1);
-  cursorone.each(function(err, provider){
-    if (provider != null){
-      if (!data["providerEmail"]){
-        data["providerEmail"] = provider.email;
-        data["status"] = "Assigned";
-      }
-      db.collection('providerAssigned').save(data, (err, result) => {
+
+  cursorone.count(function (e, count) {
+
+    if (count == 0){
+      db.collection('parcelSender').insertOne(data, (err, result) => {
         if (err) return console.log(err);
-      responseToSender.push(provider);
-      callback(responseToSender);
-      cursorone.close();
-      provider.maxParcelWeight -= data.parcelWeight;
-      provider.maxParcelHeight -= data.parcelHeight;
-      provider.maxParcelLength -= data.parcelLength;
-      provider.maxParcelWidth -= data.parcelWidth;
-        if ((provider.maxParcelWeight < 1) || (provider.maxParcelHeight < 1) || (provider.maxParcelLength < 1) || (provider.maxParcelWidth < 1) ) {
-          db.collection('serviceProvided').save( provider, function(err, results) {
-            console.log('saved to database');
-          });
-        }else {
-          db.collection('serviceProvider').updateOne(
-            { "email" : provider.email },
-            {
-              $set: { "maxParcelWeight": provider.maxParcelWeight, "maxParcelHeight": provider.maxParcelHeight, "maxParcelLength": provider.maxParcelLength, "maxParcelWidth": provider.maxParcelWidth },
-            }, function(err, results) {
-              console.log('saved to database');
-            });
+      console.log("Saved in parcelSender");
+      return
+    })
+    }
+    else{
+      cursorone.each(function(err, provider){
+        if (provider !== null){
+          if (!data["providerEmail"]){
+            data["providerEmail"] = provider.email;
+            data["status"] = "Assigned";
+          }
+          db.collection('providerAssigned').insertOne(data, (err, result) => {
+            if (err) return console.log(err);
+          responseToSender.push(provider);
+          callback(responseToSender);
+          responseToSender = [];
+          cursorone.close();
+          provider.maxParcelWeight -= data.parcelWeight;
+          provider.maxParcelHeight -= data.parcelHeight;
+          provider.maxParcelLength -= data.parcelLength;
+          provider.maxParcelWidth -= data.parcelWidth;
+          if ((provider.maxParcelWeight < 1) || (provider.maxParcelHeight < 1) || (provider.maxParcelLength < 1) || (provider.maxParcelWidth < 1) ) {
+            db.collection('serviceProvider').deleteOne(
+              { "_id": provider._id },
+              function(err, results) {
+                console.log("Deleted from serviceProvider");
+                delete provider["_id"];
+                db.collection('serviceProvided').insertOne( provider, function(err, results) {
+                  console.log('saved to serviceProvided');
+                });
+              });
+          }else {
+            db.collection('serviceProvider').updateOne(
+              { "_id": provider._id },
+              {
+                $set: { "maxParcelWeight": provider.maxParcelWeight, "maxParcelHeight": provider.maxParcelHeight, "maxParcelLength": provider.maxParcelLength, "maxParcelWidth": provider.maxParcelWidth },
+              }, function(err, results) {
+                console.log('updated serviceProvider');
+                delete provider["_id"];
+                db.collection('serviceProvided').insertOne( provider, function(err, results) {
+                  console.log('saved to serviceProvided');
+                });
+              });
+          }
+        });
         }
       })
     }
@@ -186,15 +224,50 @@ var assignSender =  function (data, callback) {
 
 
 
-var request = function (data, callback) {
-  var requests = [];
-  var cursor = db.collection('providerAssigned').find( { "providerEmail": data.email} );
+var assignedServiceRequest = function (data, callback) {
+  var assignedServiceRequests = [];
+  var cursor = db.collection('serviceProvided').find( { "email": data.email} );
   cursor.each(function(err, request){
-    if (request != null) {
-      requests.push(request);
-      console.log(requests);
+    if (request !== null) {
+      assignedServiceRequests.push(request);
     }else {
-      callback(requests)
+      callback(assignedServiceRequests)
     }
   })
-}
+};
+
+var unassignedServiceRequest = function (data, callback) {
+  var unassignedServiceRequests = [];
+  var cursor = db.collection('serviceProvider').find( { "email": data.email} );
+  cursor.each(function(err, request){
+    if (request !== null) {
+      unassignedServiceRequests.push(request);
+    }else {
+      callback(unassignedServiceRequests)
+    }
+  })
+};
+
+var assignedSenderRequest = function (data, callback) {
+  var assignedServiceRequests = [];
+  var cursor = db.collection('providerAssigned').find( { "senderEmail": data.email} );
+  cursor.each(function(err, request){
+    if (request !== null) {
+      assignedServiceRequests.push(request);
+    }else {
+      callback(assignedServiceRequests)
+    }
+  })
+};
+
+var unassignedSenderRequest = function (data, callback) {
+  var unassignedServiceRequests = [];
+  var cursor = db.collection('parcelSender').find( { "senderEmail": data.email} );
+  cursor.each(function(err, request){
+    if (request !== null) {
+      unassignedServiceRequests.push(request);
+    }else {
+      callback(unassignedServiceRequests)
+    }
+  })
+};

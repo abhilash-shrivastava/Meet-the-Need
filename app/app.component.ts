@@ -71,7 +71,8 @@ export class AppComponent {
         var self = this;
         localStorage.removeItem('profile');
         localStorage.removeItem('id_token');
-        this.router.navigate(['ServiceProvider']);
+        sessionStorage.clear();
+        window.location.reload();
         self.loggedIn();
     }
 
@@ -85,6 +86,7 @@ export class AppComponent {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
+            window.location.reload();
             self.loggedIn();
         });
 

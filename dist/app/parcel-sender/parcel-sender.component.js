@@ -22,37 +22,35 @@ var ParcelSenderComponent = (function () {
         this.routeParams = routeParams;
         this.mode = 'Observable';
         this.model = new parcel_sender_details_1.ParcelSenderDetails();
-        this.showDetails = false;
         this.submitted = false;
+        this.close = new core_1.EventEmitter();
+        this.navigated = false; // true if navigated here
     }
     ParcelSenderComponent.prototype.onSubmit = function () {
         this.submitted = true;
-        if (this.model !== null) {
-            this.saveParcelSenderDetails(this.model);
-        }
+        console.log(this.model);
+        this.saveParcelSenderDetails(this.model);
     };
     ParcelSenderComponent.prototype.saveParcelSenderDetails = function (parcelSenderDetails) {
         var _this = this;
         if (!parcelSenderDetails) {
             return;
         }
-        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+        //noinspection TypeScriptUnresolvedFunction
         this.parcelSenderCRUDService.save(parcelSenderDetails)
-            .subscribe(function (data) {
-            console.log(data);
-            _this.requests = data;
-            console.log(_this.requests);
-            if (_this.requests.length > 0) {
-                _this.showDetails = true;
-            }
-            else {
-                _this.showDetails = false;
-            }
-        }, function (error) { return _this.errorMessage = error; });
+            .subscribe(function (data) { return _this.message = JSON.stringify(data); }, function (error) { return _this.errorMessage = error; });
     };
     ParcelSenderComponent.prototype.loggedIn = function () {
         return angular2_jwt_1.tokenNotExpired();
     };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', parcel_sender_details_1.ParcelSenderDetails)
+    ], ParcelSenderComponent.prototype, "parcelSenderDetails", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], ParcelSenderComponent.prototype, "close", void 0);
     ParcelSenderComponent = __decorate([
         core_1.Component({
             selector: 'parcel-sender',

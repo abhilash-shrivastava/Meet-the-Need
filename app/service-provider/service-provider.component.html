@@ -68,7 +68,28 @@
 </div>
 <div class="form-style-10" *ngIf="loggedIn()" [hidden]="!submitted">
     <h2>You submitted the service providing request successfully</h2>
-    <div>{{message}}</div>
+    <div *ngIf="requests" [hidden]="!showDetails">
+        <ul *ngFor="let request of requests ">
+            <h3>Request Details:</h3>
+            <li>Parcel Details : {{request.parcelDisclosure}}</li>
+            <h4>Sender Details</h4>
+            <li>Sender Name : {{request.senderName}}</li>
+            <li>Sender Email : {{request.senderEmail}}</li>
+            <li>Sender Contact Number :   {{request.senderPhone}}</li>
+            <li>Sender Address : <b>{{request.currentAddressLine1}}</b></li>
+            <li> <b>{{request.currentyAddressLine2}}</b></li>
+            <li>City : {{request.currentCity}}</li>
+            <h4>Receiver Details</h4>
+            <li>Receiver Name : {{request.receiverName}}</li>
+            <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
+            <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
+            <li>Receiver Address : <b>{{request.deliveryAddressLine1}}</b></li>
+            <li> <b>{{request.deliveryAddressLine2}}</b></li>
+            <li>City : {{request.deliveryCity}}</li>
+            -----------------------------------**********--------------------------------------------
+        </ul>
+    </div>
+    <div *ngIf="requests" [hidden]="showDetails"><h3>No Suitable Parcel Requests Found</h3></div>
     <button class="btn btn-default" (click)="submitted=false">Submit Another Request</button>
 </div>
 </body>

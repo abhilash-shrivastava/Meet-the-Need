@@ -24,21 +24,19 @@ import {tokenNotExpired} from 'angular2-jwt';
 
 export class ServiceProviderComponent {
     errorMessage: string;
-    message: any;
+    requests: any;
     mode = 'Observable';
     model = new ServiceProviderDetails();
-    
+    showDetails = false;
+
+
     submitted = false;
     onSubmit() { this.submitted = true;
-        console.log(this.model);
-        this.saveServiceProviderDetails(this.model);
+        if (this.model !== null){
+            this.saveServiceProviderDetails(this.model);
+        }
     }
-    // TODO: Remove this when we're done
-    @Input() serviceProviderDetails: ServiceProviderDetails;
-    @Output() close = new EventEmitter();
     error: any;
-    navigated = false; // true if navigated here
-
     status: string;
     constructor(
         private serviceProviderCRUDService: ServiceProviderCRUDService,
@@ -47,10 +45,19 @@ export class ServiceProviderComponent {
 
     saveServiceProviderDetails(serviceProviderDetails: ServiceProviderDetails){
         if (!serviceProviderDetails) { return; }
-        //noinspection TypeScriptUnresolvedFunction
+        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(
-                data  => this.message = JSON.stringify(data),
+                data  => {
+                    console.log(data);
+                    this.requests = data;
+                    console.log(this.requests);
+                    if(this.requests.length > 0){
+                        this.showDetails = true;
+                    }else{
+                        this.showDetails = false;
+                    }
+                },
                 error =>  this.errorMessage = <any>error
             );
 
