@@ -22,6 +22,8 @@ var RequestsService = (function () {
         this.getUnassignedServiceRequestsUrl = 'http://localhost:9000/unassigned-service-request';
         this.getAssignedSenderRequestsUrl = 'http://localhost:9000/assigned-sender-request';
         this.getUnassignedSenderRequestsUrl = 'http://localhost:9000/unassigned-sender-request';
+        this.getParcelReceivingRequestsUrl = 'http://localhost:9000/parcel-receiving-request';
+        this.setParcelStatusUrl = 'http://localhost:9000/change-status';
     }
     RequestsService.prototype.getAssignedServiceRequests = function (data) {
         //console.log(serviceProviderDetails);
@@ -60,6 +62,26 @@ var RequestsService = (function () {
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.getUnassignedSenderRequestsUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    RequestsService.prototype.getParcelReceivingRequests = function (data) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(data);
+        console.log(body);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.getParcelReceivingRequestsUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    RequestsService.prototype.setParcelStatus = function (data) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(data);
+        console.log(body);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.setParcelStatusUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };

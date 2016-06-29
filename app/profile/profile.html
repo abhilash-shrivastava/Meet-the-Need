@@ -12,6 +12,7 @@
         <button class="btn btn-default" (click)="onUnassignedServiceClick()">Unassigned Service request</button>
         <button class="btn btn-default" (click)="onAssignedSenderClick()">Assigned Parcel request</button>
         <button class="btn btn-default" (click)="onUnassignedSenderClick()">Unassigned Parcel request</button>
+        <button class="btn btn-default" (click)="onReceivingRequestStatusClick()">Receiving Parcel Request</button>
     </div>
 <div>
     <div *ngIf="unassignedServiceRequests" [hidden]="!showDetails">
@@ -26,7 +27,7 @@
             -----------------------------------**********--------------------------------------------
         </ul>
     </div>
-    <div *ngIf="unassignedServiceRequests" [hidden]="showDetails"><h3>No Service Requests</h3></div>
+    <div *ngIf="unassignedServiceRequests" [hidden]="showDetails"><h3>No Unassigned Service Requests</h3></div>
 
     <div *ngIf="assignedServiceRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of assignedServiceRequests ">
@@ -51,10 +52,13 @@
             <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
             <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
             <li>City : <b>{{request.deliveryCity}}</b></li>
+            <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
+            <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="btn btn-default" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
+            <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="btn btn-default" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered</button>
             -----------------------------------**********--------------------------------------------
         </ul>
     </div>
-    <div *ngIf="assignedServiceRequests" [hidden]="showDetails"><h3>No Service Requests</h3></div>
+    <div *ngIf="assignedServiceRequests" [hidden]="showDetails"><h3>No Assigned Service Requests</h3></div>
 
     <div *ngIf="parcelRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of parcelRequests ">
@@ -62,16 +66,50 @@
             <li>Receiver Name : <b>{{request.receiverName}}</b></li>
             <li>Parcel Details : <b>{{request.parcelDisclosure}}</b></li>
             <li>Delivery City : <b>{{request.deliveryCity}}</b></li>
-            <li>Service Provider Email:   <b>{{request.serviceProvider.email}}</b></li>
+            <li *ngIf = "request.status">Service Provider Email:   <b>{{request.serviceProvider.email}}</b></li>
             <h4>Parcel Details:</h4>
+            <li>Parcel Id : <b>{{request._id}}</b></li>
             <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> ounce</li>
             <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
             <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
             <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
-             -----------------------------------**********--------------------------------------------
+            <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
+            <button *ngIf = "request.status" [hidden] = "request.status !== 'Assigned To Service Provider'" class="btn btn-default" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
+            -----------------------------------**********--------------------------------------------
         </ul>
     </div>
     <div *ngIf="parcelRequests" [hidden]="showDetails"><h3>No Parcel Requests</h3></div>
+
+    <div *ngIf="parcelReceivingRequests" [hidden]="!showDetails">
+        <ul *ngFor="let request of parcelReceivingRequests ">
+            <h3>Request Details:</h3>
+            <h4>Parcel Details:</h4>
+            <li>Parcel Description : <b>{{request.parcelDisclosure}}</b></li>
+            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> ounce</li>
+            <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
+            <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
+            <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
+            <li>Parcel Status :  <b>{{request.status}}</b></li>
+            <h4>Sender Details</h4>
+            <li>Sender Name : <b>{{request.senderName}}</b></li>
+            <li>Sender Email : <b>{{request.senderEmail}}</b></li>
+            <li>Sender Contact Number :   <b>{{request.senderPhone}}</b></li>
+            <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
+            <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li>City : <b>{{request.currentCity}}</b></li>
+            <h4>Service Provider Details</h4>
+            <li>Receiver Name : <b>{{request.serviceProvider.name}}</b></li>
+            <li>Receiver Email : <b>{{request.serviceProvider.email}}</b></li>
+            <li>Receiver Contact Number :  <b>{{request.serviceProvider.phone}}</b></li>
+            <li>Receiver Address : <b>{{request.serviceProvider.destinationAddreddaddressLine1}}</b></li>
+            <li> <b>{{request.destinationAddreddaddressLine2}}</b></li>
+            <li>City : <b>{{request.serviceProvider.destinationCity}}</b></li>
+            <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
+            <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Delivered To Receiver'" class="btn btn-default" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Received</button>
+            -----------------------------------**********--------------------------------------------
+        </ul>
+    </div>
+    <div *ngIf="parcelReceivingRequests" [hidden]="showDetails"><h3>No Parcel Receiving Requests</h3></div>
 </div>
 </div>
 <!--<ul>-->

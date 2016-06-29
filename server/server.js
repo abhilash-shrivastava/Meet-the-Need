@@ -115,6 +115,25 @@ app.post('/unassigned-sender-request', function (req, res) {
 })
 });
 
+
+app.use('/parcel-receiving-request', jwtCheck);
+
+app.post('/parcel-receiving-request', function (req, res) {
+  res.connection.setTimeout(0);
+  parcelReceivingRequest(req.body, (requests) => {
+    res.send(JSON.stringify(requests));
+})
+});
+
+app.use('/change-status', jwtCheck);
+
+app.post('/change-status', function (req, res) {
+  res.connection.setTimeout(0);
+  parcelStatusChange(req.body, (requests) => {
+    res.send(JSON.stringify(requests));
+})
+});
+
 var assignProvider =  function (data, callback) {
   var cursorone = db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
   cursorone.count(function (e, count) {
@@ -182,7 +201,7 @@ var assignSender =  function (data, callback) {
         if (provider !== null){
           if (!data["serviceProvider"]){
             data["serviceProvider"] = provider;
-            data["status"] = "Assigned";
+            data["status"] = "Assigned To Service Provider";
           }
           db.collection('providerAssigned').insertOne(data, (err, result) => {
             if (err) return console.log(err);
@@ -271,4 +290,47 @@ var unassignedSenderRequest = function (data, callback) {
       callback(unassignedServiceRequests)
     }
   })
+};
+
+
+var parcelReceivingRequest = function (data, callback) {
+  var parcelReceivingRequests = [];
+  var cursor = db.collection('providerAssigned').find( { "receiverEmail": data.email} );
+  cursor.each(function(err, request){
+    if (request !== null) {
+      parcelReceivingRequests.push(request);
+    }else {
+      callback(parcelReceivingRequests)
+    }
+  })
+};
+
+var parcelStatusChange = function (data, callback) {
+  var cursor = db.collection('providerAssigned').find( { "_id": ObjectId(data.parcelId)} );
+  cursor.each(function(err, parcel){
+    if (parcel !== null) {
+      if (parcel.senderEmail === data.email){
+        role = "Sender";
+        status = "Parcel Given To Service Provider"
+      }else if (parcel.serviceProvider.email === data.email){
+        role = "Provider";
+        if (parcel.status === "Parcel Given To Service Provider"){
+          status = "Parcel Collected From Sender"
+        }else if (parcel.status === "Parcel Collected From Sender"){
+          status = "Parcel Delivered To Receiver"
+        }
+      }else if (parcel.receiverEmail === data.email){
+        role = "Receiver";
+        status = "Parcel Received From Service Provider"
+      }
+      db.collection('providerAssigned').updateOne(
+        { "_id": ObjectId(data.parcelId)},
+        {
+          $set: { "status": status },
+        }, function(err, results) {
+          console.log('status updated');
+          callback({role: role, status: status});
+        });
+    }
+  });
 };

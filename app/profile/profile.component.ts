@@ -19,8 +19,13 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
 
     profile: any;
     unassignedServiceRequests: any;
-    assignedServiceRequests:any
+    assignedServiceRequests:any;
+    parcelReceivingRequests:any;
     parcelRequests: any;
+    parcelGiven = false;
+    parcelCollected = false;
+    parcelDelivered = false;
+    parcelReceived = false;
     errorMessage: string;
     public arrayOfKeys;
     showDetails = false;
@@ -46,6 +51,16 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.getUnassignedSenderRequests(this.profile);
     }
 
+    onReceivingRequestStatusClick(){
+        console.log(this.profile);
+        this.getParcelReceivingRequests(this.profile);
+    }
+
+    onStatusChangeClick(parcelId){
+        console.log(parcelId);
+        
+        this.changeParcelStatus({email: this.profile.email, parcelId: parcelId}, this.getAssignedSenderRequests(this.profile));
+    }
     constructor(    private requestsService: RequestsService,
                     public authHttp: AuthHttp) {
     }
@@ -87,11 +102,14 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                     if(this.assignedServiceRequests.length > 0){
                         delete this.parcelRequests;
                         delete this.unassignedServiceRequests;
+                        delete this.parcelReceivingRequests;
+
                         this.showDetails = true;
                         this.requestType = true;
                     }else{
                         delete this.parcelRequests;
                         delete this.unassignedServiceRequests;
+                        delete this.parcelReceivingRequests;
                         this.showDetails = false;
                         this.requestType = true;
                     }
@@ -113,11 +131,13 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                     if(this.unassignedServiceRequests.length > 0){
                         delete this.parcelRequests;
                         delete this.assignedServiceRequests;
+                        delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = true;
                     }else{
                         delete this.parcelRequests;
                         delete this.assignedServiceRequests;
+                        delete this.parcelReceivingRequests;
                         this.showDetails = false;
                         this.requestType = true;
                     }
@@ -138,12 +158,13 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                     if(this.parcelRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
-
+                        delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
+                        delete this.parcelReceivingRequests;
                         this.showDetails = false;
                         this.requestType = false;
                     }
@@ -164,11 +185,13 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                     if(this.parcelRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
+                        delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
+                        delete this.parcelReceivingRequests;
                         this.showDetails = false;
                         this.requestType = false;
                     }
@@ -178,6 +201,60 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
 
     }
 
+
+    getParcelReceivingRequests(data){
+        if (!this.profile.email) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.getParcelReceivingRequests(data)
+            .subscribe(
+                data  => {
+                    this.parcelReceivingRequests = data;
+                    console.log(this.parcelRequests);
+                    if(this.parcelReceivingRequests.length > 0){
+                        delete this.unassignedServiceRequests;
+                        delete this.assignedServiceRequests;
+                        delete this.parcelRequests;
+                        this.showDetails = true;
+                    }else{
+                        delete this.unassignedServiceRequests;
+                        delete this.assignedServiceRequests;
+                        delete this.parcelRequests;
+                        this.showDetails = false;
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );
+
+    }
+    res: any;
+    changeParcelStatus(data, callback){
+        if (!data.email || !data.parcelId) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.setParcelStatus(data)
+            .subscribe(
+                data  => {
+                    this.res = data;
+                    //noinspection TypeScriptUnresolvedVariable
+                    console.log(this.res.status);
+                    console.log(this.res.role);
+                    //noinspection TypeScriptUnresolvedVariable
+                    if(this.res.role === "Sender"){
+                        console.log("in sender");
+                        this.getAssignedSenderRequests(this.profile);
+                    }else { //noinspection TypeScriptUnresolvedVariable
+                        if (this.res.role === "Provider"){
+                            console.log("in provider");
+                            this.getAssignedServiceRequests(this.profile);
+                        }else { //noinspection TypeScriptUnresolvedVariable
+                            if (this.res.role === "Receiver"){
+                                this.getParcelReceivingRequests(this.profile);
+                            }
+                        }
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );
+    }
 
     loggedIn() {
         return tokenNotExpired();

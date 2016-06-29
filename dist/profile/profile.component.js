@@ -19,6 +19,10 @@ var ProfileComponent = (function () {
     function ProfileComponent(requestsService, authHttp) {
         this.requestsService = requestsService;
         this.authHttp = authHttp;
+        this.parcelGiven = false;
+        this.parcelCollected = false;
+        this.parcelDelivered = false;
+        this.parcelReceived = false;
         this.showDetails = false;
         this.requestType = false;
     }
@@ -37,6 +41,14 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.onUnassignedSenderClick = function () {
         console.log(this.profile);
         this.getUnassignedSenderRequests(this.profile);
+    };
+    ProfileComponent.prototype.onReceivingRequestStatusClick = function () {
+        console.log(this.profile);
+        this.getParcelReceivingRequests(this.profile);
+    };
+    ProfileComponent.prototype.onStatusChangeClick = function (parcelId) {
+        console.log(parcelId);
+        this.changeParcelStatus({ email: this.profile.email, parcelId: parcelId }, this.getAssignedSenderRequests(this.profile));
     };
     ProfileComponent.prototype.ngOnInit = function () {
         console.log('ngOnInit() called');
@@ -73,12 +85,14 @@ var ProfileComponent = (function () {
             if (_this.assignedServiceRequests.length > 0) {
                 delete _this.parcelRequests;
                 delete _this.unassignedServiceRequests;
+                delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
             }
             else {
                 delete _this.parcelRequests;
                 delete _this.unassignedServiceRequests;
+                delete _this.parcelReceivingRequests;
                 _this.showDetails = false;
                 _this.requestType = true;
             }
@@ -98,12 +112,14 @@ var ProfileComponent = (function () {
             if (_this.unassignedServiceRequests.length > 0) {
                 delete _this.parcelRequests;
                 delete _this.assignedServiceRequests;
+                delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
             }
             else {
                 delete _this.parcelRequests;
                 delete _this.assignedServiceRequests;
+                delete _this.parcelReceivingRequests;
                 _this.showDetails = false;
                 _this.requestType = true;
             }
@@ -122,12 +138,14 @@ var ProfileComponent = (function () {
             if (_this.parcelRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
+                delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = false;
             }
             else {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
+                delete _this.parcelReceivingRequests;
                 _this.showDetails = false;
                 _this.requestType = false;
             }
@@ -146,14 +164,70 @@ var ProfileComponent = (function () {
             if (_this.parcelRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
+                delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = false;
             }
             else {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
+                delete _this.parcelReceivingRequests;
                 _this.showDetails = false;
                 _this.requestType = false;
+            }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ProfileComponent.prototype.getParcelReceivingRequests = function (data) {
+        var _this = this;
+        if (!this.profile.email) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.getParcelReceivingRequests(data)
+            .subscribe(function (data) {
+            _this.parcelReceivingRequests = data;
+            console.log(_this.parcelRequests);
+            if (_this.parcelReceivingRequests.length > 0) {
+                delete _this.unassignedServiceRequests;
+                delete _this.assignedServiceRequests;
+                delete _this.parcelRequests;
+                _this.showDetails = true;
+            }
+            else {
+                delete _this.unassignedServiceRequests;
+                delete _this.assignedServiceRequests;
+                delete _this.parcelRequests;
+                _this.showDetails = false;
+            }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ProfileComponent.prototype.changeParcelStatus = function (data, callback) {
+        var _this = this;
+        if (!data.email || !data.parcelId) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.setParcelStatus(data)
+            .subscribe(function (data) {
+            _this.res = data;
+            //noinspection TypeScriptUnresolvedVariable
+            console.log(_this.res.status);
+            console.log(_this.res.role);
+            //noinspection TypeScriptUnresolvedVariable
+            if (_this.res.role === "Sender") {
+                console.log("in sender");
+                _this.getAssignedSenderRequests(_this.profile);
+            }
+            else {
+                if (_this.res.role === "Provider") {
+                    console.log("in provider");
+                    _this.getAssignedServiceRequests(_this.profile);
+                }
+                else {
+                    if (_this.res.role === "Receiver") {
+                        _this.getParcelReceivingRequests(_this.profile);
+                    }
+                }
             }
         }, function (error) { return _this.errorMessage = error; });
     };
