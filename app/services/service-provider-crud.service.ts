@@ -23,6 +23,19 @@ export class ServiceProviderCRUDService{
             .map(res => res.json())
             .catch(this.handleError);
     }
+
+    private getServiceProviderDetailsUrl = 'http://localhost:9000/service-details';
+    getServiceProviderDetails (data): Observable<string> {
+        //console.log(serviceProviderDetails);
+        let body = JSON.stringify(data);
+        console.log(body);
+        let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.getServiceProviderDetailsUrl, body, options)
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
     
     private handleError (error: any) {
         // In a real world app, we might use a remote logging infrastructure

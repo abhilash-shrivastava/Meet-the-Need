@@ -23,10 +23,12 @@ import {tokenNotExpired} from 'angular2-jwt';
 })
 
 export class ServiceProviderComponent {
+    profile: any;
     errorMessage: string;
     requests: any;
     mode = 'Observable';
     model = new ServiceProviderDetails();
+    data: any
     showDetails = false;
 
 
@@ -43,6 +45,11 @@ export class ServiceProviderComponent {
         private routeParams: RouteParams) {
     }
 
+    ngOnInit(): void {
+        this.profile = JSON.parse(localStorage.getItem('profile'));
+        this.getServiceProviderDetails(this.profile);
+    }
+
     saveServiceProviderDetails(serviceProviderDetails: ServiceProviderDetails){
         if (!serviceProviderDetails) { return; }
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
@@ -57,6 +64,20 @@ export class ServiceProviderComponent {
                     }else{
                         this.showDetails = false;
                     }
+                },
+                error =>  this.errorMessage = <any>error
+            );
+
+    }
+
+    getServiceProviderDetails(data){
+        if (!this.profile.email) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.serviceProviderCRUDService.getServiceProviderDetails(data)
+            .subscribe(
+                data  => {
+                    this.data = data;
+                    console.log(this.model);
                 },
                 error =>  this.errorMessage = <any>error
             );

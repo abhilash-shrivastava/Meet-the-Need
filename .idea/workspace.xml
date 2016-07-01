@@ -2,14 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bf27a07d-67b9-42e0-9353-0fde10b3d64b" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/profile/profile.component.ts" afterPath="$PROJECT_DIR$/app/profile/profile.component.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/profile/profile.html" afterPath="$PROJECT_DIR$/app/profile/profile.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/services/request.service.ts" afterPath="$PROJECT_DIR$/app/services/request.service.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/profile/profile.component.js" afterPath="$PROJECT_DIR$/dist/profile/profile.component.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/profile/profile.component.js.map" afterPath="$PROJECT_DIR$/dist/profile/profile.component.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/services/request.service.js" afterPath="$PROJECT_DIR$/dist/services/request.service.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/services/request.service.js.map" afterPath="$PROJECT_DIR$/dist/services/request.service.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/service-provider/service-provider.component.ts" afterPath="$PROJECT_DIR$/app/service-provider/service-provider.component.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/services/service-provider-crud.service.ts" afterPath="$PROJECT_DIR$/app/services/service-provider-crud.service.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/service-provider/service-provider.component.js" afterPath="$PROJECT_DIR$/dist/service-provider/service-provider.component.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/service-provider/service-provider.component.js.map" afterPath="$PROJECT_DIR$/dist/service-provider/service-provider.component.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/services/service-provider-crud.service.js" afterPath="$PROJECT_DIR$/dist/services/service-provider-crud.service.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/services/service-provider-crud.service.js.map" afterPath="$PROJECT_DIR$/dist/services/service-provider-crud.service.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/package.json" afterPath="$PROJECT_DIR$/server/package.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server.js" afterPath="$PROJECT_DIR$/server/server.js" />
     </list>
     <ignored path="meet-the-need.iws" />
@@ -31,26 +32,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="parcel-sender.component.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1185">
-              <caret line="79" column="55" selection-start-line="79" selection-start-column="55" selection-end-line="79" selection-end-column="55" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="service-provider.component.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/service-provider/service-provider.component.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1785">
-              <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="parcel-sender.component.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.ts">
           <provider selected="true" editor-type-id="text-editor">
@@ -66,9 +47,31 @@
       <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="318" column="68" selection-start-line="318" selection-start-column="68" selection-end-line="318" selection-end-column="68" />
+            <state relative-caret-position="298">
+              <caret line="446" column="84" selection-start-line="446" selection-start-column="84" selection-end-line="446" selection-end-column="84" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.component.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/app.component.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="25" column="56" selection-start-line="25" selection-start-column="39" selection-end-line="25" selection-end-column="56" />
+              <folding>
+                <marker date="1466724133000" expanded="true" signature="778:1370" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,8 +79,8 @@
       <file leaf-file-name="profile.component.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/profile/profile.component.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="238" column="47" selection-start-line="238" selection-start-column="47" selection-end-line="238" selection-end-column="47" />
+            <state relative-caret-position="255">
+              <caret line="19" column="10" selection-start-line="19" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
               <folding>
                 <element signature="e#39#123#0" expanded="true" />
               </folding>
@@ -88,8 +91,8 @@
       <file leaf-file-name="request.service.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/services/request.service.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
-              <caret line="85" column="38" selection-start-line="85" selection-start-column="38" selection-end-line="85" selection-end-column="38" />
+            <state relative-caret-position="459">
+              <caret line="93" column="5" selection-start-line="82" selection-start-column="4" selection-end-line="93" selection-end-column="5" />
               <folding>
                 <element signature="e#39#85#0" expanded="true" />
               </folding>
@@ -100,7 +103,7 @@
       <file leaf-file-name="profile.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/profile/profile.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
+            <state relative-caret-position="1125">
               <caret line="107" column="207" selection-start-line="107" selection-start-column="207" selection-end-line="107" selection-end-column="207" />
               <folding />
             </state>
@@ -120,11 +123,21 @@
       <file leaf-file-name="service-provider.component.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/service-provider/service-provider.component.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="29" column="10" selection-start-line="29" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+            <state relative-caret-position="690">
+              <caret line="74" column="46" selection-start-line="74" selection-start-column="46" selection-end-line="74" selection-end-column="46" />
               <folding>
                 <element signature="e#40#84#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="service-provider-crud.service.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/services/service-provider-crud.service.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="27" column="29" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="29" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -183,11 +196,8 @@
         <option value="$PROJECT_DIR$/app/profile/profile.css" />
         <option value="$PROJECT_DIR$/server/match-sender.js" />
         <option value="$PROJECT_DIR$/server/db-connection.js" />
-        <option value="internal/process/next_tick.js" />
-        <option value="$PROJECT_DIR$/app/services/service-provider-crud.service.ts" />
         <option value="$PROJECT_DIR$/app/services/service-request.service.ts" />
         <option value="$PROJECT_DIR$/app/app.component.ts" />
-        <option value="$PROJECT_DIR$/app/service-provider/service-provider.component.ts" />
         <option value="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.ts" />
         <option value="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.html" />
         <option value="$PROJECT_DIR$/app/service-provider/service-provider.component.html" />
@@ -195,6 +205,9 @@
         <option value="$PROJECT_DIR$/app/services/request.service.ts" />
         <option value="$PROJECT_DIR$/app/profile/profile.component.ts" />
         <option value="$PROJECT_DIR$/app/profile/profile.html" />
+        <option value="$PROJECT_DIR$/app/services/service-provider-crud.service.ts" />
+        <option value="$PROJECT_DIR$/app/service-provider/service-provider.component.ts" />
+        <option value="internal/process/next_tick.js" />
         <option value="$PROJECT_DIR$/server/server.js" />
       </list>
     </option>
@@ -482,12 +495,12 @@
       <workItem from="1466362730784" duration="27451000" />
       <workItem from="1466664693963" duration="58241000" />
       <workItem from="1466799508278" duration="4552000" />
-      <workItem from="1467105952726" duration="20127000" />
+      <workItem from="1467105952726" duration="42350000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="214961000" />
+    <option name="totallyTimeSpent" value="237184000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -495,13 +508,13 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24312897" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34134614" sideWeight="0.5024665" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932693" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932693" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34134614" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34134614" sideWeight="0.49753347" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28365386" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28365386" sideWeight="0.49753347" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -542,12 +555,103 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="211" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>70</line>
+          <properties />
+          <option name="timeStamp" value="222" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>188</line>
+          <properties />
+          <option name="timeStamp" value="224" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>189</line>
+          <properties />
+          <option name="timeStamp" value="225" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>190</line>
+          <properties />
+          <option name="timeStamp" value="226" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>212</line>
+          <properties />
+          <option name="timeStamp" value="227" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>213</line>
+          <properties />
+          <option name="timeStamp" value="228" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>229</line>
+          <properties />
+          <option name="timeStamp" value="229" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>230</line>
+          <properties />
+          <option name="timeStamp" value="230" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>231</line>
+          <properties />
+          <option name="timeStamp" value="231" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>273</line>
+          <properties />
+          <option name="timeStamp" value="232" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>283</line>
+          <properties />
+          <option name="timeStamp" value="233" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>296</line>
+          <properties />
+          <option name="timeStamp" value="234" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>309</line>
+          <properties />
+          <option name="timeStamp" value="235" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>325</line>
+          <properties />
+          <option name="timeStamp" value="236" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>341</line>
+          <properties />
+          <option name="timeStamp" value="237" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="245" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/services/in-memory-data.service.ts" />
     <entry file="file://$PROJECT_DIR$/app/services/service-provider-details.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -750,13 +854,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/services/service-provider-crud.service.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="27" column="51" selection-start-line="27" selection-start-column="51" selection-end-line="27" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/services/parcel-sender-details.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -768,26 +865,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="491">
           <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/app.component.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="88" column="37" selection-start-line="88" selection-start-column="37" selection-end-line="88" selection-end-column="37" />
-          <folding>
-            <marker date="1466724133000" expanded="true" signature="778:1370" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/service-provider/service-provider.component.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="29" column="10" selection-start-line="29" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding>
-            <element signature="e#40#84#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -815,16 +892,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/services/request.service.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="85" column="38" selection-start-line="85" selection-start-column="38" selection-end-line="85" selection-end-column="38" />
-          <folding>
-            <element signature="e#39#85#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -835,28 +902,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/profile/profile.component.ts">
+    <entry file="file://$PROJECT_DIR$/app/app.component.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="238" column="47" selection-start-line="238" selection-start-column="47" selection-end-line="238" selection-end-column="47" />
+        <state relative-caret-position="225">
+          <caret line="25" column="56" selection-start-line="25" selection-start-column="39" selection-end-line="25" selection-end-column="56" />
           <folding>
-            <element signature="e#39#123#0" expanded="true" />
+            <marker date="1466724133000" expanded="true" signature="778:1370" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/profile/profile.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
+        <state relative-caret-position="1125">
           <caret line="107" column="207" selection-start-line="107" selection-start-column="207" selection-end-line="107" selection-end-column="207" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/services/request.service.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="93" column="5" selection-start-line="82" selection-start-column="4" selection-end-line="93" selection-end-column="5" />
+          <folding>
+            <element signature="e#39#85#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/profile/profile.component.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="19" column="10" selection-start-line="19" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding>
+            <element signature="e#39#123#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/services/service-provider-crud.service.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="27" column="29" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/service-provider/service-provider.component.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="74" column="46" selection-start-line="74" selection-start-column="46" selection-end-line="74" selection-end-column="46" />
+          <folding>
+            <element signature="e#40#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="318" column="68" selection-start-line="318" selection-start-column="68" selection-end-line="318" selection-end-column="68" />
+        <state relative-caret-position="298">
+          <caret line="446" column="84" selection-start-line="446" selection-start-column="84" selection-end-line="446" selection-end-column="84" />
           <folding />
         </state>
       </provider>

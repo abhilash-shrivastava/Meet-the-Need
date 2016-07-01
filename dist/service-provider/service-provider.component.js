@@ -33,6 +33,10 @@ var ServiceProviderComponent = (function () {
             this.saveServiceProviderDetails(this.model);
         }
     };
+    ServiceProviderComponent.prototype.ngOnInit = function () {
+        this.profile = JSON.parse(localStorage.getItem('profile'));
+        this.getServiceProviderDetails(this.profile);
+    };
     ServiceProviderComponent.prototype.saveServiceProviderDetails = function (serviceProviderDetails) {
         var _this = this;
         if (!serviceProviderDetails) {
@@ -50,6 +54,18 @@ var ServiceProviderComponent = (function () {
             else {
                 _this.showDetails = false;
             }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ServiceProviderComponent.prototype.getServiceProviderDetails = function (data) {
+        var _this = this;
+        if (!this.profile.email) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction
+        this.serviceProviderCRUDService.getServiceProviderDetails(data)
+            .subscribe(function (data) {
+            _this.data = data;
+            console.log(_this.model);
         }, function (error) { return _this.errorMessage = error; });
     };
     ServiceProviderComponent.prototype.loggedIn = function () {

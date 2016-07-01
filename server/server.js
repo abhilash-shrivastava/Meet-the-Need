@@ -15,6 +15,9 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var DBurl = 'mongodb://abhilash.shrivastava:ab#ILASH0@ds019471.mlab.com:19471/meet-the-need-db';
 var LocalDbUrl = 'mongodb://localhost:27017/test';
+var helper = require('sendgrid').mail;
+var sg = require('sendgrid').SendGrid(process.env.SENDGRID_API_KEY);
+
 var jwtCheck = jwt({
   secret: new Buffer(auth0Settings.secret, 'base64'),
   audience: auth0Settings.audience
@@ -61,9 +64,11 @@ res.send(JSON.stringify(responseToSender));
 
 app.use('/save-user', jwtCheck);
 app.post('/save-user', (req, res) => {
+  console.log(req.body);
   db.collection('user').save(req.body, (err, result) => {
   res.connection.setTimeout(0);
-if (err) return console.log(err)
+if (err) return console.log(err);
+sendEmail(req.body.email,"User Account created as " + req.body.nickname, "You have successfully logged in with Meet-the-Need App")
 console.log('saved to database');
 res.send(JSON.stringify(response));
 })
@@ -134,13 +139,23 @@ app.post('/change-status', function (req, res) {
 })
 });
 
+app.use('/service-details', jwtCheck);
+
+app.post('/service-details', function (req, res) {
+  res.connection.setTimeout(0);
+  getServiceProviderDetails(req.body, (requests) => {
+    res.send(JSON.stringify(requests));
+})
+});
+
 var assignProvider =  function (data, callback) {
-  var cursorone = db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
+  var cursorone = db.collection('parcelSender').find( { "currentCity": data.currentCity, "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
   cursorone.count(function (e, count) {
 
     if (count == 0){
       db.collection('serviceProvider').insertOne(data, (err, result) => {
         if (err) return console.log(err);
+      sendRaisedEmailToProvider(data);
       console.log("saved to serviceProvider");
       return;
     })
@@ -150,7 +165,7 @@ var assignProvider =  function (data, callback) {
         if (sender !== null){
           if (!sender["serviceProvider"]){
             sender["serviceProvider"] = data;
-            sender["status"] = "Assigned";
+            sender["status"] = "Assigned To Service Provider";
           }
           db.collection('providerAssigned').insertOne(sender, (err, result) => {
             if (err) return console.log(err);
@@ -167,10 +182,13 @@ var assignProvider =  function (data, callback) {
               db.collection('serviceProvided').insertOne( data, function(err, results) {
                 console.log('saved to serviceProvided');
                 cursorone.close();
-                db.collection('parcelSender').find( { "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).count(function (e, count) {
+                db.collection('parcelSender').find( { "currentCity": data.currentCity, "deliveryCity": data.destinationCity, "parcelWeight": { $lt: (data.maxParcelWeight +1) }, "parcelHeight": { $lt: (data.maxParcelHeight + 1)}, "parcelLength": { $lt: (data.maxParcelLength + 1)}, "parcelWidth": { $lt: (data.maxParcelWidth + 1)}} ).count(function (e, count) {
                   if (count == 0){
                     callback(responseToProvider);
                   }else {
+                    sendAssignedEmailToProvider(sender, data);
+                    sendAssignedEmailToSender (sender, data);
+                    sendAssignedEmailToReceiver(sender, data);
                     assignProvider(data, callback);
                   }
                 });
@@ -185,13 +203,15 @@ var assignProvider =  function (data, callback) {
 
 
 var assignSender =  function (data, callback) {
-  var cursorone = db.collection('serviceProvider').find( { "destinationCity": data.deliveryCity, "maxParcelWeight": { $gte: (data.parcelWeight) }, "maxParcelHeight": { $gte: (data.parcelHeight)}, "maxParcelLength": { $gte: (data.parcelLength)}, "maxParcelWidth": { $gte: (data.parcelWidth)}, "journeyDate" : { $gt: new Date(new Date()).toISOString().split('T')[0] } } ).sort({maxParcelWeight: + 1}).limit(1);
+  var cursorone = db.collection('serviceProvider').find( { "currentCity": data.currentCity, "destinationCity": data.deliveryCity, "maxParcelWeight": { $gte: (data.parcelWeight) }, "maxParcelHeight": { $gte: (data.parcelHeight)}, "maxParcelLength": { $gte: (data.parcelLength)}, "maxParcelWidth": { $gte: (data.parcelWidth)}, "journeyDate" : { $gte: new Date().toISOString().split('T')[0] } } ).sort({maxParcelWeight: + 1}).limit(1);
 
   cursorone.count(function (e, count) {
 
     if (count == 0){
       db.collection('parcelSender').insertOne(data, (err, result) => {
         if (err) return console.log(err);
+      sendRaisedEmailToReceiver(data);
+      sendRaisedEmailToSender(data);
       console.log("Saved in parcelSender");
       return
     })
@@ -207,6 +227,9 @@ var assignSender =  function (data, callback) {
             if (err) return console.log(err);
           responseToSender.push(provider);
           callback(responseToSender);
+          sendAssignedEmailToProvider(data, provider);
+          sendAssignedEmailToSender (data, provider);
+          sendAssignedEmailToReceiver(data, provider);
           responseToSender = [];
           cursorone.close();
           provider.maxParcelWeight -= data.parcelWeight;
@@ -241,8 +264,84 @@ var assignSender =  function (data, callback) {
   })
 };
 
+var sendRaisedEmailToSender = function (sender) {
+
+  let subject = "Parcel Request Raised for the Item " + sender.parcelDisclosure;
+  let content = "You have successfully raised the Parcel request for the Item " + sender.parcelDisclosure + " \n " +
+    "Parcel Capacity Mentioned: \n" +
+    "Max. Parcel Weight: " + sender.maxParcelWeight + " pounds" + " \n " + "Max. Parcel Height: " + sender.maxParcelHeight + " cm." + " \n " + "Max. Parcel Length: " + sender.maxParcelLength+ " cm." + " \n " + "Max. Parcel Width: " + sender.maxParcelWidth+ " cm." + " \n\n\n " +
+    "Team\nMeet-the-Need";
+  sendEmail(sender.email, subject, content);
+
+}
+
+var sendRaisedEmailToProvider = function (provider) {
+  let subject = "Service Request Raised for the Travel to " + provider.destinationCity + " on "+ provider.journeyDate;
+  let content = "You have successfully raised the service request for the travel to " + provider.destinationCity + " on " + provider.journeyDate + " \n " +
+    "Parcel Capacity Mentioned: \n" +
+    "Max. Parcel Weight: " + provider.maxParcelWeight + " pounds" + " \n " + "Max. Parcel Height: " + provider.maxParcelHeight + " cm." + " \n " + "Max. Parcel Length: " + provider.maxParcelLength+ " cm." + " \n " + "Max. Parcel Width: " + provider.maxParcelWidth+ " cm." + " \n\n\n " +
+    "Team\nMeet-the-Need";
+  sendEmail(provider.email, subject, content);
+
+};
+
+var sendRaisedEmailToReceiver = function (sender) {
+
+  let subject = "Parcel " + sender.parcelDisclosure + " is requested to delivery to you";
+  let content = "Parcel " + sender.parcelDisclosure + " is successfully requested to delivery to you" + " \n " +
+    "Assigned Parcel Details: \n " +
+    "Parcel Description: "+ sender.parcelDisclosure + "Parcel Weight: " + sender.parcelWeight + " pounds" + " \n " + "Parcel Height: " + sender.parcelHeight + " cm." + " \n " + "Parcel Length: " + sender.parcelLength+ " cm." + " \n " + "Parcel Width: " + sender.parcelWidth+ " cm." + " \n\n\n " +
+    "Sender Details: \nName : " + sender.senderName + " \n " + "Email : " + sender.senderEmail + " \n " + "Phone : " + sender.senderPhone + " \n " +
+    "Address :\n " + sender.currentAddreddaddressLine1 + " \n " + sender.currentAddreddaddressLine2 + " \n " + "City : " + sender.currentCity + " \n " + "State : " + sender.currentState + " \n " + "Zip : " + sender.currentZip + " \n " +
+    "Team\nMeet-the-Need";
+  sendEmail(sender.receiverEmail, subject, content);
+
+}
+
+var sendAssignedEmailToSender = function (sender, provider) {
+  let subject = "Service Provider is Assigned for the Parcel Request  for Item " + sender.parcelDisclosure;
+  let content = "Service Provider is successfully assigned for the Parcel Request  for Item " + sender.parcelDisclosure +
+    "Parcel Description: "+ sender.parcelDisclosure + "Parcel Weight: " + sender.parcelWeight + " pounds" + " \n " + "Parcel Height: " + sender.parcelHeight + " cm." + " \n " + "Parcel Length: " + sender.parcelLength+ " cm." + " \n " + "Parcel Width: " + sender.parcelWidth+ " cm." + " \n\n\n " +
+    "Assigned Service Provider Details:\n" +
+    "Name : " + provider.name + " \n " + "Email : " + provider.email + " \n " + "Phone : " + provider.phone + " \n " +
+    "Current Address :\n " + provider.currentAddreddaddressLine1 + " \n " + provider.currentAddreddaddressLine2 + " \n " + "City : " + provider.currentCity + " \n " + "State : " + provider.currentState + " \n " + "Zip : " + provider.currentZip + " \n " +
+    "Destination Address :\n " + provider.destinationAddreddaddressLine1 + " \n " + provider.destinationAddreddaddressLine2 + " \n " + "City : " + provider.destinationCity + " \n " + "State : " + provider.destinationState + " \n " + "Zip : " + provider.destinationZip + " \n\n\n " +
+    "Team\nMeet-the-Need";
+  sendEmail(sender.senderEmail, subject, content);
+
+}
 
 
+
+var sendAssignedEmailToProvider = function (sender, provider) {
+  let subject = "Parcel Request Assigned for the Travel to " + provider.destinationCity + " on "+ provider.journeyDate;
+  let content = "Parcel Request is successfully assigned for the travel to " + provider.destinationCity + " on " + provider.journeyDate + " \n " +
+    "Assigned Parcel Details: \n" +
+    "Parcel Description: "+ sender.parcelDisclosure + "\nParcel Weight: " + sender.parcelWeight + " pounds" + " \n " + "Parcel Height: " + sender.parcelHeight + " cm." + " \n " + "Parcel Length: " + sender.parcelLength+ " cm." + " \n " + "Parcel Width: " + sender.parcelWidth+ " cm." + " \n\n\n " +
+    "Sender Details: \nName : " + sender.senderName + " \n " + "Email : " + sender.senderEmail + " \n " + "Phone : " + sender.senderPhone + " \n " +
+    "Address :\n " + sender.currentAddreddaddressLine1 + " \n " + sender.currentAddreddaddressLine2 + " \n " + "City : " + sender.currentCity + " \n " + "State : " + sender.currentState + " \n " + "Zip : " + sender.currentZip + " \n " +
+    "Receiver Details: \nName : " + sender.receiverName + " \n " + "Email : " + sender.receiverEmail + " \n " + "Phone : " + sender.receiverPhone + " \n " +
+    "Address :\n " + sender.deliveryAddreddaddressLine1 + " \n " + sender.deliveryAddreddaddressLine2 + " \n " + "City : " + sender.deliveryCity + " \n " + "State : " + sender.deliveryState + " \n " + "Zip : " + sender.deliveryZip + " \n " +
+    "Team\nMeet-the-Need";
+  sendEmail(provider.email, subject, content);
+
+};
+
+var sendAssignedEmailToReceiver = function (sender, provider) {
+  let subject = "Service Provider is Assigned for Parcel Item " + sender.parcelDisclosure + " to Deliver to You";
+  let content = "Service Provider is Successfully Assigned for Parcel Item " + sender.parcelDisclosure + " to Deliver to You" + " \n " +
+    "Assigned Parcel Details: \n " +
+    "Parcel Description: "+ sender.parcelDisclosure + "Parcel Weight: " + sender.parcelWeight + " pounds" + " \n " + "Parcel Height: " + sender.parcelHeight + " cm." + " \n " + "Parcel Length: " + sender.parcelLength+ " cm." + " \n " + "Parcel Width: " + sender.parcelWidth+ " cm." + " \n\n\n " +
+    "Sender Details: \nName : " + sender.senderName + " \n " + "Email : " + sender.senderEmail + " \n" + "Phone : " + sender.senderPhone + " \n" +
+    "Address :\n " + sender.currentAddreddaddressLine1 + " \n " + sender.currentAddreddaddressLine2 + " \n " + "City : " + sender.currentCity + " \n " + "State : " + sender.currentState + " \n " + "Zip : " + sender.currentZip + " \n " +
+    "Assigned Service Provider Details:\n" +
+    "Name : " + provider.name + " \n " + "Email : " + provider.email + " \n " + "Phone : " + provider.phone + " \n " +
+    "Current Address :\n " + provider.currentAddreddaddressLine1 + " \n " + provider.currentAddreddaddressLine2 + " \n " + "City : " + provider.currentCity + " \n " + "State : " + provider.currentState + " \n " + "Zip : " + provider.currentZip + " \n " +
+    "Destination Address :\n " + provider.destinationAddreddaddressLine1 + " \n " + provider.destinationAddreddaddressLine2 + " \n " + "City : " + provider.destinationCity + " \n " + "State : " + provider.destinationState + " \n " + "Zip : " + provider.destinationZip + " \n\n\n " +
+    "Team\nMeet-the-Need";
+  sendEmail(sender.receiverEmail, subject, content);
+
+};
 
 var assignedServiceRequest = function (data, callback) {
   var assignedServiceRequests = [];
@@ -329,8 +428,66 @@ var parcelStatusChange = function (data, callback) {
           $set: { "status": status },
         }, function(err, results) {
           console.log('status updated');
+          sendStatusChangeEmail(parcel, status)
           callback({role: role, status: status});
         });
     }
   });
+};
+
+var sendStatusChangeEmail = function (data, status) {
+  let subject = "Status of Request changed to " + status;
+  let content = "Status of Request changed to " + status + " for parcel Item " + data.parcelDisclosuren + " \n " +
+    "Assigned Parcel Details: \n " +
+    "Parcel Description: "+ data.parcelDisclosure + "Parcel Weight: " + data.parcelWeight + " pounds" + " \n " + "Parcel Height: " + data.parcelHeight + " cm." + " \n " + "Parcel Length: " + data.parcelLength+ " cm." + " \n " + "Parcel Width: " + data.parcelWidth+ " cm." + " \n\n\n " +
+    "Sender Details: \nName : " + data.senderName + " \n " + "Email : " + data.senderEmail + " \n " + "Phone : " + data.senderPhone + " \n" +
+    "Address :\n " + data.currentAddreddaddressLine1 + " \n " + data.currentAddreddaddressLine2 + " \n " + "City : " + data.currentCity + " \n " + "State : " + data.currentState + " \n " + "Zip : " + data.currentZip + " \n " +
+    "Assigned Service Provider Details:\n " +
+    "Name : " + data.serviceProvider.name + " \n " + "Email : " + data.serviceProvider.email + " \n " + "Phone : " + data.serviceProvider.phone + " \n " +
+    "Current Address :\n " + data.serviceProvider.currentAddreddaddressLine1 + " \n " + data.serviceProvider.currentAddreddaddressLine2 + " \n " + "City : " + data.serviceProvider.currentCity + " \n " + "State : " + data.serviceProvider.currentState + " \n " + "Zip : " + data.serviceProvider.currentZip + " \n " +
+    "Destination Address :\n " + data.destinationAddreddaddressLine1 + " \n " + data.destinationAddreddaddressLine2 + " \n " + "City : " + data.destinationCity + " \n " + "State : " + data.destinationState + " \n " + "Zip : " + data.destinationZip + " \n\n\n " +
+    "Receiver Details: \nName : " + data.receiverName + " \n " + "Email : " + data.receiverEmail + " \n " + "Phone : " + data.receiverPhone + " \n" +
+    "Address :\n " + data.deliveryAddreddaddressLine1 + " \n " + data.deliveryAddreddaddressLine2 + " \n " + "City : " + data.deliveryCity + " \n " + "State : " + data.deliveryState + " \n " + "Zip : " + data.deliveryZip + " \n " +
+    "Team\nMeet-the-Need";
+  sendEmail(data.serviceProvider.email, subject, content);
+  sendEmail(data.senderEmail, subject, content);
+  sendEmail(data.receiverEmail, subject, content);
+
+};
+
+var getServiceProviderDetails = function (data, callback) {
+  var serviceProviderDetails = [];
+  var cursor = db.collection('providerAssigned').findOne( { "serviceProvider.email": data.email}, function (err, document) {
+    if (document !== null){
+      serviceProviderDetails.push(document);
+      callback(serviceProviderDetails)
+    }else {
+      var cursor = db.collection('serviceProvider').findOne( { "email": data.email}, function (err, document) {
+        serviceProviderDetails.push(document);
+        callback(serviceProviderDetails)
+      })
+    }
+  } );
+};
+
+
+var sendEmail = function (to_emailId, email_subject, content_text) {
+  from_email = new helper.Email("no-reply@meet-the-need.com")
+  to_email = new helper.Email(to_emailId)
+  subject = email_subject;
+  content = new helper.Content("text/plain", content_text)
+  mail = new helper.Mail(from_email, subject, to_email, content)
+
+  var sg = require('sendgrid').SendGrid('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')
+  var requestBody = mail.toJSON()
+  var request = sg.emptyRequest()
+  request.method = 'POST'
+  request.path = '/v3/mail/send'
+  request.body = requestBody
+  sg.API(request, function (response) {
+    console.log(response.statusCode)
+    console.log(response.body)
+    console.log(response.headers)
+  })
+
 };

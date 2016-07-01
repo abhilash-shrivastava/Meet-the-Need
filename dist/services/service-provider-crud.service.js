@@ -19,12 +19,23 @@ var ServiceProviderCRUDService = (function () {
     function ServiceProviderCRUDService(http) {
         this.http = http;
         this.serviceProviderDetailsSaveUrl = 'http://localhost:9000/service-confirm';
+        this.getServiceProviderDetailsUrl = 'http://localhost:9000/service-details';
     }
     ServiceProviderCRUDService.prototype.save = function (serviceProviderDetails) {
         var body = JSON.stringify(serviceProviderDetails);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    ServiceProviderCRUDService.prototype.getServiceProviderDetails = function (data) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(data);
+        console.log(body);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.getServiceProviderDetailsUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
