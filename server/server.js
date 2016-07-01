@@ -2,6 +2,7 @@
 /**
  * Created by Abhi on 6/12/16.
  */
+'use strict'
 const express = require('express');
 var cors = require('cors');
 const bodyParser= require('body-parser');
@@ -17,7 +18,7 @@ var DBurl = 'mongodb://abhilash.shrivastava:ab#ILASH0@ds019471.mlab.com:19471/me
 var LocalDbUrl = 'mongodb://localhost:27017/test';
 var helper = require('sendgrid').mail;
 var sg = require('sendgrid').SendGrid(process.env.SENDGRID_API_KEY);
-
+var textbelt = require('textbelt');
 var jwtCheck = jwt({
   secret: new Buffer(auth0Settings.secret, 'base64'),
   audience: auth0Settings.audience
@@ -28,6 +29,9 @@ var jwtCheck = jwt({
 var db;
 var responseToSender = [];
 var responseToProvider = [];
+var response = {
+  status: 'Saved'
+}
 
 app.use(bodyParser.json());
 app.all('*', function(req, res, next) {
@@ -37,9 +41,7 @@ app.all('*', function(req, res, next) {
   next();
 });
 
-response = {
-  status: 'Saved'
-}
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 });
@@ -80,7 +82,7 @@ MongoClient.connect(LocalDbUrl, (err, database) => {
   db = database
 app.listen(9000, () => {
   console.log('listening on 9000');
-})
+  })
 })
 
 app.use('/assigned-service-request', jwtCheck);
@@ -409,8 +411,8 @@ var parcelStatusChange = function (data, callback) {
   cursor.each(function(err, parcel){
     if (parcel !== null) {
       if (parcel.senderEmail === data.email){
-        role = "Sender";
-        status = "Parcel Given To Service Provider"
+        var role = "Sender";
+        var status = "Parcel Given To Service Provider"
       }else if (parcel.serviceProvider.email === data.email){
         role = "Provider";
         if (parcel.status === "Parcel Given To Service Provider"){
@@ -472,11 +474,11 @@ var getServiceProviderDetails = function (data, callback) {
 
 
 var sendEmail = function (to_emailId, email_subject, content_text) {
-  from_email = new helper.Email("no-reply@meet-the-need.com")
-  to_email = new helper.Email(to_emailId)
-  subject = email_subject;
-  content = new helper.Content("text/plain", content_text)
-  mail = new helper.Mail(from_email, subject, to_email, content)
+  var from_email = new helper.Email("no-reply@meet-the-need.com")
+  var to_email = new helper.Email(to_emailId)
+  var subject = email_subject;
+  var content = new helper.Content("text/plain", content_text)
+  var mail = new helper.Mail(from_email, subject, to_email, content)
 
   var sg = require('sendgrid').SendGrid('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')
   var requestBody = mail.toJSON()

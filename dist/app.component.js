@@ -62,6 +62,7 @@ var AppComponent = (function () {
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
             _this.saveUserDetails(profile);
+            window.location.reload();
             self.loggedIn();
         });
     };

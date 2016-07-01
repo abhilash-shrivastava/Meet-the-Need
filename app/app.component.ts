@@ -103,6 +103,7 @@ export class AppComponent {
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
             this.saveUserDetails(profile);
+            window.location.reload();
             self.loggedIn();
 
         })
