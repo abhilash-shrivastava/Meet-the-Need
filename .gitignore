@@ -1,2 +1,3 @@
 .idea/workspace.xml
-node_modulessendgrid.env
+node_modules
+sendgrid.env
