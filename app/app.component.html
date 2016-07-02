@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body class ="bg-image">
+<h1>{{title}}</h1>
+<nav class = "home">
+
+    <a class="sign-in" *ngIf="!loggedIn()" (click)="signin()">Sign In</a>
+    <a class="sign-up" *ngIf="!loggedIn()" (click)="signup()">Sign Up</a>
+    <a class="reset"*ngIf="!loggedIn()" (click)="resetPassword()">Reset Password</a>
+</nav>
+<nav *ngIf="loggedIn()" class="signed-in">
+    <button *ngIf="loggedIn()" [routerLink]="['ServiceProvider']">Service Provider</button>
+    <button *ngIf="loggedIn()" [routerLink]="['ParcelSender']">Parcel Sender</button>
+    <button *ngIf="loggedIn()" [routerLink]="['Profile']">Profile</button>
+    <button *ngIf="loggedIn()" (click)="logout()">Logout</button>
+    <label>{{profile.name}}</label>
+    <img src="{{profile.picture}}" style="width: 50px" />
+</nav>
+<router-outlet></router-outlet>
+</body>
+</html>

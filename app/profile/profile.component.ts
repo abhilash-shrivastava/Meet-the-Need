@@ -12,6 +12,7 @@ import { RequestsService } from './../services/request.service';
 @Component({
     selector: 'profile',
     templateUrl: 'app/profile/profile.html',
+    styleUrls: ['app/profile/profile.css'],
     providers: [RequestsService]
 })
 

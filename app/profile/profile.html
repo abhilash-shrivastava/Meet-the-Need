@@ -6,16 +6,15 @@
 </head>
 <body>
 <div *ngIf="loggedIn()">
-    <img src="{{profile.picture}}" style="width: 50px" /> {{profile.name}}
-    <div>
+    <div >
         <button class="btn btn-default" (click)="onAssignedServiceClick()">Assigned Service request</button>
         <button class="btn btn-default" (click)="onUnassignedServiceClick()">Unassigned Service request</button>
         <button class="btn btn-default" (click)="onAssignedSenderClick()">Assigned Parcel request</button>
         <button class="btn btn-default" (click)="onUnassignedSenderClick()">Unassigned Parcel request</button>
         <button class="btn btn-default" (click)="onReceivingRequestStatusClick()">Receiving Parcel Request</button>
     </div>
-<div>
-    <div *ngIf="unassignedServiceRequests" [hidden]="!showDetails">
+<div class="form-style-10">
+    <div *ngIf="unassignedServiceRequests" [hidden]="!showDetails" >
         <ul *ngFor="let request of unassignedServiceRequests ">
             <h3>Request Details:</h3>
             <li>Journey Date:   <b>{{request.journeyDate}}</b></li>

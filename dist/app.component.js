@@ -27,6 +27,7 @@ var AppComponent = (function () {
         this.mode = 'Observable';
         this.lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
         this.jwtHelper = new angular2_jwt_1.JwtHelper();
+        this.profile = JSON.parse(localStorage.getItem('profile'));
     }
     AppComponent.prototype.logout = function () {
         var self = this;
@@ -37,6 +38,7 @@ var AppComponent = (function () {
         self.loggedIn();
     };
     AppComponent.prototype.signin = function () {
+        var _this = this;
         var self = this;
         this.lock.showSignin(function (err, profile, id_token) {
             if (err) {
@@ -46,6 +48,7 @@ var AppComponent = (function () {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
+            _this.profile = JSON.stringify(profile);
             window.location.reload();
             self.loggedIn();
         });
@@ -61,6 +64,7 @@ var AppComponent = (function () {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
+            _this.profile = JSON.stringify(profile);
             _this.saveUserDetails(profile);
             window.location.reload();
             self.loggedIn();
@@ -90,7 +94,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: "\n                <h1>{{title}}</h1>\n                <nav>\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['ServiceProvider']\">Service Provider</a>&nbsp;\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['ParcelSender']\">Parcel Sender</a>&nbsp;\n                <a *ngIf=\"loggedIn()\" [routerLink]=\"['Profile']\">Profile</a>&nbsp;\n                <a *ngIf=\"!loggedIn()\" (click)=\"signin()\">Sign In</a>\n                <a *ngIf=\"!loggedIn()\" (click)=\"signup()\">Sign Up</a>\n                <a *ngIf=\"!loggedIn()\" (click)=\"resetPassword()\">Reset Password</a>\n                <a *ngIf=\"loggedIn()\" (click)=\"logout()\">Logout</a>\n                </nav>\n                <router-outlet></router-outlet>        ",
+            templateUrl: 'app/app.component.html',
             styleUrls: ['app/app.component.css'],
             directives: [router_deprecated_1.ROUTER_DIRECTIVES],
             providers: [

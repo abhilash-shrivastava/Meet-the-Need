@@ -238,6 +238,7 @@ var ProfileComponent = (function () {
         core_1.Component({
             selector: 'profile',
             templateUrl: 'app/profile/profile.html',
+            styleUrls: ['app/profile/profile.css'],
             providers: [request_service_1.RequestsService]
         }), 
         __metadata('design:paramtypes', [request_service_1.RequestsService, angular2_jwt_1.AuthHttp])

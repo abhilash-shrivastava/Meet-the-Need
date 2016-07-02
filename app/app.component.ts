@@ -17,18 +17,7 @@ declare var Auth0Lock;
 
 @Component({
     selector: 'my-app',
-    template: `
-                <h1>{{title}}</h1>
-                <nav>
-                <a *ngIf="loggedIn()" [routerLink]="['ServiceProvider']">Service Provider</a>&nbsp;
-                <a *ngIf="loggedIn()" [routerLink]="['ParcelSender']">Parcel Sender</a>&nbsp;
-                <a *ngIf="loggedIn()" [routerLink]="['Profile']">Profile</a>&nbsp;
-                <a *ngIf="!loggedIn()" (click)="signin()">Sign In</a>
-                <a *ngIf="!loggedIn()" (click)="signup()">Sign Up</a>
-                <a *ngIf="!loggedIn()" (click)="resetPassword()">Reset Password</a>
-                <a *ngIf="loggedIn()" (click)="logout()">Logout</a>
-                </nav>
-                <router-outlet></router-outlet>        `,
+    templateUrl:'app/app.component.html',
     styleUrls: ['app/app.component.css'],
     directives: [ROUTER_DIRECTIVES],
     providers: [
@@ -58,11 +47,13 @@ declare var Auth0Lock;
 
 export class AppComponent {
 
+    profile:any
     title = 'Meet The Need';
     errorMessage: string;
     status: string;
     mode = 'Observable';
     constructor(private userCRUDService: UserCRUDService, private router: Router) {
+        this.profile = JSON.parse(localStorage.getItem('profile'));
     }
     lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
     jwtHelper = new JwtHelper();
@@ -86,6 +77,7 @@ export class AppComponent {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
+            this.profile = JSON.stringify(profile);
             window.location.reload();
             self.loggedIn();
         });
@@ -102,6 +94,7 @@ export class AppComponent {
             console.log(id_token);
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('id_token', id_token);
+            this.profile = JSON.stringify(profile);
             this.saveUserDetails(profile);
             window.location.reload();
             self.loggedIn();
