@@ -25,6 +25,7 @@ var ServiceProviderCRUDService = (function () {
         var body = JSON.stringify(serviceProviderDetails);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
+        //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
@@ -35,6 +36,7 @@ var ServiceProviderCRUDService = (function () {
         console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
+        //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.getServiceProviderDetailsUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);

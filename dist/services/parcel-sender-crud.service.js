@@ -22,6 +22,7 @@ var ParcelSenderCRUDService = (function () {
     function ParcelSenderCRUDService(http) {
         this.http = http;
         this.parcelSenderDetailsSaveUrl = 'http://localhost:9000/order-confirm';
+        this.getParcelSenderDetailsUrl = 'http://localhost:9000/sender-details';
     }
     ParcelSenderCRUDService.prototype.save = function (parcelSenderDetails) {
         //console.log(serviceProviderDetails);
@@ -29,7 +30,19 @@ var ParcelSenderCRUDService = (function () {
         console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
+        //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.parcelSenderDetailsSaveUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    ParcelSenderCRUDService.prototype.getParcelSenderDetails = function (data) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(data);
+        console.log(body);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        //noinspection TypeScriptUnresolvedFunction
+        return this.http.post(this.getParcelSenderDetailsUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };

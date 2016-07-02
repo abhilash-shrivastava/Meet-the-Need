@@ -29,6 +29,8 @@ var ServiceProviderComponent = (function () {
     }
     ServiceProviderComponent.prototype.onSubmit = function () {
         this.submitted = true;
+        this.model['email'] = this.profile.email;
+        console.log(this.model);
         if (this.model !== null) {
             this.saveServiceProviderDetails(this.model);
         }
@@ -65,6 +67,14 @@ var ServiceProviderComponent = (function () {
         this.serviceProviderCRUDService.getServiceProviderDetails(data)
             .subscribe(function (data) {
             _this.data = data;
+            if (_this.data[0].serviceProvider) {
+                delete _this.data[0].serviceProvider['_id'];
+                _this.model = _this.data[0].serviceProvider;
+            }
+            else {
+                delete _this.data[0]['_id'];
+                _this.model = _this.data[0];
+            }
             console.log(_this.model);
         }, function (error) { return _this.errorMessage = error; });
     };

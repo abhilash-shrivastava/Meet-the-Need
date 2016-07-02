@@ -117,3 +117,21 @@
     margin-top: 10px;
     text-align: right;
 }
+
+
+div button {
+    padding: 10px;
+    margin-left: 10px;
+    font-size: 12px;
+}
+div button:visited {
+    color: red;
+}
+div button:hover {
+    color: #039be5;
+    background-color: #CFD8DC;
+}
+div button:focus {
+    color: red;
+    background-color: #CFD8DC;
+}

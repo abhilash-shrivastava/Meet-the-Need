@@ -19,11 +19,10 @@
             <h3>Request Details:</h3>
             <li>Journey Date:   <b>{{request.journeyDate}}</b></li>
             <h4>Parcel Details:</h4>
-            <li>Parcel Weight Capacity :  <b>{{request.maxParcelWeight}}</b> ounce</li>
+            <li>Parcel Weight Capacity :  <b>{{request.maxParcelWeight}}</b> pound</li>
             <li>Parcel Height Dimension : <b>{{request.maxParcelHeight}}</b> cm.</li>
             <li>Parcel length Dimension : <b>{{request.maxParcelLength}}</b> cm.</li>
             <li>Parcel Width Dimension :  <b>{{request.maxParcelWidth}}</b> cm.</li>
-            -----------------------------------**********--------------------------------------------
         </ul>
     </div>
     <div *ngIf="unassignedServiceRequests" [hidden]="showDetails"><h3>No Unassigned Service Requests</h3></div>
@@ -33,7 +32,7 @@
             <h3>Request Details:</h3>
             <h4>Parcel Details:</h4>
             <li>Parcel Description : <b>{{request.parcelDisclosure}}</b></li>
-            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> ounce</li>
+            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>
             <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
             <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
             <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
@@ -54,7 +53,6 @@
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="btn btn-default" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="btn btn-default" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered</button>
-            -----------------------------------**********--------------------------------------------
         </ul>
     </div>
     <div *ngIf="assignedServiceRequests" [hidden]="showDetails"><h3>No Assigned Service Requests</h3></div>
@@ -68,13 +66,12 @@
             <li *ngIf = "request.status">Service Provider Email:   <b>{{request.serviceProvider.email}}</b></li>
             <h4>Parcel Details:</h4>
             <li>Parcel Id : <b>{{request._id}}</b></li>
-            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> ounce</li>
+            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>
             <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
             <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
             <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Assigned To Service Provider'" class="btn btn-default" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
-            -----------------------------------**********--------------------------------------------
         </ul>
     </div>
     <div *ngIf="parcelRequests" [hidden]="showDetails"><h3>No Parcel Requests</h3></div>
@@ -84,7 +81,7 @@
             <h3>Request Details:</h3>
             <h4>Parcel Details:</h4>
             <li>Parcel Description : <b>{{request.parcelDisclosure}}</b></li>
-            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> ounce</li>
+            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>
             <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
             <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
             <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
@@ -105,7 +102,6 @@
             <li>City : <b>{{request.serviceProvider.destinationCity}}</b></li>
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Delivered To Receiver'" class="btn btn-default" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Received</button>
-            -----------------------------------**********--------------------------------------------
         </ul>
     </div>
     <div *ngIf="parcelReceivingRequests" [hidden]="showDetails"><h3>No Parcel Receiving Requests</h3></div>

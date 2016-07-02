@@ -19,6 +19,7 @@ export class ServiceProviderCRUDService{
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
+        //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.serviceProviderDetailsSaveUrl, body, options)
             .map(res => res.json())
             .catch(this.handleError);
@@ -32,6 +33,7 @@ export class ServiceProviderCRUDService{
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
+        //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.getServiceProviderDetailsUrl, body, options)
             .map(res => res.json())
             .catch(this.handleError);

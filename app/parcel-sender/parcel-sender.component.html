@@ -16,7 +16,6 @@
                     Name is required
                 </div>
             </label>
-            <label>Email Address <input type="email" [(ngModel)]="model.senderEmail" required/></label>
             <label>Phone Number <input type="text" [(ngModel)]="model.senderPhone" required/></label>
         </div>
 
@@ -49,8 +48,8 @@
 
         <div class="section"><span>4</span>Parcel Details</div>
         <div class="inner-wrap">
-            <label>Max. Parcel Weight (in ounce) <input type="number" [(ngModel)]="model.parcelWeight" required></label>
-            <label>Max Parcel Dimensions (in cm)</label>
+            <label>Parcel Weight (in pound) <input type="number" [(ngModel)]="model.parcelWeight" required></label>
+            <label>Parcel Dimensions (in cm)</label>
             <label>Height (approx.) <input type="number" [(ngModel)]="model.parcelHeight" required></label>
             <label>Length (approx.) <input type="number" [(ngModel)]="model.parcelLength" required></label>
             <label>Width (approx.) <input type="number" [(ngModel)]="model.parcelWidth" required></label>
@@ -79,7 +78,6 @@
             <li>Address :  <b>{{request.currentAddreddaddressLine1}}</b></li>
             <li><b>{{request.currentAddreddaddressLine2}}</b></li>
             <li>City : {{request.currentCity}}</li>
-            -----------------------------------**********--------------------------------------------
         </ul>
     </div>
     <div *ngIf="requests" [hidden]="showDetails"><h3>No Suitable Service Requests Found</h3></div>

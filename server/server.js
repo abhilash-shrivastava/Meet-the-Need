@@ -150,6 +150,15 @@ app.post('/service-details', function (req, res) {
 })
 });
 
+app.use('/sender-details', jwtCheck);
+
+app.post('/sender-details', function (req, res) {
+  res.connection.setTimeout(0);
+  getParcelSenderDetails(req.body, (requests) => {
+    res.send(JSON.stringify(requests));
+})
+});
+
 var assignProvider =  function (data, callback) {
   var cursorone = db.collection('parcelSender').find( { "currentCity": data.currentCity, "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
   cursorone.count(function (e, count) {
@@ -165,7 +174,7 @@ var assignProvider =  function (data, callback) {
     else {
       cursorone.each(function(err, sender){
         if (sender !== null){
-          if (!sender["serviceProvider"]){
+          if (!sender["serviceProvider"] && sender["status"] !== "Assigned To Service Provider"){
             sender["serviceProvider"] = data;
             sender["status"] = "Assigned To Service Provider";
           }
@@ -221,7 +230,7 @@ var assignSender =  function (data, callback) {
     else{
       cursorone.each(function(err, provider){
         if (provider !== null){
-          if (!data["serviceProvider"]){
+          if (!data["serviceProvider"] && data["status"] !== "Assigned To Service Provider"){
             data["serviceProvider"] = provider;
             data["status"] = "Assigned To Service Provider";
           }
@@ -273,7 +282,7 @@ var sendRaisedEmailToSender = function (sender) {
     "Parcel Capacity Mentioned: \n" +
     "Max. Parcel Weight: " + sender.maxParcelWeight + " pounds" + " \n " + "Max. Parcel Height: " + sender.maxParcelHeight + " cm." + " \n " + "Max. Parcel Length: " + sender.maxParcelLength+ " cm." + " \n " + "Max. Parcel Width: " + sender.maxParcelWidth+ " cm." + " \n\n\n " +
     "Team\nMeet-the-Need";
-  sendEmail(sender.email, subject, content);
+  sendEmail(sender.senderEmail, subject, content);
 
 }
 
@@ -472,6 +481,21 @@ var getServiceProviderDetails = function (data, callback) {
   } );
 };
 
+
+var getParcelSenderDetails = function (data, callback) {
+  var parcelSenderDetails = [];
+  var cursor = db.collection('parcelSender').findOne( { "senderEmail": data.email}, function (err, document) {
+    if (document !== null){
+      parcelSenderDetails.push(document);
+      callback(parcelSenderDetails)
+    }else {
+      var cursor = db.collection('providerAssigned').findOne( { "senderEmail": data.email}, function (err, document) {
+        parcelSenderDetails.push(document);
+        callback(parcelSenderDetails)
+      })
+    }
+  } );
+};
 
 var sendEmail = function (to_emailId, email_subject, content_text) {
   var from_email = new helper.Email("no-reply@meet-the-need.com")

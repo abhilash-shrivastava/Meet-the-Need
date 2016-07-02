@@ -24,7 +24,22 @@ export class ParcelSenderCRUDService{
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
+        //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.parcelSenderDetailsSaveUrl, body, options)
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
+    private getParcelSenderDetailsUrl = 'http://localhost:9000/sender-details';
+    getParcelSenderDetails (data): Observable<string> {
+        //console.log(serviceProviderDetails);
+        let body = JSON.stringify(data);
+        console.log(body);
+        let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
+        let options = new RequestOptions({ headers: headers });
+
+        //noinspection TypeScriptUnresolvedFunction
+        return this.http.post(this.getParcelSenderDetailsUrl, body, options)
             .map(res => res.json())
             .catch(this.handleError);
     }

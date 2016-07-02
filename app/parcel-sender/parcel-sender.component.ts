@@ -22,10 +22,13 @@ export class ParcelSenderComponent {
     model = new ParcelSenderDetails();
     requests: any;
     showDetails = false;
+    profile:any;
+    data:any;
 
 
     submitted = false;
     onSubmit() { this.submitted = true;
+        this.model['senderEmail'] = this.profile.email;
         if (this.model !== null){
             this.saveParcelSenderDetails(this.model);
         }        
@@ -38,6 +41,11 @@ export class ParcelSenderComponent {
         private routeParams: RouteParams) {
     }
 
+    ngOnInit(): void {
+        this.profile = JSON.parse(localStorage.getItem('profile'));
+        this.getParcelSenderDetails(this.profile);
+    }
+    
     saveParcelSenderDetails(parcelSenderDetails: ParcelSenderDetails){
         if (!parcelSenderDetails) { return; }
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
@@ -57,6 +65,24 @@ export class ParcelSenderComponent {
             );
 
     }
+
+    getParcelSenderDetails(data){
+        if (!this.profile.email) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.parcelSenderCRUDService.getParcelSenderDetails(data)
+            .subscribe(
+                data  => {
+                    this.data = data;
+                    delete this.data[0]['status'];
+                    delete this.data[0]['_id'];
+                    this.model = this.data[0];
+                    console.log(this.model);
+                },
+                error =>  this.errorMessage = <any>error
+            );
+
+    }
+    
     loggedIn() {
         return tokenNotExpired();
     }

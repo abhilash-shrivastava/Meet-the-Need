@@ -28,12 +28,14 @@ export class ServiceProviderComponent {
     requests: any;
     mode = 'Observable';
     model = new ServiceProviderDetails();
-    data: any
+    data: any;
     showDetails = false;
 
 
     submitted = false;
     onSubmit() { this.submitted = true;
+        this.model['email'] = this.profile.email;
+        console.log(this.model);
         if (this.model !== null){
             this.saveServiceProviderDetails(this.model);
         }
@@ -77,6 +79,13 @@ export class ServiceProviderComponent {
             .subscribe(
                 data  => {
                     this.data = data;
+                    if (this.data[0].serviceProvider){
+                        delete this.data[0].serviceProvider['_id']
+                        this.model = this.data[0].serviceProvider;
+                    }else {
+                        delete this.data[0]['_id']
+                        this.model = this.data[0];
+                    }
                     console.log(this.model);
                 },
                 error =>  this.errorMessage = <any>error

@@ -16,7 +16,6 @@
                         Name is required
                     </div>
                 </label>
-                <label>Email Address <input type="email" [(ngModel)]="model.email" required/></label>
                 <label>Phone Number <input type="text" [(ngModel)]="model.phone" required/></label>
             </div>
 
@@ -50,7 +49,7 @@
 
             <div class="section"><span>5</span>Parcel Carrying Capacity</div>
             <div class="inner-wrap">
-                <label>Max. Parcel Weight (in ounce) <input type="number" [(ngModel)]="model.maxParcelWeight" required></label>
+                <label>Max. Parcel Weight (in pound) <input type="number" [(ngModel)]="model.maxParcelWeight" required></label>
                 <label>Max Parcel Dimensions (in cm)</label>
                 <label>Height (approx.) <input type="number" [(ngModel)]="model.maxParcelHeight" required></label>
                 <label>Length (approx.) <input type="number" [(ngModel)]="model.maxParcelLength" required></label>
@@ -87,7 +86,6 @@
             <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
             <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
             <li>City : {{request.deliveryCity}}</li>
-            -----------------------------------**********--------------------------------------------
         </ul>
     </div>
     <div *ngIf="requests" [hidden]="showDetails"><h3>No Suitable Parcel Requests Found</h3></div>

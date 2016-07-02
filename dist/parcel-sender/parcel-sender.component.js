@@ -27,9 +27,14 @@ var ParcelSenderComponent = (function () {
     }
     ParcelSenderComponent.prototype.onSubmit = function () {
         this.submitted = true;
+        this.model['senderEmail'] = this.profile.email;
         if (this.model !== null) {
             this.saveParcelSenderDetails(this.model);
         }
+    };
+    ParcelSenderComponent.prototype.ngOnInit = function () {
+        this.profile = JSON.parse(localStorage.getItem('profile'));
+        this.getParcelSenderDetails(this.profile);
     };
     ParcelSenderComponent.prototype.saveParcelSenderDetails = function (parcelSenderDetails) {
         var _this = this;
@@ -48,6 +53,21 @@ var ParcelSenderComponent = (function () {
             else {
                 _this.showDetails = false;
             }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ParcelSenderComponent.prototype.getParcelSenderDetails = function (data) {
+        var _this = this;
+        if (!this.profile.email) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction
+        this.parcelSenderCRUDService.getParcelSenderDetails(data)
+            .subscribe(function (data) {
+            _this.data = data;
+            delete _this.data[0]['status'];
+            delete _this.data[0]['_id'];
+            _this.model = _this.data[0];
+            console.log(_this.model);
         }, function (error) { return _this.errorMessage = error; });
     };
     ParcelSenderComponent.prototype.loggedIn = function () {
