@@ -86,9 +86,17 @@ nav label {
     border-radius: 50%;
 }
 .bg-image {
+    /*background-image: url(http://www.mbagusi.com/i/light-abstract-background-wallpaper-2.jpg);*/
     background-image: url(http://www.mbagusi.com/i/light-abstract-background-wallpaper-2.jpg);
+    animation: animatedBackground 40s linear infinite;
 }
 
 body {
     margin: 0px !important;
+}
+
+
+@keyframes animatedBackground {
+    from { background-position: 0 0; }
+    to { background-position: 100% 0; }
 }
