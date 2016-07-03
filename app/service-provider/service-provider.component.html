@@ -65,11 +65,11 @@
         </form>
     </div>
 </div>
-<div class="form-style-10" *ngIf="loggedIn()" [hidden]="!submitted">
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted">
     <h2>You submitted the service providing request successfully</h2>
     <div *ngIf="requests" [hidden]="!showDetails">
         <h2>Following Parcel Request is Assigned to You</h2>
-        <ul *ngFor="let request of requests ">
+        <ul *ngFor="let request of requests " class="form-style-10-assign">
             <h3>Request Details:</h3>
             <li>Parcel Details : {{request.parcelDisclosure}}</li>
             <h4>Sender Details</h4>

@@ -64,11 +64,11 @@
     </form>
 </div>
 </div>
-<div class="form-style-10" *ngIf="loggedIn()" [hidden]="!submitted">
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted">
     <h2>You submitted the parcel sending order successfully</h2>
-    <div *ngIf="requests" [hidden]="!showDetails">
+    <div *ngIf="requests" [hidden]="!showDetails" >
         <h2>Following Service Provider Request is Assigned to You</h2>
-        <ul *ngFor="let request of requests ">
+        <ul *ngFor="let request of requests " class="form-style-10-assign">
             <h3>Request Details:</h3>
             <li>Parcel Dispatch Date:   {{request.journeyDate}}</li>
             <h4>Service Provider Details:</h4>
@@ -80,7 +80,7 @@
             <li>City : {{request.currentCity}}</li>
         </ul>
     </div>
-    <div *ngIf="requests" [hidden]="showDetails"><h3>No Suitable Service Requests Found</h3></div>
+    <div *ngIf="requests" [hidden]="showDetails"><h4>No Suitable Service Requests Found</h4></div>
     <button class="resubmit-button" (click)="submitted=false">Send Another Parcel</button>
 </div>
 </body>

@@ -166,9 +166,10 @@ var assignProvider =  function (data, callback) {
     if (count == 0){
       db.collection('serviceProvider').insertOne(data, (err, result) => {
         if (err) return console.log(err);
+      responseToProvider = [];
+      callback(responseToProvider);
       sendRaisedEmailToProvider(data);
       console.log("saved to serviceProvider");
-      return;
     })
     }
     else {
@@ -221,10 +222,11 @@ var assignSender =  function (data, callback) {
     if (count == 0){
       db.collection('parcelSender').insertOne(data, (err, result) => {
         if (err) return console.log(err);
+      responseToSender = [];
+      callback(responseToSender);
       sendRaisedEmailToReceiver(data);
       sendRaisedEmailToSender(data);
       console.log("Saved in parcelSender");
-      return
     })
     }
     else{
