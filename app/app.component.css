@@ -19,7 +19,7 @@ h2 {
 
 
 .signed-in{
-    background: #0143A3;
+    background: white;
     padding: 10px;
 }
 nav a.sign-in{
@@ -73,6 +73,7 @@ nav label {
     vertical-align: middle
 }
 .signed-in label {
+    background-color: #0273D4;
     color: white;
     display: inline-block;
     float: right;
@@ -99,4 +100,9 @@ body {
 @keyframes animatedBackground {
     from { background-position: 0 0; }
     to { background-position: 100% 0; }
+}
+
+.button-section {
+    background: #0273D4;
+    color: white;
 }

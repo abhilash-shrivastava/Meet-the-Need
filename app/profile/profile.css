@@ -151,3 +151,9 @@ div button:focus {
     color: red;
     background-color: #CFD8DC;
 }
+
+.profile-button {
+    background-color: black;
+    background-color:rgba(0, 0, 0, 0.5);
+    padding: 20px;
+}

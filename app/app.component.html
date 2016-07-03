@@ -13,10 +13,10 @@
     <a class="reset"*ngIf="!loggedIn()" (click)="resetPassword()">Reset Password</a>
 </nav>
 <nav *ngIf="loggedIn()" class="signed-in">
-    <button *ngIf="loggedIn()" [routerLink]="['ServiceProvider']">Service Provider</button>
-    <button *ngIf="loggedIn()" [routerLink]="['ParcelSender']">Parcel Sender</button>
-    <button *ngIf="loggedIn()" [routerLink]="['Profile']">Profile</button>
-    <button *ngIf="loggedIn()" (click)="logout()">Logout</button>
+    <button *ngIf="loggedIn()" [routerLink]="['ServiceProvider']" class="button-section">Service Provider</button>
+    <button *ngIf="loggedIn()" [routerLink]="['ParcelSender']" class="button-section">Parcel Sender</button>
+    <button *ngIf="loggedIn()" [routerLink]="['Profile']" class="button-section">Profile</button>
+    <button *ngIf="loggedIn()" (click)="logout()" class="button-section">Logout</button>
     <label>{{profile.name}}</label>
     <img src="{{profile.picture}}" style="width: 50px" />
 </nav>

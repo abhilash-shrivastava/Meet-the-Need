@@ -7,11 +7,13 @@
 <body>
 <div *ngIf="loggedIn()">
     <div >
-        <button class="btn btn-default" (click)="onAssignedServiceClick()">Assigned Service request</button>
-        <button class="btn btn-default" (click)="onUnassignedServiceClick()">Unassigned Service request</button>
-        <button class="btn btn-default" (click)="onAssignedSenderClick()">Assigned Parcel request</button>
-        <button class="btn btn-default" (click)="onUnassignedSenderClick()">Unassigned Parcel request</button>
-        <button class="btn btn-default" (click)="onReceivingRequestStatusClick()">Receiving Parcel Request</button>
+        <nav class="profile-button">
+            <button class="btn btn-default" (click)="onAssignedServiceClick()">Assigned Service request</button>
+            <button class="btn btn-default" (click)="onUnassignedServiceClick()">Unassigned Service request</button>
+            <button class="btn btn-default" (click)="onAssignedSenderClick()">Assigned Parcel request</button>
+            <button class="btn btn-default" (click)="onUnassignedSenderClick()">Unassigned Parcel request</button>
+            <button class="btn btn-default" (click)="onReceivingRequestStatusClick()">Receiving Parcel Request</button>
+        </nav>
     </div>
 <div >
     <div *ngIf="unassignedServiceRequests" [hidden]="!showDetails">
