@@ -11,21 +11,25 @@
         <form (ngSubmit)="onSubmit()" #serviceProviderDetailsForm="ngForm">
             <div class="section"><span>1</span>General Information</div>
             <div class="inner-wrap">
-                <label>Your Full Name <input type="text" [(ngModel)]="model.name" required ngControl="name"  #name="ngForm"/>
+                <label>Your Full Name <input type="text" placeholder="Name" [(ngModel)]="model.name" required ngControl="name"  #name="ngForm"/>
                     <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
                         Name is required
                     </div>
                 </label>
-                <label>Phone Number <input type="text" [(ngModel)]="model.phone" required/></label>
+                <label>Phone Number <input type="text" placeholder="(123)-456-7890" [(ngModel)]="model.phone" required/></label>
             </div>
 
             <div class="section"><span>2</span>Current Address</div>
             <div class="inner-wrap">
                 <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required>{{model.currentAddressaddressLine1}}</label>
                 <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddressaddressLine2" ></label>
-                <label>City <input type="text" [(ngModel)]="model.currentCity" required></label>
-                <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
-                <label>Zip <input type="number" [(ngModel)]="model.currentZip" required></label>
+                <label>State <select [(ngModel)]="model.currentState" (ngModelChange)="onChange($event)" required>
+                    <option *ngFor = "let state of states">
+                        {{state}}
+                    </option>
+                </select></label>
+                <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
+                <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" required></label>
 
             </div>
 
@@ -33,27 +37,31 @@
             <div class="inner-wrap">
                 <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" required></label>
                 <label>Address line 2 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine2"></label>
-                <label>City <input type="text" [(ngModel)]="model.destinationCity" required></label>
-                <label>State <input type="text" [(ngModel)]="model.destinationState" required></label>
-                <label>Zip <input type="number" [(ngModel)]="model.destinationZip" required></label>
+                <label>State <select [(ngModel)]="model.destinationState" (ngModelChange)="onChange($event)" required>
+                    <option *ngFor = "let state of states">
+                        {{state}}
+                    </option>
+                </select></label>
+                <label>City <input type = "text" [(ngModel)]="model.destinationCity" required></label>
+                <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.destinationZip" required></label>
 
             </div>
 
             <div class="section"><span>4</span>Date &amp; Time</div>
             <div class="inner-wrap">
-                <label>Journey Date <input type="date" [(ngModel)]="model.journeyDate" required/></label>
+                <label>Journey Date <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.journeyDate" required/></label>
                 <label>Availability Time</label>
-                <label>From  <input type="text" [(ngModel)]="model.availabilityFrom" required/></label>
-                <label>To  <input type="text" [(ngModel)]="model.availabilityTo" required/></label>
+                <label>From  <input type="time" name="time" placeholder="Hrs:Mins" [(ngModel)]="model.availabilityFrom" required/></label>
+                <label>To  <input type="time" name="time"  placeholder="Hrs:Mins" [(ngModel)]="model.availabilityTo" required/></label>
             </div>
 
             <div class="section"><span>5</span>Parcel Carrying Capacity</div>
             <div class="inner-wrap">
-                <label>Max. Parcel Weight (in pound) <input type="number" [(ngModel)]="model.maxParcelWeight" required></label>
-                <label>Max Parcel Dimensions (in cm)</label>
-                <label>Height (approx.) <input type="number" [(ngModel)]="model.maxParcelHeight" required></label>
-                <label>Length (approx.) <input type="number" [(ngModel)]="model.maxParcelLength" required></label>
-                <label>Width (approx.) <input type="number" [(ngModel)]="model.maxParcelWidth" required></label>
+                <label>Max. Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.maxParcelWeight" required></label>
+                <label>Max Parcel Dimensions </label>
+                <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelHeight" required></label>
+                <label>Length (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelLength" required></label>
+                <label>Width (approx.) <input type="number"  placeholder="in cm" [(ngModel)]="model.maxParcelWidth" required></label>
             </div>
 
             <div class="button-section">
@@ -88,7 +96,7 @@
             <li>City : {{request.deliveryCity}}</li>
         </ul>
     </div>
-    <div *ngIf="requests" [hidden]="showDetails"><h3>No Suitable Parcel Requests Found</h3></div>
+    <div *ngIf="requests" [hidden]="showDetails"><h4>No Suitable Parcel Requests Found</h4></div>
     <button class="resubmit-button" (click)="submitted=false">Submit Another Request</button>
 </div>
 </body>

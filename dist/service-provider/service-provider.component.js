@@ -26,10 +26,41 @@ var ServiceProviderComponent = (function () {
         this.model = new service_provider_details_1.ServiceProviderDetails();
         this.showDetails = false;
         this.submitted = false;
+        this.states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
+        this.cities = [];
+        this.SwitchFuction = function (state) {
+            switch (state) {
+                case 'Alabama':
+                    this.cities = ["Alabama cities"];
+                    break;
+                case 'Alaska':
+                    this.cities = ["Alaska cities"];
+                    break;
+                default: this.cities = [];
+            }
+        };
     }
     ServiceProviderComponent.prototype.onSubmit = function () {
         this.submitted = true;
         this.model['email'] = this.profile.email;
+        this.currentCityName = this.model['currentCity'].split(" ");
+        this.model['currentCity'] = "";
+        for (var i = 0; i < this.currentCityName.length; i++) {
+            this.currentCityName[i] = this.currentCityName[i].charAt(0).toUpperCase() + this.currentCityName[i].slice(1).toLowerCase();
+            this.model['currentCity'] = this.model['currentCity'] + this.currentCityName[i];
+            if (i + 1 < this.currentCityName.length) {
+                this.model['currentCity'] = this.model['currentCity'] + " ";
+            }
+        }
+        this.destinationCityName = this.model['destinationCity'].split(" ");
+        this.model['destinationCity'] = "";
+        for (var i = 0; i < this.destinationCityName.length; i++) {
+            this.destinationCityName[i] = this.destinationCityName[i].charAt(0).toUpperCase() + this.destinationCityName[i].slice(1).toLowerCase();
+            this.model['destinationCity'] = this.model['destinationCity'] + this.destinationCityName[i];
+            if (i + 1 < this.destinationCityName.length) {
+                this.model['destinationCity'] = this.model['destinationCity'] + " ";
+            }
+        }
         console.log(this.model);
         if (this.model !== null) {
             this.saveServiceProviderDetails(this.model);
@@ -80,6 +111,9 @@ var ServiceProviderComponent = (function () {
     };
     ServiceProviderComponent.prototype.loggedIn = function () {
         return angular2_jwt_1.tokenNotExpired();
+    };
+    ServiceProviderComponent.prototype.onChange = function (selectedState) {
+        // this.SwitchFuction(selectedState);
     };
     ServiceProviderComponent = __decorate([
         core_1.Component({

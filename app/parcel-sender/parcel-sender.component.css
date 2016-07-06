@@ -104,7 +104,9 @@
     -moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
     -webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
 }
-
+.form-style-10 select {
+    height: 35px;
+}
 .form-style-10 .section{
     font: normal 20px 'Bitter', serif;
     color: #0273D4;

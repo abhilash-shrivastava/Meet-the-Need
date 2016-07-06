@@ -32,6 +32,7 @@
     <div *ngIf="assignedServiceRequests" [hidden]="!showDetails" >
         <ul *ngFor="let request of assignedServiceRequests " class="form-style-10">
             <h3>Request Details:</h3>
+            <li>Journey Date:   <b>{{request.serviceProvider.journeyDate}}</b></li>
             <h4>Parcel Details:</h4>
             <li>Parcel Description : <b>{{request.parcelDisclosure}}</b></li>
             <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>

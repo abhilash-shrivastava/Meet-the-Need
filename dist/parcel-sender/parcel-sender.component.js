@@ -23,11 +23,30 @@ var ParcelSenderComponent = (function () {
         this.mode = 'Observable';
         this.model = new parcel_sender_details_1.ParcelSenderDetails();
         this.showDetails = false;
+        this.states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
         this.submitted = false;
     }
     ParcelSenderComponent.prototype.onSubmit = function () {
         this.submitted = true;
         this.model['senderEmail'] = this.profile.email;
+        this.currentCityName = this.model['currentCity'].split(" ");
+        this.model['currentCity'] = "";
+        for (var i = 0; i < this.currentCityName.length; i++) {
+            this.currentCityName[i] = this.currentCityName[i].charAt(0).toUpperCase() + this.currentCityName[i].slice(1).toLowerCase();
+            this.model['currentCity'] = this.model['currentCity'] + this.currentCityName[i];
+            if (i + 1 < this.currentCityName.length) {
+                this.model['currentCity'] = this.model['currentCity'] + " ";
+            }
+        }
+        this.deliveryCityName = this.model['deliveryCity'].split(" ");
+        this.model['deliveryCity'] = "";
+        for (var i = 0; i < this.deliveryCityName.length; i++) {
+            this.deliveryCityName[i] = this.deliveryCityName[i].charAt(0).toUpperCase() + this.deliveryCityName[i].slice(1).toLowerCase();
+            this.model['deliveryCity'] = this.model['deliveryCity'] + this.deliveryCityName[i];
+            if (i + 1 < this.deliveryCityName.length) {
+                this.model['deliveryCity'] = this.model['deliveryCity'] + " ";
+            }
+        }
         if (this.model !== null) {
             this.saveParcelSenderDetails(this.model);
         }
@@ -69,6 +88,9 @@ var ParcelSenderComponent = (function () {
             _this.model = _this.data[0];
             console.log(_this.model);
         }, function (error) { return _this.errorMessage = error; });
+    };
+    ParcelSenderComponent.prototype.onChange = function (selectedState) {
+        // this.SwitchFuction(selectedState);
     };
     ParcelSenderComponent.prototype.loggedIn = function () {
         return angular2_jwt_1.tokenNotExpired();
