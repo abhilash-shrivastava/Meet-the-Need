@@ -54,7 +54,6 @@ export class ServiceProviderComponent {
                 this.model['destinationCity'] =  this.model['destinationCity'] + " ";
             }
         }
-        console.log(this.model);
         if (this.model !== null){
             this.saveServiceProviderDetails(this.model);
         }
@@ -77,9 +76,7 @@ export class ServiceProviderComponent {
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(
                 data  => {
-                    console.log(data);
                     this.requests = data;
-                    console.log(this.requests);
                     if(this.requests.length > 0){
                         this.showDetails = true;
                     }else{
@@ -105,7 +102,6 @@ export class ServiceProviderComponent {
                         delete this.data[0]['_id']
                         this.model = this.data[0];
                     }
-                    console.log(this.model);
                 },
                 error =>  this.errorMessage = <any>error
             );

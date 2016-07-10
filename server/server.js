@@ -159,6 +159,26 @@ app.post('/sender-details', function (req, res) {
 })
 });
 
+app.use('/cancel-request', jwtCheck);
+
+app.post('/cancel-request', function (req, res) {
+  res.connection.setTimeout(0);
+  cancelRequest(req.body, (response) => {
+    res.send(JSON.stringify(response));
+})
+});
+
+
+app.use('/update-request', jwtCheck);
+
+app.post('/update-request', function (req, res) {
+  res.connection.setTimeout(0);
+  updateRequest(req.body, (response) => {
+    res.send(JSON.stringify(response));
+})
+});
+
+
 var assignProvider =  function (data, callback) {
   var cursorone = db.collection('parcelSender').find( { "currentCity": data.currentCity, "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
   cursorone.count(function (e, count) {
@@ -497,6 +517,47 @@ var getParcelSenderDetails = function (data, callback) {
       })
     }
   } );
+};
+
+var cancelRequest = function (data, callback) {
+  if (data.requestType == 'Service'){
+    db.collection('serviceProvider').deleteOne(
+      { "_id": ObjectId(data.requestId) },
+      function(err, results) {
+        console.log('deleted from serviceProvider');
+        if (callback){
+          callback({role: 'Service'});
+        }
+      })
+  }
+  if (data.requestType == 'Parcel') {
+    db.collection('parcelSender').deleteOne(
+      { "_id": ObjectId(data.requestId) },
+      function(err, results) {
+        console.log('deleted from parcelSender');
+        if (callback){
+          callback({role: 'Parcel'});
+        }
+      })
+  }
+};
+
+var updateRequest = function (data, callback) {
+  var response = [];
+  if (data.requestType == 'Service'){
+    db.collection('serviceProvider').findOne({"_id": ObjectId(data.requestId)}, function(err, provider) {
+      response.push(provider);
+      callback(response);
+      cancelRequest(data);
+    });
+  }
+  if (data.requestType == 'Parcel') {
+    db.collection('parcelSender').findOne({"_id": ObjectId(data.requestId)}, function(err, sender) {
+      response.push(sender);
+      callback(response);
+      cancelRequest(data);
+    });
+  }
 };
 
 var sendEmail = function (to_emailId, email_subject, content_text) {

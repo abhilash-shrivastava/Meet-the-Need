@@ -29,7 +29,6 @@ export class ServiceProviderCRUDService{
     getServiceProviderDetails (data): Observable<string> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(data);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 

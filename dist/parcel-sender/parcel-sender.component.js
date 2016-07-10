@@ -63,9 +63,7 @@ var ParcelSenderComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
         this.parcelSenderCRUDService.save(parcelSenderDetails)
             .subscribe(function (data) {
-            console.log(data);
             _this.requests = data;
-            console.log(_this.requests);
             if (_this.requests.length > 0) {
                 _this.showDetails = true;
             }
@@ -86,7 +84,6 @@ var ParcelSenderComponent = (function () {
             delete _this.data[0]['status'];
             delete _this.data[0]['_id'];
             _this.model = _this.data[0];
-            console.log(_this.model);
         }, function (error) { return _this.errorMessage = error; });
     };
     ParcelSenderComponent.prototype.onChange = function (selectedState) {

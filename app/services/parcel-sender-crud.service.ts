@@ -20,7 +20,6 @@ export class ParcelSenderCRUDService{
     save (parcelSenderDetails: ParcelSenderDetails ): Observable<ParcelSenderDetails> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(parcelSenderDetails);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
@@ -34,7 +33,6 @@ export class ParcelSenderCRUDService{
     getParcelSenderDetails (data): Observable<string> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(data);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 

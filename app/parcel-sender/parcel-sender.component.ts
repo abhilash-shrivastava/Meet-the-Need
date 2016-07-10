@@ -72,9 +72,7 @@ export class ParcelSenderComponent {
         this.parcelSenderCRUDService.save(parcelSenderDetails)
             .subscribe(
                 data  => {
-                    console.log(data);
                     this.requests = data;
-                    console.log(this.requests);
                     if(this.requests.length > 0){
                         this.showDetails = true;
                     }else{
@@ -96,7 +94,6 @@ export class ParcelSenderComponent {
                     delete this.data[0]['status'];
                     delete this.data[0]['_id'];
                     this.model = this.data[0];
-                    console.log(this.model);
                 },
                 error =>  this.errorMessage = <any>error
             );

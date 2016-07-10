@@ -33,63 +33,60 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     requestType = false
 
     onAssignedServiceClick(){
-        console.log(this.profile);
         this.getAssignedServiceRequests(this.profile);
     }
 
     onUnassignedServiceClick(){
-        console.log(this.profile);
         this.getUnassignedServiceRequests(this.profile);
     }
 
     onAssignedSenderClick(){
-        console.log(this.profile);
         this.getAssignedSenderRequests(this.profile);
     }
 
     onUnassignedSenderClick(){
-        console.log(this.profile);
         this.getUnassignedSenderRequests(this.profile);
     }
 
     onReceivingRequestStatusClick(){
-        console.log(this.profile);
         this.getParcelReceivingRequests(this.profile);
     }
 
     onStatusChangeClick(parcelId){
-        console.log(parcelId);
-        
         this.changeParcelStatus({email: this.profile.email, parcelId: parcelId}, this.getAssignedSenderRequests(this.profile));
+    }
+
+    onCancelClick(requestId, requestType){
+        
+        if (requestType == 'Service'){
+            this.cancelRequest({requestId: requestId, requestType: requestType}, this.onUnassignedServiceClick())
+        }
+        if (requestType == 'Parcel'){
+            this.cancelRequest({requestId: requestId, requestType: requestType}, this.onUnassignedSenderClick())
+        }
+    }
+
+    onUpdateClick(requestId, requestType){
+        // if (requestType == 'Service'){
+        //     this.updateRequest({requestId: requestId, requestType: requestType}, this.onUnassignedServiceClick())
+        // }
+        // if (requestType == 'Parcel'){
+        //     this.updateRequest({requestId: requestId, requestType: requestType}, this.onUnassignedSenderClick())
+        // }
     }
     constructor(    private requestsService: RequestsService,
                     public authHttp: AuthHttp) {
     }
 
     ngOnInit(): void {
-        console.log('ngOnInit() called');
         this.profile = JSON.parse(localStorage.getItem('profile'));
     }
 
     ngOnDestroy() : void {
-        console.log('ngOnDestroy() called');
     }
 
     ngAfterContentInit() {
-        console.log('ngAfterContentInit() called');
     }
-
-    // getSecretThing() {
-    //     this.authHttp.get('http://localhost:9000/service-request')
-    //         .subscribe(
-    //             data => {
-    //                 console.log(data);
-    //                 this.serviceRequests = JSON.stringify(data.json());
-    //             },
-    //             err => console.log(err),
-    //             () => console.log('Complete')
-    //         );
-    // }
 
     getAssignedServiceRequests(data){
         if (!this.profile.email) { return; }
@@ -98,8 +95,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
             .subscribe(
                 data  => {
                     this.assignedServiceRequests = data;
-                    console.log(this.assignedServiceRequests);
-                    console.log(this.parcelRequests);
                     if(this.assignedServiceRequests.length > 0){
                         delete this.parcelRequests;
                         delete this.unassignedServiceRequests;
@@ -127,8 +122,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
             .subscribe(
                 data  => {
                     this.unassignedServiceRequests = data;
-                    console.log(this.unassignedServiceRequests);
-                    console.log(this.parcelRequests);
                     if(this.unassignedServiceRequests.length > 0){
                         delete this.parcelRequests;
                         delete this.assignedServiceRequests;
@@ -155,7 +148,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
             .subscribe(
                 data  => {
                     this.parcelRequests = data;
-                    console.log(this.parcelRequests);
                     if(this.parcelRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
@@ -182,7 +174,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
             .subscribe(
                 data  => {
                     this.parcelRequests = data;
-                    console.log(this.parcelRequests);
                     if(this.parcelRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
@@ -210,7 +201,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
             .subscribe(
                 data  => {
                     this.parcelReceivingRequests = data;
-                    console.log(this.parcelRequests);
                     if(this.parcelReceivingRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
@@ -236,21 +226,54 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                 data  => {
                     this.res = data;
                     //noinspection TypeScriptUnresolvedVariable
-                    console.log(this.res.status);
-                    console.log(this.res.role);
                     //noinspection TypeScriptUnresolvedVariable
                     if(this.res.role === "Sender"){
-                        console.log("in sender");
                         this.getAssignedSenderRequests(this.profile);
                     }else { //noinspection TypeScriptUnresolvedVariable
                         if (this.res.role === "Provider"){
-                            console.log("in provider");
                             this.getAssignedServiceRequests(this.profile);
                         }else { //noinspection TypeScriptUnresolvedVariable
                             if (this.res.role === "Receiver"){
                                 this.getParcelReceivingRequests(this.profile);
                             }
                         }
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );
+    }
+
+    cancelRequest(data, callback){
+        if (!data.requestId || !data.requestType) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.cancelRequest(data)
+            .subscribe(
+                data  => {
+                    this.res = data;
+                    if (this.res.role == 'Service'){
+                        this.onUnassignedServiceClick();
+                    }
+                    if (this.res.role == 'Parcel'){
+                        this.onUnassignedSenderClick();
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );
+    }
+
+    updateRequest(data, callback){
+        if (!data.requestId || !data.requestType) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.updateRequest(data)
+            .subscribe(
+                data  => {
+                    this.res = data;
+                    if (this.res[0].email){
+                        console.log("go to service");
+                        window.location.href = 'localhost:3000/service-provider'
+                    }else {
+                        console.log("go to parcel");
+                        window.location.href = 'localhost:3000/parcel-sender'
                     }
                 },
                 error =>  this.errorMessage = <any>error

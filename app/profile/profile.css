@@ -135,6 +135,26 @@
     margin: 30px;
 }
 
+.button-cancel {
+    background: #0273D4;
+    color: white;
+    position: absolute;
+    left: 40%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    margin: 30px;
+}
+
+.button-update {
+    background: #0273D4;
+    color: white;
+    position: absolute;
+    left: 60%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    margin: 30px;
+}
+
 div button {
     padding: 10px;
     margin-left: 10px;

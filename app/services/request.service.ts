@@ -17,7 +17,6 @@ export class RequestsService{
     getAssignedServiceRequests (data): Observable<string> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(data);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
@@ -30,7 +29,6 @@ export class RequestsService{
     getUnassignedServiceRequests (data): Observable<string> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(data);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
@@ -43,7 +41,6 @@ export class RequestsService{
     getAssignedSenderRequests (data): Observable<string> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(data);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
@@ -56,7 +53,6 @@ export class RequestsService{
     getUnassignedSenderRequests (data): Observable<string> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(data);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
@@ -71,7 +67,6 @@ export class RequestsService{
     getParcelReceivingRequests (data): Observable<string> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(data);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
@@ -84,7 +79,6 @@ export class RequestsService{
     setParcelStatus (data): Observable<string> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(data);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 
@@ -92,7 +86,30 @@ export class RequestsService{
             .map(res => res.json())
             .catch(this.handleError);
     }
-    
+
+    private cancelRequestUrl = 'http://localhost:9000/cancel-request';
+    cancelRequest (data): Observable<string> {
+        //console.log(serviceProviderDetails);
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.cancelRequestUrl, body, options)
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
+    private updateRequestUrl = 'http://localhost:9000/update-request';
+    updateRequest (data): Observable<string> {
+        //console.log(serviceProviderDetails);
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.updateRequestUrl, body, options)
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
 
     private handleError (error: any) {
         // In a real world app, we might use a remote logging infrastructure

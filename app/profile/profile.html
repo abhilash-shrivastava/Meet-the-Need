@@ -25,6 +25,8 @@
             <li>Parcel Height Dimension : <b>{{request.maxParcelHeight}}</b> cm.</li>
             <li>Parcel length Dimension : <b>{{request.maxParcelLength}}</b> cm.</li>
             <li>Parcel Width Dimension :  <b>{{request.maxParcelWidth}}</b> cm.</li>
+            <button class="button-cancel" (click)="onCancelClick(request._id, 'Service')">Cancel</button>
+            <button class="button-update" (click)="onUpdateClick(request._id, 'Service')">Update</button>
         </ul>
     </div>
     <div *ngIf="unassignedServiceRequests" [hidden]="showDetails" class="form-style-10"><h3>No Unassigned Service Requests</h3></div>
@@ -66,7 +68,13 @@
             <li>Receiver Name : <b>{{request.receiverName}}</b></li>
             <li>Parcel Details : <b>{{request.parcelDisclosure}}</b></li>
             <li>Delivery City : <b>{{request.deliveryCity}}</b></li>
-            <li *ngIf = "request.status">Service Provider Email:   <b>{{request.serviceProvider.email}}</b></li>
+            <h4 *ngIf = "request.status">Service Provider Details</h4>
+            <li *ngIf = "request.status">Provider Name : <b>{{request.serviceProvider.name}}</b></li>
+            <li *ngIf = "request.status">Provider Email : <b>{{request.serviceProvider.email}}</b></li>
+            <li *ngIf = "request.status">Provider Contact Number :  <b>{{request.serviceProvider.phone}}</b></li>
+            <li *ngIf = "request.status">Provider Address : <b>{{request.serviceProvider.destinationAddreddaddressLine1}}</b></li>
+            <li *ngIf = "request.status"> <b>{{request.destinationAddreddaddressLine2}}</b></li>
+            <li *ngIf = "request.status">City : <b>{{request.serviceProvider.destinationCity}}</b></li>
             <h4>Parcel Details:</h4>
             <li>Parcel Id : <b>{{request._id}}</b></li>
             <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>
@@ -74,6 +82,8 @@
             <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
             <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
+            <button *ngIf = "!request.status" class="button-cancel" (click)="onCancelClick(request._id, 'Parcel')">Cancel</button>
+            <button *ngIf = "!request.status" class="button-update" (click)="onUpdateClick(request._id, 'Parcel')">Update</button>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
         </ul>
     </div>
@@ -97,10 +107,10 @@
             <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
             <li>City : <b>{{request.currentCity}}</b></li>
             <h4>Service Provider Details</h4>
-            <li>Receiver Name : <b>{{request.serviceProvider.name}}</b></li>
-            <li>Receiver Email : <b>{{request.serviceProvider.email}}</b></li>
-            <li>Receiver Contact Number :  <b>{{request.serviceProvider.phone}}</b></li>
-            <li>Receiver Address : <b>{{request.serviceProvider.destinationAddreddaddressLine1}}</b></li>
+            <li>Provider Name : <b>{{request.serviceProvider.name}}</b></li>
+            <li>Provider Email : <b>{{request.serviceProvider.email}}</b></li>
+            <li>Provider Contact Number :  <b>{{request.serviceProvider.phone}}</b></li>
+            <li>Provider Address : <b>{{request.serviceProvider.destinationAddreddaddressLine1}}</b></li>
             <li> <b>{{request.destinationAddreddaddressLine2}}</b></li>
             <li>City : <b>{{request.serviceProvider.destinationCity}}</b></li>
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>

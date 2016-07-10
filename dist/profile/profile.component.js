@@ -27,50 +27,46 @@ var ProfileComponent = (function () {
         this.requestType = false;
     }
     ProfileComponent.prototype.onAssignedServiceClick = function () {
-        console.log(this.profile);
         this.getAssignedServiceRequests(this.profile);
     };
     ProfileComponent.prototype.onUnassignedServiceClick = function () {
-        console.log(this.profile);
         this.getUnassignedServiceRequests(this.profile);
     };
     ProfileComponent.prototype.onAssignedSenderClick = function () {
-        console.log(this.profile);
         this.getAssignedSenderRequests(this.profile);
     };
     ProfileComponent.prototype.onUnassignedSenderClick = function () {
-        console.log(this.profile);
         this.getUnassignedSenderRequests(this.profile);
     };
     ProfileComponent.prototype.onReceivingRequestStatusClick = function () {
-        console.log(this.profile);
         this.getParcelReceivingRequests(this.profile);
     };
     ProfileComponent.prototype.onStatusChangeClick = function (parcelId) {
-        console.log(parcelId);
         this.changeParcelStatus({ email: this.profile.email, parcelId: parcelId }, this.getAssignedSenderRequests(this.profile));
     };
+    ProfileComponent.prototype.onCancelClick = function (requestId, requestType) {
+        if (requestType == 'Service') {
+            this.cancelRequest({ requestId: requestId, requestType: requestType }, this.onUnassignedServiceClick());
+        }
+        if (requestType == 'Parcel') {
+            this.cancelRequest({ requestId: requestId, requestType: requestType }, this.onUnassignedSenderClick());
+        }
+    };
+    ProfileComponent.prototype.onUpdateClick = function (requestId, requestType) {
+        // if (requestType == 'Service'){
+        //     this.updateRequest({requestId: requestId, requestType: requestType}, this.onUnassignedServiceClick())
+        // }
+        // if (requestType == 'Parcel'){
+        //     this.updateRequest({requestId: requestId, requestType: requestType}, this.onUnassignedSenderClick())
+        // }
+    };
     ProfileComponent.prototype.ngOnInit = function () {
-        console.log('ngOnInit() called');
         this.profile = JSON.parse(localStorage.getItem('profile'));
     };
     ProfileComponent.prototype.ngOnDestroy = function () {
-        console.log('ngOnDestroy() called');
     };
     ProfileComponent.prototype.ngAfterContentInit = function () {
-        console.log('ngAfterContentInit() called');
     };
-    // getSecretThing() {
-    //     this.authHttp.get('http://localhost:9000/service-request')
-    //         .subscribe(
-    //             data => {
-    //                 console.log(data);
-    //                 this.serviceRequests = JSON.stringify(data.json());
-    //             },
-    //             err => console.log(err),
-    //             () => console.log('Complete')
-    //         );
-    // }
     ProfileComponent.prototype.getAssignedServiceRequests = function (data) {
         var _this = this;
         if (!this.profile.email) {
@@ -80,8 +76,6 @@ var ProfileComponent = (function () {
         this.requestsService.getAssignedServiceRequests(data)
             .subscribe(function (data) {
             _this.assignedServiceRequests = data;
-            console.log(_this.assignedServiceRequests);
-            console.log(_this.parcelRequests);
             if (_this.assignedServiceRequests.length > 0) {
                 delete _this.parcelRequests;
                 delete _this.unassignedServiceRequests;
@@ -107,8 +101,6 @@ var ProfileComponent = (function () {
         this.requestsService.getUnassignedServiceRequests(data)
             .subscribe(function (data) {
             _this.unassignedServiceRequests = data;
-            console.log(_this.unassignedServiceRequests);
-            console.log(_this.parcelRequests);
             if (_this.unassignedServiceRequests.length > 0) {
                 delete _this.parcelRequests;
                 delete _this.assignedServiceRequests;
@@ -134,7 +126,6 @@ var ProfileComponent = (function () {
         this.requestsService.getAssignedSenderRequests(data)
             .subscribe(function (data) {
             _this.parcelRequests = data;
-            console.log(_this.parcelRequests);
             if (_this.parcelRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
@@ -160,7 +151,6 @@ var ProfileComponent = (function () {
         this.requestsService.getUnassignedSenderRequests(data)
             .subscribe(function (data) {
             _this.parcelRequests = data;
-            console.log(_this.parcelRequests);
             if (_this.parcelRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
@@ -186,7 +176,6 @@ var ProfileComponent = (function () {
         this.requestsService.getParcelReceivingRequests(data)
             .subscribe(function (data) {
             _this.parcelReceivingRequests = data;
-            console.log(_this.parcelRequests);
             if (_this.parcelReceivingRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
@@ -211,16 +200,12 @@ var ProfileComponent = (function () {
             .subscribe(function (data) {
             _this.res = data;
             //noinspection TypeScriptUnresolvedVariable
-            console.log(_this.res.status);
-            console.log(_this.res.role);
             //noinspection TypeScriptUnresolvedVariable
             if (_this.res.role === "Sender") {
-                console.log("in sender");
                 _this.getAssignedSenderRequests(_this.profile);
             }
             else {
                 if (_this.res.role === "Provider") {
-                    console.log("in provider");
                     _this.getAssignedServiceRequests(_this.profile);
                 }
                 else {
@@ -228,6 +213,42 @@ var ProfileComponent = (function () {
                         _this.getParcelReceivingRequests(_this.profile);
                     }
                 }
+            }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ProfileComponent.prototype.cancelRequest = function (data, callback) {
+        var _this = this;
+        if (!data.requestId || !data.requestType) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.cancelRequest(data)
+            .subscribe(function (data) {
+            _this.res = data;
+            if (_this.res.role == 'Service') {
+                _this.onUnassignedServiceClick();
+            }
+            if (_this.res.role == 'Parcel') {
+                _this.onUnassignedSenderClick();
+            }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ProfileComponent.prototype.updateRequest = function (data, callback) {
+        var _this = this;
+        if (!data.requestId || !data.requestType) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.updateRequest(data)
+            .subscribe(function (data) {
+            _this.res = data;
+            if (_this.res[0].email) {
+                console.log("go to service");
+                window.location.href = 'localhost:3000/service-provider';
+            }
+            else {
+                console.log("go to parcel");
+                window.location.href = 'localhost:3000/parcel-sender';
             }
         }, function (error) { return _this.errorMessage = error; });
     };

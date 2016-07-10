@@ -24,11 +24,12 @@ var RequestsService = (function () {
         this.getUnassignedSenderRequestsUrl = 'http://localhost:9000/unassigned-sender-request';
         this.getParcelReceivingRequestsUrl = 'http://localhost:9000/parcel-receiving-request';
         this.setParcelStatusUrl = 'http://localhost:9000/change-status';
+        this.cancelRequestUrl = 'http://localhost:9000/cancel-request';
+        this.updateRequestUrl = 'http://localhost:9000/update-request';
     }
     RequestsService.prototype.getAssignedServiceRequests = function (data) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(data);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.getAssignedServiceRequestsUrl, body, options)
@@ -38,7 +39,6 @@ var RequestsService = (function () {
     RequestsService.prototype.getUnassignedServiceRequests = function (data) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(data);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.getUnassignedServiceRequestsUrl, body, options)
@@ -48,7 +48,6 @@ var RequestsService = (function () {
     RequestsService.prototype.getAssignedSenderRequests = function (data) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(data);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.getAssignedSenderRequestsUrl, body, options)
@@ -58,7 +57,6 @@ var RequestsService = (function () {
     RequestsService.prototype.getUnassignedSenderRequests = function (data) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(data);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.getUnassignedSenderRequestsUrl, body, options)
@@ -68,7 +66,6 @@ var RequestsService = (function () {
     RequestsService.prototype.getParcelReceivingRequests = function (data) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(data);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.getParcelReceivingRequestsUrl, body, options)
@@ -78,10 +75,27 @@ var RequestsService = (function () {
     RequestsService.prototype.setParcelStatus = function (data) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(data);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.setParcelStatusUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    RequestsService.prototype.cancelRequest = function (data) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(data);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.cancelRequestUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    RequestsService.prototype.updateRequest = function (data) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(data);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.updateRequestUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };

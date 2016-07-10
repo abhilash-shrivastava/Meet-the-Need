@@ -27,7 +27,6 @@ var ParcelSenderCRUDService = (function () {
     ParcelSenderCRUDService.prototype.save = function (parcelSenderDetails) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(parcelSenderDetails);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         //noinspection TypeScriptUnresolvedFunction
@@ -38,7 +37,6 @@ var ParcelSenderCRUDService = (function () {
     ParcelSenderCRUDService.prototype.getParcelSenderDetails = function (data) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(data);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         //noinspection TypeScriptUnresolvedFunction
