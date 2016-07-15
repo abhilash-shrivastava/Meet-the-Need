@@ -5,7 +5,8 @@
     <title>Parcel Sender</title>
 </head>
 <body>
-<div *ngIf="loggedIn()" [hidden]="submitted">
+<div [hidden] = "!isLoading" class="loader">Loading...</div>
+<div *ngIf="loggedIn()" [hidden]="submitted || isLoading">
 <div class="form-style-10">
     <h1>Details Needed<span>Please provide the following details to send a parcel!</span></h1>
     <form (ngSubmit) = "onSubmit()" #parcelSenderDetailsForm = "ngForm">
@@ -72,7 +73,7 @@
     </form>
 </div>
 </div>
-<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted">
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading">
     <h2>You submitted the parcel sending order successfully</h2>
     <div *ngIf="requests" [hidden]="!showDetails" >
         <h2>Following Service Provider Request is Assigned to You</h2>

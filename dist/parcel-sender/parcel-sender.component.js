@@ -24,11 +24,14 @@ var ParcelSenderComponent = (function () {
         this.mode = 'Observable';
         this.model = new parcel_sender_details_1.ParcelSenderDetails();
         this.showDetails = false;
+        this.isLoading = false;
         this.states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
         this.submitted = false;
     }
     ParcelSenderComponent.prototype.onSubmit = function () {
+        this.isLoading = true;
         this.submitted = true;
+        console.log('timer');
         if (this.profile["id"] != null) {
             this.model["_id"] = this.profile.id;
         }
@@ -72,6 +75,9 @@ var ParcelSenderComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
         this.parcelSenderCRUDService.save(parcelSenderDetails)
             .subscribe(function (data) {
+            setTimeout(function () {
+                _this.isLoading = false;
+            }, 3000);
             _this.requests = data;
             if (_this.requests.length > 0) {
                 _this.showDetails = true;

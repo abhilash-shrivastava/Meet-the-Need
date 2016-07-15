@@ -31,9 +31,12 @@ export class ServiceProviderComponent {
     showDetails = false;
     currentCityName: string[];
     destinationCityName: string[];
-
+    isLoading = false;
     submitted = false;
-    onSubmit() { this.submitted = true;
+
+    onSubmit() {
+        this.isLoading = true;
+        this.submitted = true;
         if (this.profile["id"] != null){
             this.model["_id"] = this.profile.id;
         }
@@ -84,6 +87,9 @@ export class ServiceProviderComponent {
             .subscribe(
                 data  => {
                     this.requests = data;
+                    setTimeout(() => {
+                        this.isLoading = false;
+                    }, 3000);
                     if(this.requests.length > 0){
                         this.showDetails = true;
                     }else{

@@ -26,10 +26,14 @@ export class ParcelSenderComponent {
     data:any;
     currentCityName: string[];
     deliveryCityName: string[];
+    isLoading = false;
     states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
 
     submitted = false;
-    onSubmit() { this.submitted = true;
+    onSubmit() {
+        this.isLoading = true;
+        this.submitted = true;
+        console.log('timer');
         if (this.profile["id"] != null){
             this.model["_id"] = this.profile.id;
         }
@@ -80,6 +84,9 @@ export class ParcelSenderComponent {
         this.parcelSenderCRUDService.save(parcelSenderDetails)
             .subscribe(
                 data  => {
+                    setTimeout(() => {
+                        this.isLoading = false;
+                    }, 3000);
                     this.requests = data;
                     if(this.requests.length > 0){
                         this.showDetails = true;

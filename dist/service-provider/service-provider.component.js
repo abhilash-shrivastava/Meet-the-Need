@@ -26,6 +26,7 @@ var ServiceProviderComponent = (function () {
         this.mode = 'Observable';
         this.model = new service_provider_details_1.ServiceProviderDetails();
         this.showDetails = false;
+        this.isLoading = false;
         this.submitted = false;
         this.states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
         this.cities = [];
@@ -42,6 +43,7 @@ var ServiceProviderComponent = (function () {
         };
     }
     ServiceProviderComponent.prototype.onSubmit = function () {
+        this.isLoading = true;
         this.submitted = true;
         if (this.profile["id"] != null) {
             this.model["_id"] = this.profile.id;
@@ -87,6 +89,9 @@ var ServiceProviderComponent = (function () {
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(function (data) {
             _this.requests = data;
+            setTimeout(function () {
+                _this.isLoading = false;
+            }, 3000);
             if (_this.requests.length > 0) {
                 _this.showDetails = true;
             }
