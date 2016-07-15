@@ -11,15 +11,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
+var core_1 = require('@angular/core');
 var service_provider_details_1 = require('./../services/service-provider-details');
 var service_provider_crud_service_1 = require('./../services/service-provider-crud.service');
 require('./../rxjs-operators');
 var angular2_jwt_1 = require('angular2-jwt');
 //var fetch = require('node-fetch');
 var ServiceProviderComponent = (function () {
-    function ServiceProviderComponent(serviceProviderCRUDService, routeParams) {
+    function ServiceProviderComponent(router, serviceProviderCRUDService, routeParams) {
+        this.router = router;
         this.serviceProviderCRUDService = serviceProviderCRUDService;
         this.routeParams = routeParams;
         this.mode = 'Observable';
@@ -42,6 +43,10 @@ var ServiceProviderComponent = (function () {
     }
     ServiceProviderComponent.prototype.onSubmit = function () {
         this.submitted = true;
+        if (this.profile["id"] != null) {
+            this.model["_id"] = this.profile.id;
+            this.router.navigate(['Profile']);
+        }
         this.model['email'] = this.profile.email;
         this.currentCityName = this.model['currentCity'].split(" ");
         this.model['currentCity'] = "";
@@ -67,6 +72,11 @@ var ServiceProviderComponent = (function () {
     };
     ServiceProviderComponent.prototype.ngOnInit = function () {
         this.profile = JSON.parse(localStorage.getItem('profile'));
+        var id = this.routeParams.get('id');
+        if (id != null) {
+            this.profile["id"] = id;
+            this.model["_id"] = id;
+        }
         this.getServiceProviderDetails(this.profile);
     };
     ServiceProviderComponent.prototype.saveServiceProviderDetails = function (serviceProviderDetails) {
@@ -77,6 +87,9 @@ var ServiceProviderComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(function (data) {
+            if (_this.profile["id"] != null) {
+                _this.router.navigate(['Profile']);
+            }
             _this.requests = data;
             if (_this.requests.length > 0) {
                 _this.showDetails = true;
@@ -118,7 +131,7 @@ var ServiceProviderComponent = (function () {
             styleUrls: ['app/service-provider/service-provider.component.css'],
             providers: [service_provider_crud_service_1.ServiceProviderCRUDService]
         }), 
-        __metadata('design:paramtypes', [service_provider_crud_service_1.ServiceProviderCRUDService, router_deprecated_1.RouteParams])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, service_provider_crud_service_1.ServiceProviderCRUDService, router_deprecated_1.RouteParams])
     ], ServiceProviderComponent);
     return ServiceProviderComponent;
 }());

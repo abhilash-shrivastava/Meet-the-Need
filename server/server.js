@@ -180,11 +180,14 @@ app.post('/update-request', function (req, res) {
 
 
 var assignProvider =  function (data, callback) {
+  if (data._id != null){
+    data._id = ObjectId(data._id);
+  }
   var cursorone = db.collection('parcelSender').find( { "currentCity": data.currentCity, "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
   cursorone.count(function (e, count) {
 
     if (count == 0){
-      db.collection('serviceProvider').insertOne(data, (err, result) => {
+      db.collection('serviceProvider').save(data, (err, result) => {
         if (err) return console.log(err);
       responseToProvider = [];
       callback(responseToProvider);
@@ -235,6 +238,9 @@ var assignProvider =  function (data, callback) {
 
 
 var assignSender =  function (data, callback) {
+  if (data._id != null){
+    data._id = ObjectId(data._id);
+  }
   var cursorone = db.collection('serviceProvider').find( { "currentCity": data.currentCity, "destinationCity": data.deliveryCity, "maxParcelWeight": { $gte: (data.parcelWeight) }, "maxParcelHeight": { $gte: (data.parcelHeight)}, "maxParcelLength": { $gte: (data.parcelLength)}, "maxParcelWidth": { $gte: (data.parcelWidth)}, "journeyDate" : { $gte: new Date().toISOString().split('T')[0] } } ).sort({maxParcelWeight: + 1}).limit(1);
 
   cursorone.count(function (e, count) {
@@ -490,17 +496,24 @@ var sendStatusChangeEmail = function (data, status) {
 
 var getServiceProviderDetails = function (data, callback) {
   var serviceProviderDetails = [];
-  var cursor = db.collection('providerAssigned').findOne( { "serviceProvider.email": data.email}, function (err, document) {
-    if (document !== null){
+  if (data.id != null){
+    var cursor = db.collection('serviceProvider').findOne( { "_id": ObjectId(data.id)}, function (err, document) {
       serviceProviderDetails.push(document);
       callback(serviceProviderDetails)
-    }else {
-      var cursor = db.collection('serviceProvider').findOne( { "email": data.email}, function (err, document) {
+    })
+  } else {
+    var cursor = db.collection('providerAssigned').findOne( { "serviceProvider.email": data.email}, function (err, document) {
+      if (document !== null){
         serviceProviderDetails.push(document);
         callback(serviceProviderDetails)
-      })
-    }
-  } );
+      }else {
+        var cursor = db.collection('serviceProvider').findOne( { "email": data.email}, function (err, document) {
+          serviceProviderDetails.push(document);
+          callback(serviceProviderDetails)
+        })
+      }
+    } );
+  }
 };
 
 

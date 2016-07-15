@@ -5,7 +5,7 @@
 import {tokenNotExpired} from 'angular2-jwt';
 import {ParcelSenderDetails} from "../services/parcel-sender-details";
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RouteParams } from '@angular/router-deprecated';
+import { RouteParams, Router } from '@angular/router-deprecated';
 import { ParcelSenderCRUDService } from './../services/parcel-sender-crud.service';
 
 
@@ -30,6 +30,10 @@ export class ParcelSenderComponent {
 
     submitted = false;
     onSubmit() { this.submitted = true;
+        if (this.profile["id"] != null){
+            this.model["_id"] = this.profile.id;
+            this.router.navigate( ['Profile'] );
+        }
         this.model['senderEmail'] = this.profile.email;
         this.currentCityName = this.model['currentCity'].split(" ");
         this.model['currentCity'] = "";
@@ -56,13 +60,18 @@ export class ParcelSenderComponent {
     error: any;
 
     status: string;
-    constructor(
+    constructor( private router: Router,
         private parcelSenderCRUDService: ParcelSenderCRUDService,
         private routeParams: RouteParams) {
     }
 
     ngOnInit(): void {
         this.profile = JSON.parse(localStorage.getItem('profile'));
+        let id = this.routeParams.get('id');
+        if (id != null){
+            this.profile["id"] = id;
+            this.model["_id"] = id;
+        }
         this.getParcelSenderDetails(this.profile);
     }
     

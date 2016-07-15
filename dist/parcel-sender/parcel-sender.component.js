@@ -17,7 +17,8 @@ var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var parcel_sender_crud_service_1 = require('./../services/parcel-sender-crud.service');
 var ParcelSenderComponent = (function () {
-    function ParcelSenderComponent(parcelSenderCRUDService, routeParams) {
+    function ParcelSenderComponent(router, parcelSenderCRUDService, routeParams) {
+        this.router = router;
         this.parcelSenderCRUDService = parcelSenderCRUDService;
         this.routeParams = routeParams;
         this.mode = 'Observable';
@@ -28,6 +29,10 @@ var ParcelSenderComponent = (function () {
     }
     ParcelSenderComponent.prototype.onSubmit = function () {
         this.submitted = true;
+        if (this.profile["id"] != null) {
+            this.model["_id"] = this.profile.id;
+            this.router.navigate(['Profile']);
+        }
         this.model['senderEmail'] = this.profile.email;
         this.currentCityName = this.model['currentCity'].split(" ");
         this.model['currentCity'] = "";
@@ -53,6 +58,11 @@ var ParcelSenderComponent = (function () {
     };
     ParcelSenderComponent.prototype.ngOnInit = function () {
         this.profile = JSON.parse(localStorage.getItem('profile'));
+        var id = this.routeParams.get('id');
+        if (id != null) {
+            this.profile["id"] = id;
+            this.model["_id"] = id;
+        }
         this.getParcelSenderDetails(this.profile);
     };
     ParcelSenderComponent.prototype.saveParcelSenderDetails = function (parcelSenderDetails) {
@@ -99,7 +109,7 @@ var ParcelSenderComponent = (function () {
             styleUrls: ['app/parcel-sender/parcel-sender.component.css'],
             providers: [parcel_sender_crud_service_1.ParcelSenderCRUDService]
         }), 
-        __metadata('design:paramtypes', [parcel_sender_crud_service_1.ParcelSenderCRUDService, router_deprecated_1.RouteParams])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, parcel_sender_crud_service_1.ParcelSenderCRUDService, router_deprecated_1.RouteParams])
     ], ParcelSenderComponent);
     return ParcelSenderComponent;
 }());

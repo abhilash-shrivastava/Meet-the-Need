@@ -15,8 +15,10 @@ var core_1 = require('@angular/core');
 var angular2_jwt_1 = require('angular2-jwt');
 var angular2_jwt_2 = require('angular2-jwt');
 var request_service_1 = require('./../services/request.service');
+var router_deprecated_1 = require('@angular/router-deprecated');
 var ProfileComponent = (function () {
-    function ProfileComponent(requestsService, authHttp) {
+    function ProfileComponent(router, requestsService, authHttp) {
+        this.router = router;
         this.requestsService = requestsService;
         this.authHttp = authHttp;
         this.parcelGiven = false;
@@ -53,12 +55,12 @@ var ProfileComponent = (function () {
         }
     };
     ProfileComponent.prototype.onUpdateClick = function (requestId, requestType) {
-        // if (requestType == 'Service'){
-        //     this.updateRequest({requestId: requestId, requestType: requestType}, this.onUnassignedServiceClick())
-        // }
-        // if (requestType == 'Parcel'){
-        //     this.updateRequest({requestId: requestId, requestType: requestType}, this.onUnassignedSenderClick())
-        // }
+        if (requestType == 'Service') {
+            this.router.navigate(['ServiceProvider', { id: requestId }]);
+        }
+        if (requestType == 'Parcel') {
+            this.router.navigate(['ParcelSender', { id: requestId }]);
+        }
     };
     ProfileComponent.prototype.ngOnInit = function () {
         this.profile = JSON.parse(localStorage.getItem('profile'));
@@ -233,25 +235,6 @@ var ProfileComponent = (function () {
             }
         }, function (error) { return _this.errorMessage = error; });
     };
-    ProfileComponent.prototype.updateRequest = function (data, callback) {
-        var _this = this;
-        if (!data.requestId || !data.requestType) {
-            return;
-        }
-        //noinspection TypeScriptUnresolvedFunction
-        this.requestsService.updateRequest(data)
-            .subscribe(function (data) {
-            _this.res = data;
-            if (_this.res[0].email) {
-                console.log("go to service");
-                window.location.href = 'localhost:3000/service-provider';
-            }
-            else {
-                console.log("go to parcel");
-                window.location.href = 'localhost:3000/parcel-sender';
-            }
-        }, function (error) { return _this.errorMessage = error; });
-    };
     ProfileComponent.prototype.loggedIn = function () {
         return angular2_jwt_2.tokenNotExpired();
     };
@@ -262,7 +245,7 @@ var ProfileComponent = (function () {
             styleUrls: ['app/profile/profile.css'],
             providers: [request_service_1.RequestsService]
         }), 
-        __metadata('design:paramtypes', [request_service_1.RequestsService, angular2_jwt_1.AuthHttp])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, request_service_1.RequestsService, angular2_jwt_1.AuthHttp])
     ], ProfileComponent);
     return ProfileComponent;
 }());

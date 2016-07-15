@@ -3,9 +3,8 @@
  */
 
 import { NgForm }    from '@angular/common';
-import { Router } from '@angular/router-deprecated';
+import { RouteParams, Router } from '@angular/router-deprecated';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RouteParams } from '@angular/router-deprecated';
 import { ServiceProviderDetails }        from './../services/service-provider-details';
 import { ServiceProviderCRUDService } from './../services/service-provider-crud.service';
 import './../rxjs-operators';
@@ -35,6 +34,10 @@ export class ServiceProviderComponent {
 
     submitted = false;
     onSubmit() { this.submitted = true;
+        if (this.profile["id"] != null){
+            this.model["_id"] = this.profile.id;
+            this.router.navigate( ['Profile'] );
+        }
         this.model['email'] = this.profile.email;
         this.currentCityName = this.model['currentCity'].split(" ");
         this.model['currentCity'] = "";
@@ -60,13 +63,18 @@ export class ServiceProviderComponent {
     }
     error: any;
     status: string;
-    constructor(
+    constructor(private router: Router,
         private serviceProviderCRUDService: ServiceProviderCRUDService,
         private routeParams: RouteParams) {
     }
 
     ngOnInit(): void {
         this.profile = JSON.parse(localStorage.getItem('profile'));
+        let id = this.routeParams.get('id');
+        if (id != null){
+            this.profile["id"] = id;
+            this.model["_id"] = id;
+        }
         this.getServiceProviderDetails(this.profile);
     }
 
@@ -76,6 +84,9 @@ export class ServiceProviderComponent {
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(
                 data  => {
+                    if (this.profile["id"] != null){
+                        this.router.navigate( ['Profile'] );
+                    }
                     this.requests = data;
                     if(this.requests.length > 0){
                         this.showDetails = true;

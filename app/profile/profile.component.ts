@@ -5,6 +5,7 @@ import {Component, OnInit, OnDestroy, AfterContentInit, Input} from '@angular/co
 import {AuthHttp} from 'angular2-jwt';
 import {tokenNotExpired} from 'angular2-jwt';
 import { RequestsService } from './../services/request.service';
+import { RouteParams, Router } from '@angular/router-deprecated';
 
 
 
@@ -67,14 +68,14 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     }
 
     onUpdateClick(requestId, requestType){
-        // if (requestType == 'Service'){
-        //     this.updateRequest({requestId: requestId, requestType: requestType}, this.onUnassignedServiceClick())
-        // }
-        // if (requestType == 'Parcel'){
-        //     this.updateRequest({requestId: requestId, requestType: requestType}, this.onUnassignedSenderClick())
-        // }
+        if (requestType == 'Service'){
+            this.router.navigate( ['ServiceProvider', {id: requestId}] );
+        }
+        if (requestType == 'Parcel'){
+            this.router.navigate( ['ParcelSender', {id: requestId}] );
+        }
     }
-    constructor(    private requestsService: RequestsService,
+    constructor(    private router: Router, private requestsService: RequestsService,
                     public authHttp: AuthHttp) {
     }
 
@@ -255,25 +256,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                     }
                     if (this.res.role == 'Parcel'){
                         this.onUnassignedSenderClick();
-                    }
-                },
-                error =>  this.errorMessage = <any>error
-            );
-    }
-
-    updateRequest(data, callback){
-        if (!data.requestId || !data.requestType) { return; }
-        //noinspection TypeScriptUnresolvedFunction
-        this.requestsService.updateRequest(data)
-            .subscribe(
-                data  => {
-                    this.res = data;
-                    if (this.res[0].email){
-                        console.log("go to service");
-                        window.location.href = 'localhost:3000/service-provider'
-                    }else {
-                        console.log("go to parcel");
-                        window.location.href = 'localhost:3000/parcel-sender'
                     }
                 },
                 error =>  this.errorMessage = <any>error
