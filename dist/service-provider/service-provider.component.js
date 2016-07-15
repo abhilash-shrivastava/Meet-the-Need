@@ -45,7 +45,6 @@ var ServiceProviderComponent = (function () {
         this.submitted = true;
         if (this.profile["id"] != null) {
             this.model["_id"] = this.profile.id;
-            this.router.navigate(['Profile']);
         }
         this.model['email'] = this.profile.email;
         this.currentCityName = this.model['currentCity'].split(" ");
@@ -87,14 +86,14 @@ var ServiceProviderComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(function (data) {
-            if (_this.profile["id"] != null) {
-                _this.router.navigate(['Profile']);
-            }
             _this.requests = data;
             if (_this.requests.length > 0) {
                 _this.showDetails = true;
             }
             else {
+                if (_this.profile["id"] != null) {
+                    _this.router.navigate(['Profile']);
+                }
                 _this.showDetails = false;
             }
         }, function (error) { return _this.errorMessage = error; });

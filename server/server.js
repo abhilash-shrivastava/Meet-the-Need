@@ -246,7 +246,7 @@ var assignSender =  function (data, callback) {
   cursorone.count(function (e, count) {
 
     if (count == 0){
-      db.collection('parcelSender').insertOne(data, (err, result) => {
+      db.collection('parcelSender').save(data, (err, result) => {
         if (err) return console.log(err);
       responseToSender = [];
       callback(responseToSender);

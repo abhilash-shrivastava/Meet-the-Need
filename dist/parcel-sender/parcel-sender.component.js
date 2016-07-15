@@ -31,7 +31,6 @@ var ParcelSenderComponent = (function () {
         this.submitted = true;
         if (this.profile["id"] != null) {
             this.model["_id"] = this.profile.id;
-            this.router.navigate(['Profile']);
         }
         this.model['senderEmail'] = this.profile.email;
         this.currentCityName = this.model['currentCity'].split(" ");
@@ -78,6 +77,9 @@ var ParcelSenderComponent = (function () {
                 _this.showDetails = true;
             }
             else {
+                if (_this.profile["id"] != null) {
+                    _this.router.navigate(['Profile']);
+                }
                 _this.showDetails = false;
             }
         }, function (error) { return _this.errorMessage = error; });

@@ -20,6 +20,14 @@
         <ul *ngFor="let request of unassignedServiceRequests " class="form-style-10">
             <h3>Request Details:</h3>
             <li>Journey Date:   <b>{{request.journeyDate}}</b></li>
+            <h4 >Service Provider Details</h4>
+            <li >Provider Name : <b>{{request.name}}</b></li>
+            <li >Provider Email : <b>{{request.email}}</b></li>
+            <li >Provider Contact Number :  <b>{{request.phone}}</b></li>
+            <li >Provider Address : <b>{{request.destinationAddreddaddressLine1}}</b></li>
+            <li > <b>{{request.destinationAddreddaddressLine2}}</b></li>
+            <li >Current City : <b>{{request.currentCity}}</b></li>
+            <li >Destination City : <b>{{request.destinationCity}}</b></li>
             <h4>Parcel Details:</h4>
             <li>Parcel Weight Capacity :  <b>{{request.maxParcelWeight}}</b> pound</li>
             <li>Parcel Height Dimension : <b>{{request.maxParcelHeight}}</b> cm.</li>

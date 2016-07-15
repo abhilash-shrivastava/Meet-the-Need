@@ -36,7 +36,6 @@ export class ServiceProviderComponent {
     onSubmit() { this.submitted = true;
         if (this.profile["id"] != null){
             this.model["_id"] = this.profile.id;
-            this.router.navigate( ['Profile'] );
         }
         this.model['email'] = this.profile.email;
         this.currentCityName = this.model['currentCity'].split(" ");
@@ -84,13 +83,13 @@ export class ServiceProviderComponent {
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(
                 data  => {
-                    if (this.profile["id"] != null){
-                        this.router.navigate( ['Profile'] );
-                    }
                     this.requests = data;
                     if(this.requests.length > 0){
                         this.showDetails = true;
                     }else{
+                        if (this.profile["id"] != null){
+                            this.router.navigate( ['Profile'] );
+                        }
                         this.showDetails = false;
                     }
                 },

@@ -32,7 +32,6 @@ export class ParcelSenderComponent {
     onSubmit() { this.submitted = true;
         if (this.profile["id"] != null){
             this.model["_id"] = this.profile.id;
-            this.router.navigate( ['Profile'] );
         }
         this.model['senderEmail'] = this.profile.email;
         this.currentCityName = this.model['currentCity'].split(" ");
@@ -85,6 +84,9 @@ export class ParcelSenderComponent {
                     if(this.requests.length > 0){
                         this.showDetails = true;
                     }else{
+                        if (this.profile["id"] != null){
+                            this.router.navigate( ['Profile'] );
+                        }
                         this.showDetails = false;
                     }
                 },
