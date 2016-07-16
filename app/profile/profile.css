@@ -168,8 +168,8 @@ div button:hover {
     /*background-color: #CFD8DC;*/
 }
 div button:focus {
-    color: red;
-    background-color: #CFD8DC;
+    color: white;
+    background-color: black;
 }
 
 .profile-button {

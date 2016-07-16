@@ -58,8 +58,8 @@ nav button:hover {
     background-color: #CFD8DC;
 }
 nav button:focus {
-    color: red;
-    background-color: #CFD8DC;
+    color: white;
+    background-color: black;
 }
 div {
     color: white;
