@@ -60,12 +60,13 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     }
 
     onCancelClick(requestId, requestType){
-        
-        if (requestType == 'Service'){
-            this.cancelRequest({requestId: requestId, requestType: requestType}, this.onUnassignedServiceClick())
-        }
-        if (requestType == 'Parcel'){
-            this.cancelRequest({requestId: requestId, requestType: requestType}, this.onUnassignedSenderClick())
+        if (confirm("Cancel Request?")){
+            if (requestType == 'Service'){
+                this.cancelRequest({requestId: requestId, requestType: requestType}, this.onUnassignedServiceClick())
+            }
+            if (requestType == 'Parcel'){
+                this.cancelRequest({requestId: requestId, requestType: requestType}, this.onUnassignedSenderClick())
+            }
         }
     }
 

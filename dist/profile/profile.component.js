@@ -48,11 +48,13 @@ var ProfileComponent = (function () {
         this.changeParcelStatus({ email: this.profile.email, parcelId: parcelId }, this.getAssignedSenderRequests(this.profile));
     };
     ProfileComponent.prototype.onCancelClick = function (requestId, requestType) {
-        if (requestType == 'Service') {
-            this.cancelRequest({ requestId: requestId, requestType: requestType }, this.onUnassignedServiceClick());
-        }
-        if (requestType == 'Parcel') {
-            this.cancelRequest({ requestId: requestId, requestType: requestType }, this.onUnassignedSenderClick());
+        if (confirm("Cancel Request?")) {
+            if (requestType == 'Service') {
+                this.cancelRequest({ requestId: requestId, requestType: requestType }, this.onUnassignedServiceClick());
+            }
+            if (requestType == 'Parcel') {
+                this.cancelRequest({ requestId: requestId, requestType: requestType }, this.onUnassignedSenderClick());
+            }
         }
     };
     ProfileComponent.prototype.onUpdateClick = function (requestId, requestType) {

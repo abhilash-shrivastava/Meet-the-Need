@@ -5,7 +5,7 @@
     <title>Parcel Sender</title>
 </head>
 <body>
-<div [hidden] = "!isLoading" class="loader">Loading...</div>
+<div *ngIf="loggedIn()" [hidden] = "!isLoading" class="loader">Loading...</div>
 <div *ngIf="loggedIn()" [hidden]="submitted || isLoading">
 <div class="form-style-10">
     <h1>Details Needed<span>Please provide the following details to send a parcel!</span></h1>

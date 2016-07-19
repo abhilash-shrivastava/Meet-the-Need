@@ -68,6 +68,7 @@ export class ParcelSenderComponent {
     }
 
     ngOnInit(): void {
+
         this.profile = JSON.parse(localStorage.getItem('profile'));
         let id = this.routeParams.get('id');
         if (id != null){
