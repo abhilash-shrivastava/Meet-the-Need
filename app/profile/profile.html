@@ -36,8 +36,8 @@
             <button class="button-cancel" (click)="onCancelClick(request._id, 'Service')">Cancel</button>
             <button class="button-update" (click)="onUpdateClick(request._id, 'Service')">Update</button>
         </ul>
-        <pagination-controls (pageChange)="p = $event" #api>
-        </pagination-controls>
+            <pagination-controls class="centerAlignText" (pageChange)="p = $event" #api>
+            </pagination-controls>
     </div>
     <div *ngIf="unassignedServiceRequests" [hidden]="showDetails" class="form-style-10"><h3>No Unassigned Service Requests</h3></div>
 
@@ -69,8 +69,8 @@
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered</button>
         </ul>
-        <pagination-controls (pageChange)="p = $event" #api>
-        </pagination-controls>
+            <pagination-controls class="centerAlignText" (pageChange)="p = $event" #api>
+            </pagination-controls>
     </div>
     <div *ngIf="assignedServiceRequests" [hidden]="showDetails" class="form-style-10"><h3>No Assigned Service Requests</h3></div>
 
@@ -98,7 +98,7 @@
             <button *ngIf = "!request.status" class="button-update" (click)="onUpdateClick(request._id, 'Parcel')">Update</button>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
         </ul>
-        <pagination-controls (pageChange)="p = $event" #api>
+        <pagination-controls class="centerAlignText" (pageChange)="p = $event" #api>
         </pagination-controls>
     </div>
     <div *ngIf="parcelRequests" [hidden]="showDetails" class="form-style-10"><h3>No Parcel Requests</h3></div>
@@ -130,7 +130,7 @@
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Delivered To Receiver'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Received</button>
         </ul>
-        <pagination-controls (pageChange)="p = $event" #api>
+        <pagination-controls class="centerAlignText" (pageChange)="p = $event" #api>
         </pagination-controls>
     </div>
     <div *ngIf="parcelReceivingRequests" [hidden]="showDetails" class="form-style-10"><h3>No Parcel Receiving Requests</h3></div>

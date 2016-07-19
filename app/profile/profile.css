@@ -177,3 +177,8 @@ div button:focus {
     background-color:rgba(0, 0, 0, 0.5);
     padding: 20px;
 }
+
+.centerAlignText {
+    text-align: center; !important;
+    font: 13px Arial, Helvetica, sans-serif;
+}
