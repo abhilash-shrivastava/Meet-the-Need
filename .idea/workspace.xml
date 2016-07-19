@@ -3,15 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="bf27a07d-67b9-42e0-9353-0fde10b3d64b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.html" afterPath="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.ts" afterPath="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/profile/profile.component.ts" afterPath="$PROJECT_DIR$/app/profile/profile.component.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/service-provider/service-provider.component.html" afterPath="$PROJECT_DIR$/app/service-provider/service-provider.component.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/parcel-sender/parcel-sender.component.js" afterPath="$PROJECT_DIR$/dist/parcel-sender/parcel-sender.component.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/parcel-sender/parcel-sender.component.js.map" afterPath="$PROJECT_DIR$/dist/parcel-sender/parcel-sender.component.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/profile/profile.component.js" afterPath="$PROJECT_DIR$/dist/profile/profile.component.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/profile/profile.component.js.map" afterPath="$PROJECT_DIR$/dist/profile/profile.component.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server.js" afterPath="$PROJECT_DIR$/server/server.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/profile/profile.html" afterPath="$PROJECT_DIR$/app/profile/profile.html" />
     </list>
     <ignored path="meet-the-need.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,6 +24,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="profile.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/profile/profile.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1980">
+              <caret line="132" column="69" selection-start-line="132" selection-start-column="69" selection-end-line="132" selection-end-column="69" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="profile.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/profile/profile.css">
           <provider selected="true" editor-type-id="text-editor">
@@ -57,16 +59,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
               <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/server.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="682">
-              <caret line="592" column="4" selection-start-line="576" selection-start-column="1" selection-end-line="592" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -116,7 +108,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="service-provider.component.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="service-provider.component.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/service-provider/service-provider.component.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
@@ -198,7 +190,6 @@
         <option value="$PROJECT_DIR$/app/service-provider/service-provider.component.css" />
         <option value="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.css" />
         <option value="$PROJECT_DIR$/systemjs.config.js" />
-        <option value="$PROJECT_DIR$/app/profile/profile.html" />
         <option value="$PROJECT_DIR$/app/profile/profile.css" />
         <option value="$PROJECT_DIR$/app/profile/profile.component.ts" />
         <option value="$PROJECT_DIR$/server/server.js" />
@@ -206,6 +197,7 @@
         <option value="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.html" />
         <option value="$PROJECT_DIR$/app/parcel-sender/parcel-sender.component.ts" />
         <option value="$PROJECT_DIR$/app/service-provider/service-provider.component.html" />
+        <option value="$PROJECT_DIR$/app/profile/profile.html" />
       </list>
     </option>
   </component>
@@ -490,12 +482,12 @@
       <workItem from="1468577378205" duration="3579000" />
       <workItem from="1468622861779" duration="131000" />
       <workItem from="1468689862530" duration="761000" />
-      <workItem from="1468911857931" duration="7696000" />
+      <workItem from="1468911857931" duration="7828000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="309737000" />
+    <option name="totallyTimeSpent" value="309869000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -757,14 +749,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/profile/profile.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="39" column="34" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="682">
@@ -845,6 +829,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/profile/profile.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1980">
+          <caret line="132" column="69" selection-start-line="132" selection-start-column="69" selection-end-line="132" selection-end-column="69" />
           <folding />
         </state>
       </provider>

@@ -17,7 +17,7 @@
     </div>
 <div >
     <div *ngIf="unassignedServiceRequests" [hidden]="!showDetails">
-        <ul *ngFor="let request of unassignedServiceRequests | paginate: { itemsPerPage: 3, currentPage: p }" class="form-style-10">
+        <ul *ngFor="let request of unassignedServiceRequests | paginate: { itemsPerPage: 3, currentPage: p1 }" class="form-style-10">
             <h3>Request Details:</h3>
             <li>Journey Date:   <b>{{request.journeyDate}}</b></li>
             <h4 >Service Provider Details</h4>
@@ -36,13 +36,13 @@
             <button class="button-cancel" (click)="onCancelClick(request._id, 'Service')">Cancel</button>
             <button class="button-update" (click)="onUpdateClick(request._id, 'Service')">Update</button>
         </ul>
-            <pagination-controls class="centerAlignText" (pageChange)="p = $event" #api>
+            <pagination-controls class="centerAlignText" (pageChange)="p1 = $event" #api>
             </pagination-controls>
     </div>
     <div *ngIf="unassignedServiceRequests" [hidden]="showDetails" class="form-style-10"><h3>No Unassigned Service Requests</h3></div>
 
     <div *ngIf="assignedServiceRequests" [hidden]="!showDetails" >
-        <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 3, currentPage: p }" class="form-style-10">
+        <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 3, currentPage: p2 }" class="form-style-10">
             <h3>Request Details:</h3>
             <li>Journey Date:   <b>{{request.serviceProvider.journeyDate}}</b></li>
             <h4>Parcel Details:</h4>
@@ -69,13 +69,13 @@
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered</button>
         </ul>
-            <pagination-controls class="centerAlignText" (pageChange)="p = $event" #api>
+            <pagination-controls class="centerAlignText" (pageChange)="p2 = $event" #api>
             </pagination-controls>
     </div>
     <div *ngIf="assignedServiceRequests" [hidden]="showDetails" class="form-style-10"><h3>No Assigned Service Requests</h3></div>
 
     <div *ngIf="parcelRequests" [hidden]="!showDetails" >
-        <ul *ngFor="let request of parcelRequests | paginate: { itemsPerPage: 3, currentPage: p }" class="form-style-10">
+        <ul *ngFor="let request of parcelRequests | paginate: { itemsPerPage: 3, currentPage: p3 }" class="form-style-10">
             <h3>Request Details:</h3>
             <li>Receiver Name : <b>{{request.receiverName}}</b></li>
             <li>Parcel Details : <b>{{request.parcelDisclosure}}</b></li>
@@ -98,13 +98,13 @@
             <button *ngIf = "!request.status" class="button-update" (click)="onUpdateClick(request._id, 'Parcel')">Update</button>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
         </ul>
-        <pagination-controls class="centerAlignText" (pageChange)="p = $event" #api>
+        <pagination-controls class="centerAlignText" (pageChange)="p3 = $event" #api>
         </pagination-controls>
     </div>
     <div *ngIf="parcelRequests" [hidden]="showDetails" class="form-style-10"><h3>No Parcel Requests</h3></div>
 
     <div *ngIf="parcelReceivingRequests" [hidden]="!showDetails">
-        <ul *ngFor="let request of parcelReceivingRequests | paginate: { itemsPerPage: 3, currentPage: p }" class="form-style-10">
+        <ul *ngFor="let request of parcelReceivingRequests | paginate: { itemsPerPage: 3, currentPage: p4 }" class="form-style-10">
             <h3>Request Details:</h3>
             <h4>Parcel Details:</h4>
             <li>Parcel Description : <b>{{request.parcelDisclosure}}</b></li>
@@ -130,7 +130,7 @@
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Delivered To Receiver'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Received</button>
         </ul>
-        <pagination-controls class="centerAlignText" (pageChange)="p = $event" #api>
+        <pagination-controls class="centerAlignText" (pageChange)="p4 = $event" #api>
         </pagination-controls>
     </div>
     <div *ngIf="parcelReceivingRequests" [hidden]="showDetails" class="form-style-10"><h3>No Parcel Receiving Requests</h3></div>
