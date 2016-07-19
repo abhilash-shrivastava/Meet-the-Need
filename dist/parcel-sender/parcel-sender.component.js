@@ -31,7 +31,6 @@ var ParcelSenderComponent = (function () {
     ParcelSenderComponent.prototype.onSubmit = function () {
         this.isLoading = true;
         this.submitted = true;
-        console.log('timer');
         if (this.profile["id"] != null) {
             this.model["_id"] = this.profile.id;
         }

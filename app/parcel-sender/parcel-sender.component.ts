@@ -33,7 +33,6 @@ export class ParcelSenderComponent {
     onSubmit() {
         this.isLoading = true;
         this.submitted = true;
-        console.log('timer');
         if (this.profile["id"] != null){
             this.model["_id"] = this.profile.id;
         }

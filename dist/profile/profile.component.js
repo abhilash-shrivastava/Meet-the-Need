@@ -16,6 +16,7 @@ var angular2_jwt_1 = require('angular2-jwt');
 var angular2_jwt_2 = require('angular2-jwt');
 var request_service_1 = require('./../services/request.service');
 var router_deprecated_1 = require('@angular/router-deprecated');
+var ng2_pagination_1 = require('ng2-pagination');
 var ProfileComponent = (function () {
     function ProfileComponent(router, requestsService, authHttp) {
         this.router = router;
@@ -79,14 +80,16 @@ var ProfileComponent = (function () {
             .subscribe(function (data) {
             _this.assignedServiceRequests = data;
             if (_this.assignedServiceRequests.length > 0) {
-                delete _this.parcelRequests;
+                delete _this.unassignedParcelRequests;
+                delete _this.assignedParcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
             }
             else {
-                delete _this.parcelRequests;
+                delete _this.unassignedParcelRequests;
+                delete _this.assignedParcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = false;
@@ -104,14 +107,16 @@ var ProfileComponent = (function () {
             .subscribe(function (data) {
             _this.unassignedServiceRequests = data;
             if (_this.unassignedServiceRequests.length > 0) {
-                delete _this.parcelRequests;
+                delete _this.unassignedParcelRequests;
+                delete _this.assignedParcelRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
             }
             else {
-                delete _this.parcelRequests;
+                delete _this.unassignedParcelRequests;
+                delete _this.assignedParcelRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = false;
@@ -127,8 +132,9 @@ var ProfileComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction
         this.requestsService.getAssignedSenderRequests(data)
             .subscribe(function (data) {
-            _this.parcelRequests = data;
-            if (_this.parcelRequests.length > 0) {
+            _this.assignedParcelRequests = data;
+            if (_this.assignedParcelRequests.length > 0) {
+                delete _this.unassignedParcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
@@ -136,6 +142,7 @@ var ProfileComponent = (function () {
                 _this.requestType = false;
             }
             else {
+                delete _this.unassignedParcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
@@ -152,8 +159,9 @@ var ProfileComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction
         this.requestsService.getUnassignedSenderRequests(data)
             .subscribe(function (data) {
-            _this.parcelRequests = data;
-            if (_this.parcelRequests.length > 0) {
+            _this.unassignedParcelRequests = data;
+            if (_this.unassignedParcelRequests.length > 0) {
+                delete _this.assignedParcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
@@ -161,6 +169,7 @@ var ProfileComponent = (function () {
                 _this.requestType = false;
             }
             else {
+                delete _this.assignedParcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
@@ -181,13 +190,15 @@ var ProfileComponent = (function () {
             if (_this.parcelReceivingRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
-                delete _this.parcelRequests;
+                delete _this.unassignedParcelRequests;
+                delete _this.assignedParcelRequests;
                 _this.showDetails = true;
             }
             else {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
-                delete _this.parcelRequests;
+                delete _this.unassignedParcelRequests;
+                delete _this.assignedParcelRequests;
                 _this.showDetails = false;
             }
         }, function (error) { return _this.errorMessage = error; });
@@ -243,7 +254,9 @@ var ProfileComponent = (function () {
             selector: 'profile',
             templateUrl: 'app/profile/profile.html',
             styleUrls: ['app/profile/profile.css'],
-            providers: [request_service_1.RequestsService]
+            providers: [ng2_pagination_1.PaginationService, request_service_1.RequestsService],
+            directives: [ng2_pagination_1.PaginationControlsCmp],
+            pipes: [ng2_pagination_1.PaginatePipe]
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, request_service_1.RequestsService, angular2_jwt_1.AuthHttp])
     ], ProfileComponent);

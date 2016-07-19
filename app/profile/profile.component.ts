@@ -6,7 +6,7 @@ import {AuthHttp} from 'angular2-jwt';
 import {tokenNotExpired} from 'angular2-jwt';
 import { RequestsService } from './../services/request.service';
 import { RouteParams, Router } from '@angular/router-deprecated';
-
+import {PaginationControlsCmp, PaginatePipe, PaginationService} from 'ng2-pagination';
 
 
 
@@ -14,7 +14,9 @@ import { RouteParams, Router } from '@angular/router-deprecated';
     selector: 'profile',
     templateUrl: 'app/profile/profile.html',
     styleUrls: ['app/profile/profile.css'],
-    providers: [RequestsService]
+    providers: [PaginationService, RequestsService],
+    directives: [PaginationControlsCmp],
+    pipes: [PaginatePipe]
 })
 
 export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
@@ -23,7 +25,8 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     unassignedServiceRequests: any;
     assignedServiceRequests:any;
     parcelReceivingRequests:any;
-    parcelRequests: any;
+    unassignedParcelRequests: any;
+    assignedParcelRequests: any;
     parcelGiven = false;
     parcelCollected = false;
     parcelDelivered = false;
@@ -97,14 +100,16 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                 data  => {
                     this.assignedServiceRequests = data;
                     if(this.assignedServiceRequests.length > 0){
-                        delete this.parcelRequests;
+                        delete this.unassignedParcelRequests;
+                        delete this.assignedParcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.parcelReceivingRequests;
 
                         this.showDetails = true;
                         this.requestType = true;
                     }else{
-                        delete this.parcelRequests;
+                        delete this.unassignedParcelRequests;
+                        delete this.assignedParcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = false;
@@ -124,13 +129,15 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                 data  => {
                     this.unassignedServiceRequests = data;
                     if(this.unassignedServiceRequests.length > 0){
-                        delete this.parcelRequests;
+                        delete this.unassignedParcelRequests;
+                        delete this.assignedParcelRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = true;
                     }else{
-                        delete this.parcelRequests;
+                        delete this.unassignedParcelRequests;
+                        delete this.assignedParcelRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = false;
@@ -148,14 +155,16 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.requestsService.getAssignedSenderRequests(data)
             .subscribe(
                 data  => {
-                    this.parcelRequests = data;
-                    if(this.parcelRequests.length > 0){
+                    this.assignedParcelRequests = data;
+                    if(this.assignedParcelRequests.length > 0){
+                        delete this.unassignedParcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
                     }else{
+                        delete this.unassignedParcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
@@ -174,14 +183,16 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.requestsService.getUnassignedSenderRequests(data)
             .subscribe(
                 data  => {
-                    this.parcelRequests = data;
-                    if(this.parcelRequests.length > 0){
+                    this.unassignedParcelRequests = data;
+                    if(this.unassignedParcelRequests.length > 0){
+                        delete this.assignedParcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
                     }else{
+                        delete this.assignedParcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
@@ -205,12 +216,14 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                     if(this.parcelReceivingRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
-                        delete this.parcelRequests;
+                        delete this.unassignedParcelRequests;
+                        delete this.assignedParcelRequests;
                         this.showDetails = true;
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
-                        delete this.parcelRequests;
+                        delete this.unassignedParcelRequests;
+                        delete this.assignedParcelRequests;
                         this.showDetails = false;
                     }
                 },
