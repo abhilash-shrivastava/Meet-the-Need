@@ -25,8 +25,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     unassignedServiceRequests: any;
     assignedServiceRequests:any;
     parcelReceivingRequests:any;
-    unassignedParcelRequests: any;
-    assignedParcelRequests: any;
+    parcelRequests: any;
     parcelGiven = false;
     parcelCollected = false;
     parcelDelivered = false;
@@ -100,16 +99,14 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                 data  => {
                     this.assignedServiceRequests = data;
                     if(this.assignedServiceRequests.length > 0){
-                        delete this.unassignedParcelRequests;
-                        delete this.assignedParcelRequests;
+                        delete this.parcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.parcelReceivingRequests;
 
                         this.showDetails = true;
                         this.requestType = true;
                     }else{
-                        delete this.unassignedParcelRequests;
-                        delete this.assignedParcelRequests;
+                        delete this.parcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = false;
@@ -129,15 +126,13 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                 data  => {
                     this.unassignedServiceRequests = data;
                     if(this.unassignedServiceRequests.length > 0){
-                        delete this.unassignedParcelRequests;
-                        delete this.assignedParcelRequests;
+                        delete this.parcelRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = true;
                     }else{
-                        delete this.unassignedParcelRequests;
-                        delete this.assignedParcelRequests;
+                        delete this.parcelRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = false;
@@ -155,16 +150,14 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.requestsService.getAssignedSenderRequests(data)
             .subscribe(
                 data  => {
-                    this.assignedParcelRequests = data;
-                    if(this.assignedParcelRequests.length > 0){
-                        delete this.unassignedParcelRequests;
+                    this.parcelRequests = data;
+                    if(this.parcelRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
                     }else{
-                        delete this.unassignedParcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
@@ -183,16 +176,14 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.requestsService.getUnassignedSenderRequests(data)
             .subscribe(
                 data  => {
-                    this.unassignedParcelRequests = data;
-                    if(this.unassignedParcelRequests.length > 0){
-                        delete this.assignedParcelRequests;
+                    this.parcelRequests = data;
+                    if(this.parcelRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
                     }else{
-                        delete this.assignedParcelRequests;
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
                         delete this.parcelReceivingRequests;
@@ -216,14 +207,12 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                     if(this.parcelReceivingRequests.length > 0){
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
-                        delete this.unassignedParcelRequests;
-                        delete this.assignedParcelRequests;
+                        delete this.parcelRequests;
                         this.showDetails = true;
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
-                        delete this.unassignedParcelRequests;
-                        delete this.assignedParcelRequests;
+                        delete this.parcelRequests;
                         this.showDetails = false;
                     }
                 },

@@ -80,16 +80,14 @@ var ProfileComponent = (function () {
             .subscribe(function (data) {
             _this.assignedServiceRequests = data;
             if (_this.assignedServiceRequests.length > 0) {
-                delete _this.unassignedParcelRequests;
-                delete _this.assignedParcelRequests;
+                delete _this.parcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
             }
             else {
-                delete _this.unassignedParcelRequests;
-                delete _this.assignedParcelRequests;
+                delete _this.parcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = false;
@@ -107,16 +105,14 @@ var ProfileComponent = (function () {
             .subscribe(function (data) {
             _this.unassignedServiceRequests = data;
             if (_this.unassignedServiceRequests.length > 0) {
-                delete _this.unassignedParcelRequests;
-                delete _this.assignedParcelRequests;
+                delete _this.parcelRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
             }
             else {
-                delete _this.unassignedParcelRequests;
-                delete _this.assignedParcelRequests;
+                delete _this.parcelRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = false;
@@ -132,9 +128,8 @@ var ProfileComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction
         this.requestsService.getAssignedSenderRequests(data)
             .subscribe(function (data) {
-            _this.assignedParcelRequests = data;
-            if (_this.assignedParcelRequests.length > 0) {
-                delete _this.unassignedParcelRequests;
+            _this.parcelRequests = data;
+            if (_this.parcelRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
@@ -142,7 +137,6 @@ var ProfileComponent = (function () {
                 _this.requestType = false;
             }
             else {
-                delete _this.unassignedParcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
@@ -159,9 +153,8 @@ var ProfileComponent = (function () {
         //noinspection TypeScriptUnresolvedFunction
         this.requestsService.getUnassignedSenderRequests(data)
             .subscribe(function (data) {
-            _this.unassignedParcelRequests = data;
-            if (_this.unassignedParcelRequests.length > 0) {
-                delete _this.assignedParcelRequests;
+            _this.parcelRequests = data;
+            if (_this.parcelRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
@@ -169,7 +162,6 @@ var ProfileComponent = (function () {
                 _this.requestType = false;
             }
             else {
-                delete _this.assignedParcelRequests;
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
                 delete _this.parcelReceivingRequests;
@@ -190,15 +182,13 @@ var ProfileComponent = (function () {
             if (_this.parcelReceivingRequests.length > 0) {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
-                delete _this.unassignedParcelRequests;
-                delete _this.assignedParcelRequests;
+                delete _this.parcelRequests;
                 _this.showDetails = true;
             }
             else {
                 delete _this.unassignedServiceRequests;
                 delete _this.assignedServiceRequests;
-                delete _this.unassignedParcelRequests;
-                delete _this.assignedParcelRequests;
+                delete _this.parcelRequests;
                 _this.showDetails = false;
             }
         }, function (error) { return _this.errorMessage = error; });
