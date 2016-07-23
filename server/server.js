@@ -574,22 +574,22 @@ var updateRequest = function (data, callback) {
 };
 
 var sendEmail = function (to_emailId, email_subject, content_text) {
-  var from_email = new helper.Email("no-reply@meet-the-need.com")
-  var to_email = new helper.Email(to_emailId)
-  var subject = email_subject;
-  var content = new helper.Content("text/plain", content_text)
-  var mail = new helper.Mail(from_email, subject, to_email, content)
-
-  var sg = require('sendgrid').SendGrid('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')
-  var requestBody = mail.toJSON()
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/mail/send'
-  request.body = requestBody
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
+  // var from_email = new helper.Email("no-reply@meet-the-need.com")
+  // var to_email = new helper.Email(to_emailId)
+  // var subject = email_subject;
+  // var content = new helper.Content("text/plain", content_text)
+  // var mail = new helper.Mail(from_email, subject, to_email, content)
+  //
+  // var sg = require('sendgrid').SendGrid('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')
+  // var requestBody = mail.toJSON()
+  // var request = sg.emptyRequest()
+  // request.method = 'POST'
+  // request.path = '/v3/mail/send'
+  // request.body = requestBody
+  // sg.API(request, function (response) {
+  //   console.log(response.statusCode)
+  //   console.log(response.body)
+  //   console.log(response.headers)
+  // })
 
 };

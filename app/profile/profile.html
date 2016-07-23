@@ -25,7 +25,7 @@
             <li >Provider Email : <b>{{request.email}}</b></li>
             <li >Provider Contact Number :  <b>{{request.phone}}</b></li>
             <li >Provider Address : <b>{{request.destinationAddreddaddressLine1}}</b></li>
-            <li > <b>{{request.destinationAddreddaddressLine2}}</b></li>
+            <li *ngIf = "request.destinationAddreddaddressLine2"> <b>{{request.destinationAddreddaddressLine2}}</b></li>
             <li >Current City : <b>{{request.currentCity}}</b></li>
             <li >Destination City : <b>{{request.destinationCity}}</b></li>
             <h4>Parcel Details:</h4>
@@ -56,14 +56,14 @@
             <li>Sender Email : <b>{{request.senderEmail}}</b></li>
             <li>Sender Contact Number :   <b>{{request.senderPhone}}</b></li>
             <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
-            <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li *ngIf = "request.currentAddreddaddressLine2"> <b>{{request.currentAddreddaddressLine2}}</b></li>
             <li>City : <b>{{request.currentCity}}</b></li>
             <h4>Receiver Details</h4>
             <li>Receiver Name : <b>{{request.receiverName}}</b></li>
             <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
             <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
             <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
-            <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
+            <li *ngIf = "request.deliveryAddreddaddressLine2"> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
             <li>City : <b>{{request.deliveryCity}}</b></li>
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
@@ -85,7 +85,7 @@
             <li *ngIf = "request.status">Provider Email : <b>{{request.serviceProvider.email}}</b></li>
             <li *ngIf = "request.status">Provider Contact Number :  <b>{{request.serviceProvider.phone}}</b></li>
             <li *ngIf = "request.status">Provider Address : <b>{{request.serviceProvider.destinationAddreddaddressLine1}}</b></li>
-            <li *ngIf = "request.status"> <b>{{request.destinationAddreddaddressLine2}}</b></li>
+            <li *ngIf = "request.status && request.destinationAddreddaddressLine2"> <b>{{request.destinationAddreddaddressLine2}}</b></li>
             <li *ngIf = "request.status">City : <b>{{request.serviceProvider.destinationCity}}</b></li>
             <h4>Parcel Details:</h4>
             <li>Parcel Id : <b>{{request._id}}</b></li>
@@ -118,14 +118,14 @@
             <li>Sender Email : <b>{{request.senderEmail}}</b></li>
             <li>Sender Contact Number :   <b>{{request.senderPhone}}</b></li>
             <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
-            <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li *ngIf = "request.currentAddreddaddressLine2"> <b>{{request.currentAddreddaddressLine2}}</b></li>
             <li>City : <b>{{request.currentCity}}</b></li>
             <h4>Service Provider Details</h4>
             <li>Provider Name : <b>{{request.serviceProvider.name}}</b></li>
             <li>Provider Email : <b>{{request.serviceProvider.email}}</b></li>
             <li>Provider Contact Number :  <b>{{request.serviceProvider.phone}}</b></li>
             <li>Provider Address : <b>{{request.serviceProvider.destinationAddreddaddressLine1}}</b></li>
-            <li> <b>{{request.destinationAddreddaddressLine2}}</b></li>
+            <li *ngIf = "request.destinationAddreddaddressLine2"> <b>{{request.destinationAddreddaddressLine2}}</b></li>
             <li>City : <b>{{request.serviceProvider.destinationCity}}</b></li>
             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Delivered To Receiver'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Received</button>
