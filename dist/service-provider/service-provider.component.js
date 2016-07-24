@@ -17,10 +17,12 @@ var service_provider_details_1 = require('./../services/service-provider-details
 var service_provider_crud_service_1 = require('./../services/service-provider-crud.service');
 require('./../rxjs-operators');
 var angular2_jwt_1 = require('angular2-jwt');
+var googleAPIService_service_1 = require("../services/googleAPIService.service");
 //var fetch = require('node-fetch');
 var ServiceProviderComponent = (function () {
-    function ServiceProviderComponent(router, serviceProviderCRUDService, routeParams) {
+    function ServiceProviderComponent(router, googleApi, serviceProviderCRUDService, routeParams) {
         this.router = router;
+        this.googleApi = googleApi;
         this.serviceProviderCRUDService = serviceProviderCRUDService;
         this.routeParams = routeParams;
         this.mode = 'Observable';
@@ -28,6 +30,16 @@ var ServiceProviderComponent = (function () {
         this.showDetails = false;
         this.isLoading = false;
         this.submitted = false;
+        this.fetchingCurrentAddress = false;
+        this.isCurrentAddressLoading = false;
+        this.componentForm = {
+            street_number: 'short_name',
+            route: 'long_name',
+            locality: 'long_name',
+            administrative_area_level_1: 'short_name',
+            country: 'long_name',
+            postal_code: 'short_name'
+        };
         this.states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
         this.cities = [];
         this.SwitchFuction = function (state) {
@@ -49,29 +61,36 @@ var ServiceProviderComponent = (function () {
             this.model["_id"] = this.profile.id;
         }
         this.model['email'] = this.profile.email;
-        this.currentCityName = this.model['currentCity'].split(" ");
-        this.model['currentCity'] = "";
-        for (var i = 0; i < this.currentCityName.length; i++) {
-            this.currentCityName[i] = this.currentCityName[i].charAt(0).toUpperCase() + this.currentCityName[i].slice(1).toLowerCase();
-            this.model['currentCity'] = this.model['currentCity'] + this.currentCityName[i];
-            if (i + 1 < this.currentCityName.length) {
-                this.model['currentCity'] = this.model['currentCity'] + " ";
-            }
-        }
-        this.destinationCityName = this.model['destinationCity'].split(" ");
-        this.model['destinationCity'] = "";
-        for (var i = 0; i < this.destinationCityName.length; i++) {
-            this.destinationCityName[i] = this.destinationCityName[i].charAt(0).toUpperCase() + this.destinationCityName[i].slice(1).toLowerCase();
-            this.model['destinationCity'] = this.model['destinationCity'] + this.destinationCityName[i];
-            if (i + 1 < this.destinationCityName.length) {
-                this.model['destinationCity'] = this.model['destinationCity'] + " ";
-            }
-        }
+        // this.currentCityName = this.model['currentCity'].split(" ");
+        // this.model['currentCity'] = "";
+        // for (var i= 0 ; i < this.currentCityName.length; i++ ){
+        //     this.currentCityName[i] = this.currentCityName[i].charAt(0).toUpperCase() + this.currentCityName[i].slice(1).toLowerCase();
+        //     this.model['currentCity'] =  this.model['currentCity'] + this.currentCityName[i]
+        //     if (i + 1 < this.currentCityName.length ){
+        //         this.model['currentCity'] =  this.model['currentCity'] + " ";
+        //     }
+        // }
+        // this.destinationCityName = this.model['destinationCity'].split(" ");
+        // this.model['destinationCity'] = "";
+        // for (var i= 0 ; i < this.destinationCityName.length; i++ ){
+        //     this.destinationCityName[i] = this.destinationCityName[i].charAt(0).toUpperCase() + this.destinationCityName[i].slice(1).toLowerCase();
+        //     this.model['destinationCity'] =  this.model['destinationCity'] + this.destinationCityName[i];
+        //     if (i + 1 < this.destinationCityName.length ){
+        //         this.model['destinationCity'] =  this.model['destinationCity'] + " ";
+        //     }
+        // }
         if (this.model !== null) {
             this.saveServiceProviderDetails(this.model);
         }
     };
     ServiceProviderComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.googleApi.initAutocomplete().then(function () {
+            // Create the autocomplete object, restricting the search to geographical
+            // location types.
+            _this.autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */ (document.getElementById('autocomplete')), { types: ['geocode'] });
+        });
         this.profile = JSON.parse(localStorage.getItem('profile'));
         var id = this.routeParams.get('id');
         if (id != null) {
@@ -79,6 +98,63 @@ var ServiceProviderComponent = (function () {
             this.model["_id"] = id;
         }
         this.getServiceProviderDetails(this.profile);
+    };
+    ServiceProviderComponent.prototype.fillInAddress = function () {
+        var _this = this;
+        // Get the place details from the autocomplete object.
+        var place = this.autocomplete.getPlace();
+        this.model['currentAddreddaddressLine1'] = "";
+        this.model['currentAddressaddressLine2'] = "";
+        this.model['currentCity'] = "";
+        this.model['currentState'] = "";
+        this.model['currentZip'] = "";
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form.
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (this.componentForm[addressType]) {
+                var val = place.address_components[i][this.componentForm[addressType]];
+                if (addressType == 'street_number') {
+                    this.model['currentAddreddaddressLine1'] = val;
+                }
+                else if (addressType == 'route') {
+                    this.model['currentAddressaddressLine2'] = val;
+                }
+                else if (addressType == 'locality') {
+                    this.model['currentCity'] = val;
+                }
+                else if (addressType == 'administrative_area_level_1') {
+                    this.model['currentState'] = val;
+                }
+                else if (addressType == 'postal_code') {
+                    this.model['currentZip'] = val;
+                }
+            }
+        }
+        if (place.address_components.length > 0) {
+            setTimeout(function () {
+                _this.isCurrentAddressLoading = false;
+                _this.fetchingCurrentAddress = true;
+                place['address_components'] = null;
+            }, 1);
+        }
+    };
+    ServiceProviderComponent.prototype.geolocate = function (event) {
+        var _this = this;
+        this.isCurrentAddressLoading = true;
+        this.fetchingCurrentAddress = false;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                //noinspection TypeScriptValidateTypes
+                _this.circle = new google.maps.Circle();
+                _this.autocomplete.setBounds(_this.circle.getBounds());
+                _this.fillInAddress();
+            });
+        }
     };
     ServiceProviderComponent.prototype.saveServiceProviderDetails = function (serviceProviderDetails) {
         var _this = this;
@@ -135,7 +211,7 @@ var ServiceProviderComponent = (function () {
             styleUrls: ['app/service-provider/service-provider.component.css'],
             providers: [service_provider_crud_service_1.ServiceProviderCRUDService]
         }), 
-        __metadata('design:paramtypes', [router_deprecated_1.Router, service_provider_crud_service_1.ServiceProviderCRUDService, router_deprecated_1.RouteParams])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, googleAPIService_service_1.GoogleApiService, service_provider_crud_service_1.ServiceProviderCRUDService, router_deprecated_1.RouteParams])
     ], ServiceProviderComponent);
     return ServiceProviderComponent;
 }());

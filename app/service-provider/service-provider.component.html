@@ -9,7 +9,7 @@
 <div *ngIf="loggedIn()" [hidden]="submitted || isLoading">
     <div class="form-style-10">
         <h1>Details Needed<span>Please provide the following details to offer parcel service!</span></h1>
-        <form (ngSubmit)="onSubmit()" #serviceProviderDetailsForm="ngForm">
+        <form (ngSubmit) = "onSubmit()" #serviceProviderDetailsForm="ngForm">
             <div class="section"><span>1</span>General Information</div>
             <div class="inner-wrap">
                 <label>Your Full Name <input type="text" placeholder="Name" [(ngModel)]="model.name" required ngControl="name"  #name="ngForm"/>
@@ -20,15 +20,15 @@
                 <label>Phone Number <input type="text" placeholder="(123)-456-7890" [(ngModel)]="model.phone" required/></label>
             </div>
 
-            <div class="section"><span>2</span>Current Address</div>
+            <div class="section"><span>2</span>Enter Current Address
+            </div>
+            <input id="autocomplete" placeholder="Enter your address"
+                   (keyup)="geolocate($event)" type="text" required>
+            <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
             <div class="inner-wrap">
-                <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required>{{model.currentAddressaddressLine1}}</label>
+                <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required></label>
                 <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddressaddressLine2" ></label>
-                <label>State <select [(ngModel)]="model.currentState" (ngModelChange)="onChange($event)" required>
-                    <option *ngFor = "let state of states">
-                        {{state}}
-                    </option>
-                </select></label>
+                <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
                 <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
                 <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" required></label>
 

@@ -169,6 +169,12 @@
     margin: 30px;
 }
 
+.submit-button {
+    background: #0273D4;
+    color: white;
+}
+
+
 div button {
     padding: 10px;
     margin-left: 10px;

@@ -7,8 +7,10 @@ var common_1 = require('@angular/common');
 var platform_browser_dynamic_1 = require('@angular/platform-browser-dynamic');
 var http_1 = require('@angular/http');
 var app_component_1 = require('./app.component');
+var googleAPIService_service_1 = require("./services/googleAPIService.service");
 //noinspection TypeScriptValidateTypes
 platform_browser_dynamic_1.bootstrap(app_component_1.AppComponent, [
+    googleAPIService_service_1.GoogleApiService,
     http_1.HTTP_PROVIDERS,
     core_1.provide(angular2_jwt_1.AuthConfig, { useFactory: function () {
             return new angular2_jwt_1.AuthConfig();
