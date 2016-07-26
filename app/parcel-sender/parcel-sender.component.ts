@@ -7,6 +7,7 @@ import {ParcelSenderDetails} from "../services/parcel-sender-details";
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouteParams, Router } from '@angular/router-deprecated';
 import { ParcelSenderCRUDService } from './../services/parcel-sender-crud.service';
+import {GoogleApiService} from "../services/googleAPIService.service";
 
 
 @Component({
@@ -27,6 +28,22 @@ export class ParcelSenderComponent {
     currentCityName: string[];
     deliveryCityName: string[];
     isLoading = false;
+    fetchingCurrentAddress = false;
+    isCurrentAddressLoading = false;
+    fetchingDeliveryAddress = false;
+    isDeliveryAddressLoading = false;
+
+    placeSearch: any;
+    currentAddressAutocomplete: any;
+    deliveryAddressAutocomplete: any;
+    componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'short_name',
+        country: 'long_name',
+        postal_code: 'short_name'
+    };
     states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
 
     submitted = false;
@@ -63,11 +80,23 @@ export class ParcelSenderComponent {
 
     status: string;
     constructor( private router: Router,
+                 private googleApi:GoogleApiService,
         private parcelSenderCRUDService: ParcelSenderCRUDService,
         private routeParams: RouteParams) {
     }
 
     ngOnInit(): void {
+
+        this.googleApi.initAutocomplete().then(() => {
+            // Create the autocomplete object, restricting the search to geographical
+            // location types.
+            this.currentAddressAutocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('currentaddressautocomplete')),
+                {types: ['geocode']})
+            this.deliveryAddressAutocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('deliveryaddressautocomplete')),
+                {types: ['geocode']});
+        });
 
         this.profile = JSON.parse(localStorage.getItem('profile'));
         let id = this.routeParams.get('id');
@@ -76,6 +105,123 @@ export class ParcelSenderComponent {
             this.model["_id"] = id;
         }
         this.getParcelSenderDetails(this.profile);
+    }
+
+    fillInAddress(addressType: string) {
+        // Get the place details from the autocomplete object.
+        if (addressType == "Current Address"){
+            let place = this.currentAddressAutocomplete.getPlace();
+            this.model['currentAddreddaddressLine1'] = "";
+            this.model['currentAddressaddressLine2'] = "";
+            this.model['currentCity'] = "";
+            this.model['currentState'] ="";
+            this.model['currentZip'] = "";
+
+            // Get each component of the address from the place details
+            // and fill the corresponding field on the form.
+            if (place != null && place.address_components != null) {
+                for (let i = 0; i < place.address_components.length; i++) {
+                    let addressType = place.address_components[i].types[0];
+                    if (this.componentForm[addressType]) {
+                        let val = place.address_components[i][this.componentForm[addressType]];
+                        if (addressType == 'street_number') {
+                            this.model['currentAddreddaddressLine1'] = val;
+                        } else if (addressType == 'route') {
+                            this.model['currentAddressaddressLine2'] = val;
+                        } else if (addressType == 'locality') {
+                            this.model['currentCity'] = val;
+                        } else if (addressType == 'administrative_area_level_1') {
+                            this.model['currentState'] = val;
+                        } else if (addressType == 'postal_code') {
+                            this.model['currentZip'] = val;
+                        }
+                    }
+                }
+                if (place.address_components.length > 0){
+                    setTimeout(() => {
+                        this.isCurrentAddressLoading = false;
+                        this.fetchingCurrentAddress = true;
+                        place['address_components'] = null;
+                    }, 1);
+                }
+            }
+        }
+
+
+        if (addressType == "Delivery Address"){
+            let place = this.deliveryAddressAutocomplete.getPlace();
+            this.model['destinationAddreddaddressLine1'] = "";
+            this.model['destinationAddressaddressLine2'] = "";
+            this.model['destinationCity'] = "";
+            this.model['destinationState'] ="";
+            this.model['destinationZip'] = "";
+
+            // Get each component of the address from the place details
+            // and fill the corresponding field on the form.
+            if (place != null && place.address_components != null) {
+                for (let i = 0; i < place.address_components.length; i++) {
+                    let addressType = place.address_components[i].types[0];
+                    if (this.componentForm[addressType]) {
+                        let val = place.address_components[i][this.componentForm[addressType]];
+                        if (addressType == 'street_number') {
+                            this.model['deliveryAddreddaddressLine1'] = val;
+                        } else if (addressType == 'route') {
+                            this.model['deliveryAddressaddressLine2'] = val;
+                        } else if (addressType == 'locality') {
+                            this.model['deliveryCity'] = val;
+                        } else if (addressType == 'administrative_area_level_1') {
+                            this.model['deliveryState'] = val;
+                        } else if (addressType == 'postal_code') {
+                            this.model['deliveryZip'] = val;
+                        }
+                    }
+                }
+                if (place.address_components.length > 0){
+                    setTimeout(() => {
+                        this.isDeliveryAddressLoading = false;
+                        this.fetchingDeliveryAddress = true;
+                        place['address_components'] = null;
+                    }, 1);
+                }
+            }
+        }
+
+    }
+    circle: any;
+    geolocation: any
+    geolocate(addressType : string) {
+
+        if (addressType == "Current Address"){
+            this.isCurrentAddressLoading = true;
+            this.fetchingCurrentAddress = false;
+        }
+        if (addressType == "Delivery Address"){
+            this.isDeliveryAddressLoading = true;
+            this.fetchingDeliveryAddress = false;
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                //noinspection TypeScriptValidateTypes
+                this.circle = new google.maps.Circle({
+                    center: this.geolocation,
+                    radius: position.coords.accuracy
+                });
+                if (addressType == "Current Address"){
+                    this.currentAddressAutocomplete.setBounds(this.circle.getBounds());
+                    this.fillInAddress(addressType);
+                }
+                if (addressType == "Delivery Address"){
+                    this.deliveryAddressAutocomplete.setBounds(this.circle.getBounds());
+                    this.fillInAddress(addressType);
+                }
+
+            });
+        }
     }
     
     saveParcelSenderDetails(parcelSenderDetails: ParcelSenderDetails){

@@ -22,31 +22,37 @@
 
             <div class="section"><span>2</span>Enter Current Address
             </div>
-            <input id="autocomplete" placeholder="Enter your address"
-                   (keyup)="geolocate($event)" type="text" required>
-            <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
-            <div class="inner-wrap">
-                <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required></label>
-                <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddressaddressLine2" ></label>
-                <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
-                <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
-                <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" required></label>
+            <form (ngSubmit) = "geolocate('Current Address')" #currentAddress="ngForm">
+                <div>
+                    <input id="currentaddressautocomplete"  placeholder="Enter your address" type="text" >
+                </div>
+                <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
+                <div *ngIf ="model.currentAddreddaddressLine1" *ngIf = "model.currentCity" *ngIf ="model.currentState" class="inner-wrap" >
+                    <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required></label>
+                    <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddressaddressLine2" ></label>
+                    <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
+                    <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
+                    <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" ></label>
+                </div>
+                <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
+            </form>
 
-            </div>
+            <div class="section"><span>3</span>Enter Destination Address</div>
 
-            <div class="section"><span>3</span>Destination Address</div>
-            <div class="inner-wrap">
-                <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" required></label>
-                <label>Address line 2 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine2"></label>
-                <label>State <select [(ngModel)]="model.destinationState" (ngModelChange)="onChange($event)" required>
-                    <option *ngFor = "let state of states">
-                        {{state}}
-                    </option>
-                </select></label>
-                <label>City <input type = "text" [(ngModel)]="model.destinationCity" required></label>
-                <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.destinationZip" required></label>
-
-            </div>
+            <form (ngSubmit) = "geolocate('Destination Address')" #destinationAddress="ngForm">
+                <div>
+                    <input id="destinationaddressautocomplete"  placeholder="Enter your address" type="text" >
+                </div>
+                <div *ngIf="loggedIn()" [hidden] = "!isDestinationAddressLoading" class="loader">Loading...</div>
+                <div *ngIf = "model.destinationAddreddaddressLine1" *ngIf = "model.destinationCity" *ngIf = "model.destinationState" class="inner-wrap">
+                    <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" required></label>
+                    <label>Address line 2 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine2" ></label>
+                    <label>State <input type="text" [(ngModel)]="model.destinationState" required></label>
+                    <label>City <input type = "text" [(ngModel)]="model.destinationCity" required></label>
+                    <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.destinationZip" ></label>
+                </div>
+                <input [hidden] = "true" type="submit" [disabled]="!destinationAddress.form.valid"/>
+            </form>
 
             <div class="section"><span>4</span>Date &amp; Time</div>
             <div class="inner-wrap">
@@ -66,7 +72,7 @@
             </div>
 
             <div class="button-section">
-                <input type="submit" name="Submit" [disabled]="!serviceProviderDetailsForm.form.valid"/>
+                <input type="submit" name="Submit" />
      <span class="privacy-policy">
      <input type="checkbox" name="field7">You agree to our Terms and Policy.
      </span>

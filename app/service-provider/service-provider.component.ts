@@ -4,7 +4,7 @@
 
 import { NgForm }    from '@angular/common';
 import { RouteParams, Router } from '@angular/router-deprecated';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ServiceProviderDetails }        from './../services/service-provider-details';
 import { ServiceProviderCRUDService } from './../services/service-provider-crud.service';
 import './../rxjs-operators';
@@ -36,9 +36,12 @@ export class ServiceProviderComponent {
     submitted = false;
     fetchingCurrentAddress = false;
     isCurrentAddressLoading = false;
+    fetchingDestinationAddress = false;
+    isDestinationAddressLoading = false;
 
     placeSearch: any;
-    autocomplete: any;
+    currentAddressAutocomplete: any;
+    destinationAddressAutocomplete: any;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -46,8 +49,8 @@ export class ServiceProviderComponent {
     administrative_area_level_1: 'short_name',
     country: 'long_name',
     postal_code: 'short_name'
-};
-
+    };
+    
     onSubmit() {
         this.isLoading = true;
         this.submitted = true;
@@ -55,24 +58,24 @@ export class ServiceProviderComponent {
             this.model["_id"] = this.profile.id;
         }
         this.model['email'] = this.profile.email;
-        // this.currentCityName = this.model['currentCity'].split(" ");
-        // this.model['currentCity'] = "";
-        // for (var i= 0 ; i < this.currentCityName.length; i++ ){
-        //     this.currentCityName[i] = this.currentCityName[i].charAt(0).toUpperCase() + this.currentCityName[i].slice(1).toLowerCase();
-        //     this.model['currentCity'] =  this.model['currentCity'] + this.currentCityName[i]
-        //     if (i + 1 < this.currentCityName.length ){
-        //         this.model['currentCity'] =  this.model['currentCity'] + " ";
-        //     }
-        // }
-        // this.destinationCityName = this.model['destinationCity'].split(" ");
-        // this.model['destinationCity'] = "";
-        // for (var i= 0 ; i < this.destinationCityName.length; i++ ){
-        //     this.destinationCityName[i] = this.destinationCityName[i].charAt(0).toUpperCase() + this.destinationCityName[i].slice(1).toLowerCase();
-        //     this.model['destinationCity'] =  this.model['destinationCity'] + this.destinationCityName[i];
-        //     if (i + 1 < this.destinationCityName.length ){
-        //         this.model['destinationCity'] =  this.model['destinationCity'] + " ";
-        //     }
-        // }
+        this.currentCityName = this.model['currentCity'].split(" ");
+        this.model['currentCity'] = "";
+        for (var i= 0 ; i < this.currentCityName.length; i++ ){
+            this.currentCityName[i] = this.currentCityName[i].charAt(0).toUpperCase() + this.currentCityName[i].slice(1).toLowerCase();
+            this.model['currentCity'] =  this.model['currentCity'] + this.currentCityName[i]
+            if (i + 1 < this.currentCityName.length ){
+                this.model['currentCity'] =  this.model['currentCity'] + " ";
+            }
+        }
+        this.destinationCityName = this.model['destinationCity'].split(" ");
+        this.model['destinationCity'] = "";
+        for (var i= 0 ; i < this.destinationCityName.length; i++ ){
+            this.destinationCityName[i] = this.destinationCityName[i].charAt(0).toUpperCase() + this.destinationCityName[i].slice(1).toLowerCase();
+            this.model['destinationCity'] =  this.model['destinationCity'] + this.destinationCityName[i];
+            if (i + 1 < this.destinationCityName.length ){
+                this.model['destinationCity'] =  this.model['destinationCity'] + " ";
+            }
+        }
         if (this.model !== null){
             this.saveServiceProviderDetails(this.model);
         }
@@ -90,8 +93,11 @@ export class ServiceProviderComponent {
         this.googleApi.initAutocomplete().then(() => {
             // Create the autocomplete object, restricting the search to geographical
             // location types.
-            this.autocomplete = new google.maps.places.Autocomplete(
-                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('autocomplete')),
+            this.currentAddressAutocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('currentaddressautocomplete')),
+                {types: ['geocode']})
+            this.destinationAddressAutocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('destinationaddressautocomplete')),
                 {types: ['geocode']});
         });
         
@@ -105,57 +111,119 @@ export class ServiceProviderComponent {
     }
 
     
-    fillInAddress() {
+    fillInAddress(addressType: string) {
         // Get the place details from the autocomplete object.
-        let place = this.autocomplete.getPlace();
+        if (addressType == "Current Address"){
+            let place = this.currentAddressAutocomplete.getPlace();
+            this.model['currentAddreddaddressLine1'] = "";
+            this.model['currentAddressaddressLine2'] = "";
+            this.model['currentCity'] = "";
+            this.model['currentState'] ="";
+            this.model['currentZip'] = "";
 
-        this.model['currentAddreddaddressLine1'] = "";
-        this.model['currentAddressaddressLine2'] = "";
-        this.model['currentCity'] = "";
-        this.model['currentState'] ="";
-        this.model['currentZip'] = "";
-
-        // Get each component of the address from the place details
-        // and fill the corresponding field on the form.
-        for (let i = 0; i < place.address_components.length; i++) {
-            let addressType = place.address_components[i].types[0];
-            if (this.componentForm[addressType]) {
-                let val = place.address_components[i][this.componentForm[addressType]];
-                if (addressType == 'street_number'){
-                    this.model['currentAddreddaddressLine1'] = val;
-                }else if (addressType == 'route'){
-                    this.model['currentAddressaddressLine2'] = val;
-                }else if (addressType == 'locality'){
-                    this.model['currentCity'] = val;
-                }else if (addressType == 'administrative_area_level_1') {
-                    this.model['currentState'] =val;
-                }else if (addressType == 'postal_code'){
-                    this.model['currentZip'] = val;
+            // Get each component of the address from the place details
+            // and fill the corresponding field on the form.
+            if (place != null && place.address_components != null) {
+                for (let i = 0; i < place.address_components.length; i++) {
+                    let addressType = place.address_components[i].types[0];
+                    if (this.componentForm[addressType]) {
+                        let val = place.address_components[i][this.componentForm[addressType]];
+                        if (addressType == 'street_number') {
+                            this.model['currentAddreddaddressLine1'] = val;
+                        } else if (addressType == 'route') {
+                            this.model['currentAddressaddressLine2'] = val;
+                        } else if (addressType == 'locality') {
+                            this.model['currentCity'] = val;
+                        } else if (addressType == 'administrative_area_level_1') {
+                            this.model['currentState'] = val;
+                        } else if (addressType == 'postal_code') {
+                            this.model['currentZip'] = val;
+                        }
+                    }
+                }
+                if (place.address_components.length > 0){
+                    setTimeout(() => {
+                        this.isCurrentAddressLoading = false;
+                        this.fetchingCurrentAddress = true;
+                        place['address_components'] = null;
+                    }, 1);
                 }
             }
         }
-        if (place.address_components.length > 0){
-            setTimeout(() => {
-                this.isCurrentAddressLoading = false;
-                this.fetchingCurrentAddress = true;
-                place['address_components'] = null;
-            }, 1);
+
+
+        if (addressType == "Destination Address"){
+            let place = this.destinationAddressAutocomplete.getPlace();
+            this.model['destinationAddreddaddressLine1'] = "";
+            this.model['destinationAddressaddressLine2'] = "";
+            this.model['destinationCity'] = "";
+            this.model['destinationState'] ="";
+            this.model['destinationZip'] = "";
+
+            // Get each component of the address from the place details
+            // and fill the corresponding field on the form.
+            if (place != null && place.address_components != null) {
+                for (let i = 0; i < place.address_components.length; i++) {
+                    let addressType = place.address_components[i].types[0];
+                    if (this.componentForm[addressType]) {
+                        let val = place.address_components[i][this.componentForm[addressType]];
+                        if (addressType == 'street_number') {
+                            this.model['destinationAddreddaddressLine1'] = val;
+                        } else if (addressType == 'route') {
+                            this.model['destinationAddressaddressLine2'] = val;
+                        } else if (addressType == 'locality') {
+                            this.model['destinationCity'] = val;
+                        } else if (addressType == 'administrative_area_level_1') {
+                            this.model['destinationState'] = val;
+                        } else if (addressType == 'postal_code') {
+                            this.model['destinationZip'] = val;
+                        }
+                    }
+                }
+                if (place.address_components.length > 0){
+                    setTimeout(() => {
+                        this.isDestinationAddressLoading = false;
+                        this.fetchingDestinationAddress = true;
+                        place['address_components'] = null;
+                    }, 1);
+                }
+            }
         }
+
     }
     circle: any;
-    geolocate(event : any) {
-        this.isCurrentAddressLoading = true;
-        this.fetchingCurrentAddress = false;
+    geolocation: any
+    geolocate(addressType : string) {
+
+        if (addressType == "Current Address"){
+            this.isCurrentAddressLoading = true;
+            this.fetchingCurrentAddress = false;
+        }
+        if (addressType == "Destination Address"){
+            this.isDestinationAddressLoading = true;
+            this.fetchingDestinationAddress = false;
+        }
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-                let geolocation = {
+                this.geolocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
                 //noinspection TypeScriptValidateTypes
-                this.circle = new google.maps.Circle();
-                this.autocomplete.setBounds(this.circle.getBounds());
-                this.fillInAddress();
+                this.circle = new google.maps.Circle({
+                    center: this.geolocation,
+                    radius: position.coords.accuracy
+                });
+                if (addressType == "Current Address"){
+                    this.currentAddressAutocomplete.setBounds(this.circle.getBounds());
+                    this.fillInAddress(addressType);
+                }
+                if (addressType == "Destination Address"){
+                    this.destinationAddressAutocomplete.setBounds(this.circle.getBounds());
+                    this.fillInAddress(addressType);
+                }
+
             });
         }
     }

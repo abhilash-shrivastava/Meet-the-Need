@@ -32,6 +32,8 @@ var ServiceProviderComponent = (function () {
         this.submitted = false;
         this.fetchingCurrentAddress = false;
         this.isCurrentAddressLoading = false;
+        this.fetchingDestinationAddress = false;
+        this.isDestinationAddressLoading = false;
         this.componentForm = {
             street_number: 'short_name',
             route: 'long_name',
@@ -61,24 +63,24 @@ var ServiceProviderComponent = (function () {
             this.model["_id"] = this.profile.id;
         }
         this.model['email'] = this.profile.email;
-        // this.currentCityName = this.model['currentCity'].split(" ");
-        // this.model['currentCity'] = "";
-        // for (var i= 0 ; i < this.currentCityName.length; i++ ){
-        //     this.currentCityName[i] = this.currentCityName[i].charAt(0).toUpperCase() + this.currentCityName[i].slice(1).toLowerCase();
-        //     this.model['currentCity'] =  this.model['currentCity'] + this.currentCityName[i]
-        //     if (i + 1 < this.currentCityName.length ){
-        //         this.model['currentCity'] =  this.model['currentCity'] + " ";
-        //     }
-        // }
-        // this.destinationCityName = this.model['destinationCity'].split(" ");
-        // this.model['destinationCity'] = "";
-        // for (var i= 0 ; i < this.destinationCityName.length; i++ ){
-        //     this.destinationCityName[i] = this.destinationCityName[i].charAt(0).toUpperCase() + this.destinationCityName[i].slice(1).toLowerCase();
-        //     this.model['destinationCity'] =  this.model['destinationCity'] + this.destinationCityName[i];
-        //     if (i + 1 < this.destinationCityName.length ){
-        //         this.model['destinationCity'] =  this.model['destinationCity'] + " ";
-        //     }
-        // }
+        this.currentCityName = this.model['currentCity'].split(" ");
+        this.model['currentCity'] = "";
+        for (var i = 0; i < this.currentCityName.length; i++) {
+            this.currentCityName[i] = this.currentCityName[i].charAt(0).toUpperCase() + this.currentCityName[i].slice(1).toLowerCase();
+            this.model['currentCity'] = this.model['currentCity'] + this.currentCityName[i];
+            if (i + 1 < this.currentCityName.length) {
+                this.model['currentCity'] = this.model['currentCity'] + " ";
+            }
+        }
+        this.destinationCityName = this.model['destinationCity'].split(" ");
+        this.model['destinationCity'] = "";
+        for (var i = 0; i < this.destinationCityName.length; i++) {
+            this.destinationCityName[i] = this.destinationCityName[i].charAt(0).toUpperCase() + this.destinationCityName[i].slice(1).toLowerCase();
+            this.model['destinationCity'] = this.model['destinationCity'] + this.destinationCityName[i];
+            if (i + 1 < this.destinationCityName.length) {
+                this.model['destinationCity'] = this.model['destinationCity'] + " ";
+            }
+        }
         if (this.model !== null) {
             this.saveServiceProviderDetails(this.model);
         }
@@ -88,8 +90,10 @@ var ServiceProviderComponent = (function () {
         this.googleApi.initAutocomplete().then(function () {
             // Create the autocomplete object, restricting the search to geographical
             // location types.
-            _this.autocomplete = new google.maps.places.Autocomplete(
-            /** @type {!HTMLInputElement} */ (document.getElementById('autocomplete')), { types: ['geocode'] });
+            _this.currentAddressAutocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */ (document.getElementById('currentaddressautocomplete')), { types: ['geocode'] });
+            _this.destinationAddressAutocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */ (document.getElementById('destinationaddressautocomplete')), { types: ['geocode'] });
         });
         this.profile = JSON.parse(localStorage.getItem('profile'));
         var id = this.routeParams.get('id');
@@ -99,60 +103,119 @@ var ServiceProviderComponent = (function () {
         }
         this.getServiceProviderDetails(this.profile);
     };
-    ServiceProviderComponent.prototype.fillInAddress = function () {
+    ServiceProviderComponent.prototype.fillInAddress = function (addressType) {
         var _this = this;
         // Get the place details from the autocomplete object.
-        var place = this.autocomplete.getPlace();
-        this.model['currentAddreddaddressLine1'] = "";
-        this.model['currentAddressaddressLine2'] = "";
-        this.model['currentCity'] = "";
-        this.model['currentState'] = "";
-        this.model['currentZip'] = "";
-        // Get each component of the address from the place details
-        // and fill the corresponding field on the form.
-        for (var i = 0; i < place.address_components.length; i++) {
-            var addressType = place.address_components[i].types[0];
-            if (this.componentForm[addressType]) {
-                var val = place.address_components[i][this.componentForm[addressType]];
-                if (addressType == 'street_number') {
-                    this.model['currentAddreddaddressLine1'] = val;
+        if (addressType == "Current Address") {
+            var place_1 = this.currentAddressAutocomplete.getPlace();
+            this.model['currentAddreddaddressLine1'] = "";
+            this.model['currentAddressaddressLine2'] = "";
+            this.model['currentCity'] = "";
+            this.model['currentState'] = "";
+            this.model['currentZip'] = "";
+            // Get each component of the address from the place details
+            // and fill the corresponding field on the form.
+            if (place_1 != null && place_1.address_components != null) {
+                for (var i = 0; i < place_1.address_components.length; i++) {
+                    var addressType_1 = place_1.address_components[i].types[0];
+                    if (this.componentForm[addressType_1]) {
+                        var val = place_1.address_components[i][this.componentForm[addressType_1]];
+                        if (addressType_1 == 'street_number') {
+                            this.model['currentAddreddaddressLine1'] = val;
+                        }
+                        else if (addressType_1 == 'route') {
+                            this.model['currentAddressaddressLine2'] = val;
+                        }
+                        else if (addressType_1 == 'locality') {
+                            this.model['currentCity'] = val;
+                        }
+                        else if (addressType_1 == 'administrative_area_level_1') {
+                            this.model['currentState'] = val;
+                        }
+                        else if (addressType_1 == 'postal_code') {
+                            this.model['currentZip'] = val;
+                        }
+                    }
                 }
-                else if (addressType == 'route') {
-                    this.model['currentAddressaddressLine2'] = val;
-                }
-                else if (addressType == 'locality') {
-                    this.model['currentCity'] = val;
-                }
-                else if (addressType == 'administrative_area_level_1') {
-                    this.model['currentState'] = val;
-                }
-                else if (addressType == 'postal_code') {
-                    this.model['currentZip'] = val;
+                if (place_1.address_components.length > 0) {
+                    setTimeout(function () {
+                        _this.isCurrentAddressLoading = false;
+                        _this.fetchingCurrentAddress = true;
+                        place_1['address_components'] = null;
+                    }, 1);
                 }
             }
         }
-        if (place.address_components.length > 0) {
-            setTimeout(function () {
-                _this.isCurrentAddressLoading = false;
-                _this.fetchingCurrentAddress = true;
-                place['address_components'] = null;
-            }, 1);
+        if (addressType == "Destination Address") {
+            var place_2 = this.destinationAddressAutocomplete.getPlace();
+            this.model['destinationAddreddaddressLine1'] = "";
+            this.model['destinationAddressaddressLine2'] = "";
+            this.model['destinationCity'] = "";
+            this.model['destinationState'] = "";
+            this.model['destinationZip'] = "";
+            // Get each component of the address from the place details
+            // and fill the corresponding field on the form.
+            if (place_2 != null && place_2.address_components != null) {
+                for (var i = 0; i < place_2.address_components.length; i++) {
+                    var addressType_2 = place_2.address_components[i].types[0];
+                    if (this.componentForm[addressType_2]) {
+                        var val = place_2.address_components[i][this.componentForm[addressType_2]];
+                        if (addressType_2 == 'street_number') {
+                            this.model['destinationAddreddaddressLine1'] = val;
+                        }
+                        else if (addressType_2 == 'route') {
+                            this.model['destinationAddressaddressLine2'] = val;
+                        }
+                        else if (addressType_2 == 'locality') {
+                            this.model['destinationCity'] = val;
+                        }
+                        else if (addressType_2 == 'administrative_area_level_1') {
+                            this.model['destinationState'] = val;
+                        }
+                        else if (addressType_2 == 'postal_code') {
+                            this.model['destinationZip'] = val;
+                        }
+                    }
+                }
+                if (place_2.address_components.length > 0) {
+                    setTimeout(function () {
+                        _this.isDestinationAddressLoading = false;
+                        _this.fetchingDestinationAddress = true;
+                        place_2['address_components'] = null;
+                    }, 1);
+                }
+            }
         }
     };
-    ServiceProviderComponent.prototype.geolocate = function (event) {
+    ServiceProviderComponent.prototype.geolocate = function (addressType) {
         var _this = this;
-        this.isCurrentAddressLoading = true;
-        this.fetchingCurrentAddress = false;
+        if (addressType == "Current Address") {
+            this.isCurrentAddressLoading = true;
+            this.fetchingCurrentAddress = false;
+        }
+        if (addressType == "Destination Address") {
+            this.isDestinationAddressLoading = true;
+            this.fetchingDestinationAddress = false;
+        }
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                var geolocation = {
+                _this.geolocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
                 //noinspection TypeScriptValidateTypes
-                _this.circle = new google.maps.Circle();
-                _this.autocomplete.setBounds(_this.circle.getBounds());
-                _this.fillInAddress();
+                _this.circle = new google.maps.Circle({
+                    center: _this.geolocation,
+                    radius: position.coords.accuracy
+                });
+                if (addressType == "Current Address") {
+                    _this.currentAddressAutocomplete.setBounds(_this.circle.getBounds());
+                    _this.fillInAddress(addressType);
+                }
+                if (addressType == "Destination Address") {
+                    _this.destinationAddressAutocomplete.setBounds(_this.circle.getBounds());
+                    _this.fillInAddress(addressType);
+                }
             });
         }
     };
