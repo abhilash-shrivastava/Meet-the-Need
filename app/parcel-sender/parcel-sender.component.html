@@ -35,7 +35,7 @@
             <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
             <div *ngIf ="model.currentAddreddaddressLine1" *ngIf = "model.currentCity" *ngIf ="model.currentState" class="inner-wrap">
                 <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required></label>
-                <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddressaddressLine2" ></label>
+                <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddreddaddressLine2" ></label>
                 <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
                 <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
                 <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" ></label>
@@ -62,6 +62,10 @@
 
         <div class="section"><span>4</span>Parcel Details</div>
         <div class="inner-wrap">
+            <label>Delivery Date Range </label>
+            <label>From <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.startDeliveryDate" required/></label>
+            <label> To
+                <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.endDeliveryDate" required/></label>
             <label>Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.parcelWeight" required></label>
             <label>Parcel Dimensions </label>
             <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelHeight" required></label>

@@ -182,3 +182,7 @@ div button:focus {
     text-align: center; !important;
     font: 13px Arial, Helvetica, sans-serif;
 }
+
+#map {
+    height: 100%;
+}

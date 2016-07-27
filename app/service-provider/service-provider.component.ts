@@ -116,7 +116,7 @@ export class ServiceProviderComponent {
         if (addressType == "Current Address"){
             let place = this.currentAddressAutocomplete.getPlace();
             this.model['currentAddreddaddressLine1'] = "";
-            this.model['currentAddressaddressLine2'] = "";
+            this.model['currentAddreddaddressLine2'] = "";
             this.model['currentCity'] = "";
             this.model['currentState'] ="";
             this.model['currentZip'] = "";
@@ -131,7 +131,7 @@ export class ServiceProviderComponent {
                         if (addressType == 'street_number') {
                             this.model['currentAddreddaddressLine1'] = val;
                         } else if (addressType == 'route') {
-                            this.model['currentAddressaddressLine2'] = val;
+                            this.model['currentAddreddaddressLine2'] = val;
                         } else if (addressType == 'locality') {
                             this.model['currentCity'] = val;
                         } else if (addressType == 'administrative_area_level_1') {
@@ -155,7 +155,7 @@ export class ServiceProviderComponent {
         if (addressType == "Destination Address"){
             let place = this.destinationAddressAutocomplete.getPlace();
             this.model['destinationAddreddaddressLine1'] = "";
-            this.model['destinationAddressaddressLine2'] = "";
+            this.model['destinationAddreddaddressLine2'] = "";
             this.model['destinationCity'] = "";
             this.model['destinationState'] ="";
             this.model['destinationZip'] = "";
@@ -170,7 +170,7 @@ export class ServiceProviderComponent {
                         if (addressType == 'street_number') {
                             this.model['destinationAddreddaddressLine1'] = val;
                         } else if (addressType == 'route') {
-                            this.model['destinationAddressaddressLine2'] = val;
+                            this.model['destinationAddreddaddressLine2'] = val;
                         } else if (addressType == 'locality') {
                             this.model['destinationCity'] = val;
                         } else if (addressType == 'administrative_area_level_1') {

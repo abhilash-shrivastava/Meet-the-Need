@@ -43,6 +43,7 @@ var ParcelSenderComponent = (function () {
         this.submitted = false;
     }
     ParcelSenderComponent.prototype.onSubmit = function () {
+        console.log(this.model);
         this.isLoading = true;
         this.submitted = true;
         if (this.profile["id"] != null) {
@@ -95,7 +96,7 @@ var ParcelSenderComponent = (function () {
         if (addressType == "Current Address") {
             var place_1 = this.currentAddressAutocomplete.getPlace();
             this.model['currentAddreddaddressLine1'] = "";
-            this.model['currentAddressaddressLine2'] = "";
+            this.model['currentAddreddaddressLine2'] = "";
             this.model['currentCity'] = "";
             this.model['currentState'] = "";
             this.model['currentZip'] = "";
@@ -110,7 +111,7 @@ var ParcelSenderComponent = (function () {
                             this.model['currentAddreddaddressLine1'] = val;
                         }
                         else if (addressType_1 == 'route') {
-                            this.model['currentAddressaddressLine2'] = val;
+                            this.model['currentAddreddaddressLine2'] = val;
                         }
                         else if (addressType_1 == 'locality') {
                             this.model['currentCity'] = val;
@@ -134,11 +135,11 @@ var ParcelSenderComponent = (function () {
         }
         if (addressType == "Delivery Address") {
             var place_2 = this.deliveryAddressAutocomplete.getPlace();
-            this.model['destinationAddreddaddressLine1'] = "";
-            this.model['destinationAddressaddressLine2'] = "";
-            this.model['destinationCity'] = "";
-            this.model['destinationState'] = "";
-            this.model['destinationZip'] = "";
+            this.model['deliveryAddreddaddressLine1'] = "";
+            this.model['deliveryAddreddaddressLine2'] = "";
+            this.model['deliveryCity'] = "";
+            this.model['deliveryState'] = "";
+            this.model['deliveryZip'] = "";
             // Get each component of the address from the place details
             // and fill the corresponding field on the form.
             if (place_2 != null && place_2.address_components != null) {
@@ -150,7 +151,7 @@ var ParcelSenderComponent = (function () {
                             this.model['deliveryAddreddaddressLine1'] = val;
                         }
                         else if (addressType_2 == 'route') {
-                            this.model['deliveryAddressaddressLine2'] = val;
+                            this.model['deliveryAddreddaddressLine2'] = val;
                         }
                         else if (addressType_2 == 'locality') {
                             this.model['deliveryCity'] = val;
@@ -239,6 +240,9 @@ var ParcelSenderComponent = (function () {
             _this.data = data;
             delete _this.data[0]['status'];
             delete _this.data[0]['_id'];
+            if (_this.data[0]['serviceProvider']) {
+                delete _this.data[0]['serviceProvider'];
+            }
             _this.model = _this.data[0];
         }, function (error) { return _this.errorMessage = error; });
     };

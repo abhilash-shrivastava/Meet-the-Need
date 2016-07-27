@@ -48,6 +48,7 @@ export class ParcelSenderComponent {
 
     submitted = false;
     onSubmit() {
+        console.log(this.model);
         this.isLoading = true;
         this.submitted = true;
         if (this.profile["id"] != null){
@@ -112,7 +113,7 @@ export class ParcelSenderComponent {
         if (addressType == "Current Address"){
             let place = this.currentAddressAutocomplete.getPlace();
             this.model['currentAddreddaddressLine1'] = "";
-            this.model['currentAddressaddressLine2'] = "";
+            this.model['currentAddreddaddressLine2'] = "";
             this.model['currentCity'] = "";
             this.model['currentState'] ="";
             this.model['currentZip'] = "";
@@ -127,7 +128,7 @@ export class ParcelSenderComponent {
                         if (addressType == 'street_number') {
                             this.model['currentAddreddaddressLine1'] = val;
                         } else if (addressType == 'route') {
-                            this.model['currentAddressaddressLine2'] = val;
+                            this.model['currentAddreddaddressLine2'] = val;
                         } else if (addressType == 'locality') {
                             this.model['currentCity'] = val;
                         } else if (addressType == 'administrative_area_level_1') {
@@ -150,11 +151,11 @@ export class ParcelSenderComponent {
 
         if (addressType == "Delivery Address"){
             let place = this.deliveryAddressAutocomplete.getPlace();
-            this.model['destinationAddreddaddressLine1'] = "";
-            this.model['destinationAddressaddressLine2'] = "";
-            this.model['destinationCity'] = "";
-            this.model['destinationState'] ="";
-            this.model['destinationZip'] = "";
+            this.model['deliveryAddreddaddressLine1'] = "";
+            this.model['deliveryAddreddaddressLine2'] = "";
+            this.model['deliveryCity'] = "";
+            this.model['deliveryState'] ="";
+            this.model['deliveryZip'] = "";
 
             // Get each component of the address from the place details
             // and fill the corresponding field on the form.
@@ -166,7 +167,7 @@ export class ParcelSenderComponent {
                         if (addressType == 'street_number') {
                             this.model['deliveryAddreddaddressLine1'] = val;
                         } else if (addressType == 'route') {
-                            this.model['deliveryAddressaddressLine2'] = val;
+                            this.model['deliveryAddreddaddressLine2'] = val;
                         } else if (addressType == 'locality') {
                             this.model['deliveryCity'] = val;
                         } else if (addressType == 'administrative_area_level_1') {
@@ -257,6 +258,9 @@ export class ParcelSenderComponent {
                     this.data = data;
                     delete this.data[0]['status'];
                     delete this.data[0]['_id'];
+                    if (this.data[0]['serviceProvider']){
+                        delete this.data[0]['serviceProvider']
+                    }
                     this.model = this.data[0];
                 },
                 error =>  this.errorMessage = <any>error

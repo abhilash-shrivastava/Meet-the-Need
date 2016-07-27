@@ -29,7 +29,7 @@
                 <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
                 <div *ngIf ="model.currentAddreddaddressLine1" *ngIf = "model.currentCity" *ngIf ="model.currentState" class="inner-wrap" >
                     <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required></label>
-                    <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddressaddressLine2" ></label>
+                    <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddreddaddressLine2" ></label>
                     <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
                     <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
                     <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" ></label>

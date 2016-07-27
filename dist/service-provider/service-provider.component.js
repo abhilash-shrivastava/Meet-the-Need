@@ -109,7 +109,7 @@ var ServiceProviderComponent = (function () {
         if (addressType == "Current Address") {
             var place_1 = this.currentAddressAutocomplete.getPlace();
             this.model['currentAddreddaddressLine1'] = "";
-            this.model['currentAddressaddressLine2'] = "";
+            this.model['currentAddreddaddressLine2'] = "";
             this.model['currentCity'] = "";
             this.model['currentState'] = "";
             this.model['currentZip'] = "";
@@ -124,7 +124,7 @@ var ServiceProviderComponent = (function () {
                             this.model['currentAddreddaddressLine1'] = val;
                         }
                         else if (addressType_1 == 'route') {
-                            this.model['currentAddressaddressLine2'] = val;
+                            this.model['currentAddreddaddressLine2'] = val;
                         }
                         else if (addressType_1 == 'locality') {
                             this.model['currentCity'] = val;
@@ -149,7 +149,7 @@ var ServiceProviderComponent = (function () {
         if (addressType == "Destination Address") {
             var place_2 = this.destinationAddressAutocomplete.getPlace();
             this.model['destinationAddreddaddressLine1'] = "";
-            this.model['destinationAddressaddressLine2'] = "";
+            this.model['destinationAddreddaddressLine2'] = "";
             this.model['destinationCity'] = "";
             this.model['destinationState'] = "";
             this.model['destinationZip'] = "";
@@ -164,7 +164,7 @@ var ServiceProviderComponent = (function () {
                             this.model['destinationAddreddaddressLine1'] = val;
                         }
                         else if (addressType_2 == 'route') {
-                            this.model['destinationAddressaddressLine2'] = val;
+                            this.model['destinationAddreddaddressLine2'] = val;
                         }
                         else if (addressType_2 == 'locality') {
                             this.model['destinationCity'] = val;

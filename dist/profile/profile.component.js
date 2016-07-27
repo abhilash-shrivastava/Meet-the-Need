@@ -17,10 +17,12 @@ var angular2_jwt_2 = require('angular2-jwt');
 var request_service_1 = require('./../services/request.service');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var ng2_pagination_1 = require('ng2-pagination');
+var googleAPIService_service_1 = require("../services/googleAPIService.service");
 var ProfileComponent = (function () {
-    function ProfileComponent(router, requestsService, authHttp) {
+    function ProfileComponent(router, requestsService, googleApi, authHttp) {
         this.router = router;
         this.requestsService = requestsService;
+        this.googleApi = googleApi;
         this.authHttp = authHttp;
         this.parcelGiven = false;
         this.parcelCollected = false;
@@ -29,6 +31,73 @@ var ProfileComponent = (function () {
         this.showDetails = false;
         this.requestType = false;
     }
+    ProfileComponent.prototype.initMap = function () {
+        var _this = this;
+        this.googleApi.initAutocomplete().then(function () {
+            console.log("Hey");
+            var markerArray = [];
+            // Instantiate a directions service.
+            var directionsService = new google.maps.DirectionsService;
+            // Create a map and center it on Manhattan.
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: { lat: 40.771, lng: -73.974 }
+            });
+            // Create a renderer for directions and bind it to the map.
+            var directionsDisplay = new google.maps.DirectionsRenderer({ map: map });
+            // Instantiate an info window to hold step text.
+            var stepDisplay = new google.maps.InfoWindow;
+            // Display the route between the initial start and end selections.
+            _this.calculateAndDisplayRoute(directionsDisplay, directionsService, markerArray, stepDisplay, map);
+        });
+    };
+    ProfileComponent.prototype.test = function () {
+        console.log("test");
+    };
+    ProfileComponent.prototype.calculateAndDisplayRoute = function (directionsDisplay, directionsService, markerArray, stepDisplay, map) {
+        var _this = this;
+        // First, remove any existing markers from the map.
+        for (var i = 0; i < markerArray.length; i++) {
+            markerArray[i].setMap(null);
+        }
+        // Retrieve the start and end locations and create a DirectionsRequest using
+        // WALKING directions.
+        directionsService.route({
+            origin: '50 Chumasero Dr, San Francisco, CA, United States',
+            destination: '55 Junipero Serra Boulevard, San Francisco, CA, United States',
+            travelMode: google.maps.TravelMode.WALKING
+        }, function (response, status) {
+            // Route the directions and pass the response to a function to create
+            // markers for each step.
+            if (status === google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+                _this.showSteps(response, markerArray, stepDisplay, map);
+            }
+            else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+    };
+    ProfileComponent.prototype.showSteps = function (directionResult, markerArray, stepDisplay, map) {
+        // For each step, place a marker, and add the text to the marker's infowindow.
+        // Also attach the marker to an array so we can keep track of it and remove it
+        // when calculating new routes.
+        var myRoute = directionResult.routes[0].legs[0];
+        for (var i = 0; i < myRoute.steps.length; i++) {
+            var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
+            marker.setMap(map);
+            marker.setPosition(myRoute.steps[i].start_location);
+            this.attachInstructionText(stepDisplay, marker, myRoute.steps[i].instructions, map);
+        }
+    };
+    ProfileComponent.prototype.attachInstructionText = function (stepDisplay, marker, text, map) {
+        google.maps.event.addListener(marker, 'click', function () {
+            // Open an info window when the marker is clicked on, containing the text
+            // of the step.
+            stepDisplay.setContent(text);
+            stepDisplay.open(map, marker);
+        });
+    };
     ProfileComponent.prototype.onAssignedServiceClick = function () {
         this.getAssignedServiceRequests(this.profile);
     };
@@ -137,6 +206,7 @@ var ProfileComponent = (function () {
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = false;
+                _this.initMap();
             }
             else {
                 delete _this.unassignedServiceRequests;
@@ -250,7 +320,7 @@ var ProfileComponent = (function () {
             directives: [ng2_pagination_1.PaginationControlsCmp],
             pipes: [ng2_pagination_1.PaginatePipe]
         }), 
-        __metadata('design:paramtypes', [router_deprecated_1.Router, request_service_1.RequestsService, angular2_jwt_1.AuthHttp])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, request_service_1.RequestsService, googleAPIService_service_1.GoogleApiService, angular2_jwt_1.AuthHttp])
     ], ProfileComponent);
     return ProfileComponent;
 }());

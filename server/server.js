@@ -50,7 +50,6 @@ app.use('/service-confirm', jwtCheck);
 app.post('/service-confirm', (req, res) => {
   res.connection.setTimeout(0);
 assignProvider(req.body, (responseToProvider) => {
-  console.log(responseToProvider);
 res.send(JSON.stringify(responseToProvider));
 });
 });
@@ -59,14 +58,12 @@ app.use('/order-confirm', jwtCheck);
 app.post('/order-confirm', (req, res) => {
   res.connection.setTimeout(0);
 assignSender(req.body, (responseToSender) => {
-  console.log(responseToSender);
 res.send(JSON.stringify(responseToSender));
 });
 });
 
 app.use('/save-user', jwtCheck);
 app.post('/save-user', (req, res) => {
-  console.log(req.body);
   db.collection('user').save(req.body, (err, result) => {
   res.connection.setTimeout(0);
 if (err) return console.log(err);
@@ -90,7 +87,6 @@ app.use('/assigned-service-request', jwtCheck);
 app.post('/assigned-service-request', function (req, res) {
   res.connection.setTimeout(0);
   assignedServiceRequest(req.body, (requests) => {
-    console.log(requests);
   res.send(JSON.stringify(requests));
 })
 });
@@ -183,7 +179,7 @@ var assignProvider =  function (data, callback) {
   if (data._id != null){
     data._id = ObjectId(data._id);
   }
-  var cursorone = db.collection('parcelSender').find( { "currentCity": data.currentCity, "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}} ).sort({parcelWeight: -1}).limit(1);
+  var cursorone = db.collection('parcelSender').find( { "currentCity": data.currentCity, "deliveryCity": data.destinationCity, "parcelWeight": { $lte: (data.maxParcelWeight) }, "parcelHeight": { $lte: (data.maxParcelHeight)}, "parcelLength": { $lte: (data.maxParcelLength)}, "parcelWidth": { $lte: (data.maxParcelWidth)}, "startDeliveryDate" : {$lte: data.journeyDate}, "endDeliveryDate" : {$gte: data.journeyDate}} ).sort({parcelWeight: -1}).limit(1);
   cursorone.count(function (e, count) {
 
     if (count == 0){
@@ -212,7 +208,6 @@ var assignProvider =  function (data, callback) {
               data.maxParcelHeight -= sender.parcelHeight;
               data.maxParcelLength -= sender.parcelLength;
               data.maxParcelWidth -= sender.parcelWidth;
-              console.log(data);
               responseToProvider.push(sender);
               db.collection('serviceProvided').insertOne( data, function(err, results) {
                 console.log('saved to serviceProvided');
@@ -241,7 +236,7 @@ var assignSender =  function (data, callback) {
   if (data._id != null){
     data._id = ObjectId(data._id);
   }
-  var cursorone = db.collection('serviceProvider').find( { "currentCity": data.currentCity, "destinationCity": data.deliveryCity, "maxParcelWeight": { $gte: (data.parcelWeight) }, "maxParcelHeight": { $gte: (data.parcelHeight)}, "maxParcelLength": { $gte: (data.parcelLength)}, "maxParcelWidth": { $gte: (data.parcelWidth)}, "journeyDate" : { $gte: new Date().toISOString().split('T')[0] } } ).sort({maxParcelWeight: + 1}).limit(1);
+  var cursorone = db.collection('serviceProvider').find( { "currentCity": data.currentCity, "destinationCity": data.deliveryCity, "maxParcelWeight": { $gte: (data.parcelWeight) }, "maxParcelHeight": { $gte: (data.parcelHeight)}, "maxParcelLength": { $gte: (data.parcelLength)}, "maxParcelWidth": { $gte: (data.parcelWidth)}, "journeyDate" : { $gte: new Date().toISOString().split('T')[0], $gte: data.startDeliveryDate, $lte: data.endDeliveryDate} } ).sort({maxParcelWeight: + 1}).limit(1);
 
   cursorone.count(function (e, count) {
 
