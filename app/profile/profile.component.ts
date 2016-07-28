@@ -8,6 +8,7 @@ import { RequestsService } from './../services/request.service';
 import { RouteParams, Router } from '@angular/router-deprecated';
 import {PaginationControlsCmp, PaginatePipe, PaginationService} from 'ng2-pagination';
 import {GoogleApiService} from "../services/googleAPIService.service";
+import {Panel} from './panel';
 
 
 
@@ -16,12 +17,13 @@ import {GoogleApiService} from "../services/googleAPIService.service";
     templateUrl: 'app/profile/profile.html',
     styleUrls: ['app/profile/profile.css'],
     providers: [PaginationService, RequestsService],
-    directives: [PaginationControlsCmp],
+    directives: [PaginationControlsCmp, Panel],
     pipes: [PaginatePipe]
 })
 
 export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
 
+    title: string = 'test title';
     profile: any;
     unassignedServiceRequests: any;
     assignedServiceRequests:any;
@@ -239,7 +241,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
-                        this.initMap();
+                        // this.initMap();
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;

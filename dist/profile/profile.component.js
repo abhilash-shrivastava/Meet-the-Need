@@ -18,12 +18,14 @@ var request_service_1 = require('./../services/request.service');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var ng2_pagination_1 = require('ng2-pagination');
 var googleAPIService_service_1 = require("../services/googleAPIService.service");
+var panel_1 = require('./panel');
 var ProfileComponent = (function () {
     function ProfileComponent(router, requestsService, googleApi, authHttp) {
         this.router = router;
         this.requestsService = requestsService;
         this.googleApi = googleApi;
         this.authHttp = authHttp;
+        this.title = 'test title';
         this.parcelGiven = false;
         this.parcelCollected = false;
         this.parcelDelivered = false;
@@ -206,7 +208,6 @@ var ProfileComponent = (function () {
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = false;
-                _this.initMap();
             }
             else {
                 delete _this.unassignedServiceRequests;
@@ -317,7 +318,7 @@ var ProfileComponent = (function () {
             templateUrl: 'app/profile/profile.html',
             styleUrls: ['app/profile/profile.css'],
             providers: [ng2_pagination_1.PaginationService, request_service_1.RequestsService],
-            directives: [ng2_pagination_1.PaginationControlsCmp],
+            directives: [ng2_pagination_1.PaginationControlsCmp, panel_1.Panel],
             pipes: [ng2_pagination_1.PaginatePipe]
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, request_service_1.RequestsService, googleAPIService_service_1.GoogleApiService, angular2_jwt_1.AuthHttp])
