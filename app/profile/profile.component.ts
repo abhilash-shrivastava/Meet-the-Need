@@ -1,7 +1,7 @@
 /**
  * Created by Abhi on 6/14/16.
  */
-import {Component, OnInit, OnDestroy, AfterContentInit, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, AfterViewInit, Input, ViewChild, ElementRef, Renderer} from '@angular/core';
 import {AuthHttp} from 'angular2-jwt';
 import {tokenNotExpired} from 'angular2-jwt';
 import { RequestsService } from './../services/request.service';
@@ -12,16 +12,17 @@ import {Panel} from './panel';
 
 
 
+
 @Component({
     selector: 'profile',
     templateUrl: 'app/profile/profile.html',
     styleUrls: ['app/profile/profile.css'],
-    providers: [PaginationService, RequestsService],
+    providers: [PaginationService, RequestsService, Panel],
     directives: [PaginationControlsCmp, Panel],
     pipes: [PaginatePipe]
 })
 
-export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
+export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
     title: string = 'test title';
     profile: any;
@@ -36,89 +37,60 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     errorMessage: string;
     public arrayOfKeys;
     showDetails = false;
-    requestType = false
+    requestType = false;
+    id: any;
+    mapAddress:any;
+    currentServiceAddress: any;
+    currentSenderAddress:any;
+    deliveryAddress:any;
+    destinationAddress:any;
+    status:any;
 
+    mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
 
-    initMap (){
-        this.googleApi.initAutocomplete().then(() => {
-            console.log("Hey");
-            var markerArray = [];
-
-            // Instantiate a directions service.
-            var directionsService = new google.maps.DirectionsService;
-
-            // Create a map and center it on Manhattan.
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 13,
-                center: {lat: 40.771, lng: -73.974}
-            });
-
-            // Create a renderer for directions and bind it to the map.
-            var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
-
-            // Instantiate an info window to hold step text.
-            var stepDisplay = new google.maps.InfoWindow;
-
-            // Display the route between the initial start and end selections.
-            this.calculateAndDisplayRoute(
-                directionsDisplay, directionsService, markerArray, stepDisplay, map);
-        });
-    }
-    
-    test () {
-        console.log("test");
-    }
-
-    calculateAndDisplayRoute(directionsDisplay, directionsService,
-                                      markerArray, stepDisplay, map) {
-    // First, remove any existing markers from the map.
-    for (var i = 0; i < markerArray.length; i++) {
-        markerArray[i].setMap(null);
-    }
-
-    // Retrieve the start and end locations and create a DirectionsRequest using
-    // WALKING directions.
-    directionsService.route({
-        origin: '50 Chumasero Dr, San Francisco, CA, United States',
-        destination: '55 Junipero Serra Boulevard, San Francisco, CA, United States',
-        travelMode: google.maps.TravelMode.WALKING
-    }, (response, status) => {
-        // Route the directions and pass the response to a function to create
-        // markers for each step.
-        if (status === google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-           this.showSteps(response, markerArray, stepDisplay, map);
-        } else {
-            window.alert('Directions request failed due to ' + status);
+        this.status = status;
+        if (this.id !== id && status == 'Assigned To Service Provider'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
+            this.mapAddress = "Map Direction To Parcel Sender";
         }
-    });
-}
-
-    showSteps(directionResult, markerArray, stepDisplay, map) {
-    // For each step, place a marker, and add the text to the marker's infowindow.
-    // Also attach the marker to an array so we can keep track of it and remove it
-    // when calculating new routes.
-    var myRoute = directionResult.routes[0].legs[0];
-    for (var i = 0; i < myRoute.steps.length; i++) {
-        var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
-        marker.setMap(map);
-        marker.setPosition(myRoute.steps[i].start_location);
-        this.attachInstructionText(
-            stepDisplay, marker, myRoute.steps[i].instructions, map);
+        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+            this.id = id;
+            this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
+            this.mapAddress = "Map Direction To Receiver"
+        }
     }
-}
 
-    attachInstructionText(stepDisplay, marker, text, map) {
-    google.maps.event.addListener(marker, 'click', function() {
-        // Open an info window when the marker is clicked on, containing the text
-        // of the step.
-        stepDisplay.setContent(text);
-        stepDisplay.open(map, marker);
-    });
-}
+    mapLoadAssignedParcel(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
 
+        if (this.id !== id && status == 'Assigned To Service Provider'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
+            this.mapAddress = "Map Direction To Service Provider";
+        }
+        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+            this.id = id;
+            this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
+            this.mapAddress = "Map Direction Between Service Provider and Receiver";
+        }
+    }
+
+    mapLoadAssignedReceiver(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
+
+        if (this.id !== id && status == 'Assigned To Service Provider'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
+            this.mapAddress = "Map Direction Between Service Provider and Parcel Sender";
+        }
+        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+            this.id = id;
+            this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
+            this.mapAddress = "Map Direction To Service Provider";
+        }
+    }
 
     onAssignedServiceClick(){
+        this.id = null;
         this.getAssignedServiceRequests(this.profile);
     }
 
@@ -127,6 +99,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     }
 
     onAssignedSenderClick(){
+        this.id = null;
         this.getAssignedSenderRequests(this.profile);
     }
 
@@ -135,6 +108,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     }
 
     onReceivingRequestStatusClick(){
+        this.id = null;
         this.getParcelReceivingRequests(this.profile);
     }
 
@@ -161,7 +135,9 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
             this.router.navigate( ['ParcelSender', {id: requestId}] );
         }
     }
-    constructor(    private router: Router, private requestsService: RequestsService, private googleApi:GoogleApiService,
+    constructor(    private router: Router, private requestsService: RequestsService,
+                    private panel: Panel,
+                    private renderer: Renderer,
                     public authHttp: AuthHttp) {
     }
 
@@ -172,7 +148,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
     ngOnDestroy() : void {
     }
 
-    ngAfterContentInit() {
+    ngAfterViewInit() {
     }
 
     getAssignedServiceRequests(data){
@@ -189,6 +165,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
 
                         this.showDetails = true;
                         this.requestType = true;
+                        // callback;
                     }else{
                         delete this.parcelRequests;
                         delete this.unassignedServiceRequests;
@@ -196,6 +173,8 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                         this.showDetails = false;
                         this.requestType = true;
                     }
+                    this.id = null;
+                    this.mapLoadAssignedService(this.id, this.currentServiceAddress, this.currentSenderAddress, this.deliveryAddress, this.destinationAddress, this.status);
                 },
                         error =>  this.errorMessage = <any>error
             );
@@ -241,7 +220,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
-                        // this.initMap();
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
@@ -249,10 +227,12 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                         this.showDetails = false;
                         this.requestType = false;
                     }
+                    this.id = null;
+                    this.mapLoadAssignedParcel(this.id, this.currentServiceAddress, this.currentSenderAddress, this.deliveryAddress, this.destinationAddress, this.status);
+
                 },
                 error =>  this.errorMessage = <any>error
             );
-
     }
 
     getUnassignedSenderRequests(data){
@@ -300,6 +280,9 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
                         delete this.parcelRequests;
                         this.showDetails = false;
                     }
+                    this.id = null;
+                    this.mapLoadAssignedReceiver(this.id, this.currentServiceAddress, this.currentSenderAddress, this.deliveryAddress, this.destinationAddress, this.status);
+
                 },
                 error =>  this.errorMessage = <any>error
             );
@@ -312,7 +295,9 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterContentInit {
         this.requestsService.setParcelStatus(data)
             .subscribe(
                 data  => {
+                    this.id = null;
                     this.res = data;
+                    console.log("changed");
                     //noinspection TypeScriptUnresolvedVariable
                     //noinspection TypeScriptUnresolvedVariable
                     if(this.res.role === "Sender"){

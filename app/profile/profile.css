@@ -183,6 +183,7 @@ div button:focus {
     font: 13px Arial, Helvetica, sans-serif;
 }
 
-#map {
-    height: 100%;
+.map {
+    height: 50%;
+    width: 100%;
 }

@@ -17,9 +17,9 @@
     </div>
     <div >
     <div *ngIf="unassignedServiceRequests" [hidden]="!showDetails">
-        <ul *ngFor="let request of unassignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p1 }">
+        <ul *ngFor="let request of unassignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p1 }" myMap>
             <h3>
-                <panel [title]="request.currentCity + '-' + request.deliveryCity">
+                <panel [title]="request.currentCity + '-' + request.destinationCity">
                     <div class="form-style-10">
                     <h3>Delivery Service Details:</h3>
                     <h4>{{request.currentCity}}-{{request.destinationCity}}</h4>
@@ -48,11 +48,16 @@
     </div>
     <div *ngIf="unassignedServiceRequests" [hidden]="showDetails" class="form-style-10"><h3>No Unassigned Service Requests</h3></div>
 
-    <div ng-show="assignedServiceRequests" [hidden]="!showDetails" >
-        <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p2 }" >
+    <div *ngIf="assignedServiceRequests" [hidden]="!showDetails" >
+        <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <h3>
-                <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity">
-                    <div class="form-style-10">
+                <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
+                       (click)="mapLoadAssignedService(request._id, request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
+                       + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, request.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.serviceProvider.destinationCity
+                       + ' ' + request.serviceProvider.destinationState + ' ' + request.serviceProvider.destinationZip,  request.status)" >
+                    <div class="form-style-10" >
                         <h3>Delivery Service Details:</h3>
                         <h4 >{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
                         <li>Journey Date:   <b>{{request.serviceProvider.journeyDate}}</b></li>
@@ -77,13 +82,14 @@
                         <li *ngIf = "request.deliveryAddreddaddressLine2"> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
                         <li>City : <b>{{request.deliveryCity}}</b></li>
                         <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
-                        <li id="map">{{test()}}</li>
+                        <h4>{{mapAddress}}</h4>
+                        <div id="{{request._id}}" class="map"></div>
                         <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
                         <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered</button>
                     </div>
-                    </panel>
+                </panel>
             </h3>
-            </ul>
+        </ul>
         <pagination-controls class="centerAlignText" (pageChange)="p2 = $event" #api>
             </pagination-controls>
     </div>
@@ -92,7 +98,12 @@
     <div *ngIf="parcelRequests" [hidden]="!showDetails" >
         <ul *ngFor="let request of parcelRequests | paginate: { itemsPerPage: 5, currentPage: p3 }" >
             <h3>
-                <panel *ngIf = "request.status" [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity">
+                <panel *ngIf = "request.status" [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
+                       (click)="mapLoadAssignedParcel(request._id, request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
+                       + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, request.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.serviceProvider.destinationCity
+                       + ' ' + request.serviceProvider.destinationState + ' ' + request.serviceProvider.destinationZip,  request.status)">
                     <div class="form-style-10">
                     <h3>Parcel Sending Details:</h3>
                     <h4 *ngIf = "request.status">{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
@@ -114,6 +125,8 @@
                     <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
                     <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
                     <li >Parcel Status :  <b>{{request.status}}</b></li>
+                        <h4>{{mapAddress}}</h4>
+                        <div id="{{request._id}}" class="map"></div>
                     <button [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
                     </div>
                 </panel>
@@ -145,7 +158,12 @@
     <div *ngIf="parcelReceivingRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of parcelReceivingRequests | paginate: { itemsPerPage: 5, currentPage: p4 }" >
             <h3>
-                <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity">
+                <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
+                       (click)="mapLoadAssignedReceiver(request._id, request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
+                       + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, request.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.serviceProvider.destinationCity
+                       + ' ' + request.serviceProvider.destinationState + ' ' + request.serviceProvider.destinationZip,  request.status)">
                     <div class="form-style-10">
                     <h3>Parcel Receiving Details:</h3>
                     <h4>{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
@@ -171,6 +189,8 @@
                     <li *ngIf = "request.destinationAddreddaddressLine2"> <b>{{request.destinationAddreddaddressLine2}}</b></li>
                     <li>City : <b>{{request.serviceProvider.destinationCity}}</b></li>
                     <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
+                        <h4>{{mapAddress}}</h4>
+                        <div id="{{request._id}}" class="map"></div>
                     <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Delivered To Receiver'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Received</button>
                     </div>
                 </panel>
