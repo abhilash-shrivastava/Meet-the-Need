@@ -34,6 +34,10 @@ var ProfileComponent = (function () {
         this.requestType = false;
     }
     ProfileComponent.prototype.mapLoadAssignedService = function (id, currentSenderAddress, currentServiceAddress, deliveryAddress, destinationAddress, status) {
+        this.currentServiceAddress = currentServiceAddress;
+        this.currentSenderAddress = currentSenderAddress;
+        this.deliveryAddress = deliveryAddress;
+        this.destinationAddress = destinationAddress;
         this.status = status;
         if (this.id !== id && status == 'Assigned To Service Provider') {
             this.id = id;
@@ -47,6 +51,10 @@ var ProfileComponent = (function () {
         }
     };
     ProfileComponent.prototype.mapLoadAssignedParcel = function (id, currentSenderAddress, currentServiceAddress, deliveryAddress, destinationAddress, status) {
+        this.currentServiceAddress = currentServiceAddress;
+        this.currentSenderAddress = currentSenderAddress;
+        this.deliveryAddress = deliveryAddress;
+        this.destinationAddress = destinationAddress;
         if (this.id !== id && status == 'Assigned To Service Provider') {
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
@@ -59,6 +67,10 @@ var ProfileComponent = (function () {
         }
     };
     ProfileComponent.prototype.mapLoadAssignedReceiver = function (id, currentSenderAddress, currentServiceAddress, deliveryAddress, destinationAddress, status) {
+        this.currentServiceAddress = currentServiceAddress;
+        this.currentSenderAddress = currentSenderAddress;
+        this.deliveryAddress = deliveryAddress;
+        this.destinationAddress = destinationAddress;
         if (this.id !== id && status == 'Assigned To Service Provider') {
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);

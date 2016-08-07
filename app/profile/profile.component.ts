@@ -48,6 +48,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
     mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
 
+        this.currentServiceAddress = currentServiceAddress;
+        this.currentSenderAddress = currentSenderAddress;
+        this.deliveryAddress = deliveryAddress;
+        this.destinationAddress = destinationAddress;
+        
         this.status = status;
         if (this.id !== id && status == 'Assigned To Service Provider'){
             this.id = id;
@@ -63,6 +68,12 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
     mapLoadAssignedParcel(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
 
+        this.currentServiceAddress = currentServiceAddress;
+        this.currentSenderAddress = currentSenderAddress;
+        this.deliveryAddress = deliveryAddress;
+        this.destinationAddress = destinationAddress;
+
+
         if (this.id !== id && status == 'Assigned To Service Provider'){
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
@@ -76,6 +87,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     mapLoadAssignedReceiver(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
+
+        this.currentServiceAddress = currentServiceAddress;
+        this.currentSenderAddress = currentSenderAddress;
+        this.deliveryAddress = deliveryAddress;
+        this.destinationAddress = destinationAddress;
 
         if (this.id !== id && status == 'Assigned To Service Provider'){
             this.id = id;
