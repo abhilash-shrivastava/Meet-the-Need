@@ -7,7 +7,8 @@
     "postinstall": "typings install",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "typings": "typings"
+    "typings": "typings",
+    "server": "node server/server.js"
   },
   "license": "ISC",
   "dependencies": {

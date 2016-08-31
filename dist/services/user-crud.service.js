@@ -26,7 +26,6 @@ var UserCRUDService = (function () {
     UserCRUDService.prototype.save = function (userDetails) {
         //console.log(serviceProviderDetails);
         var body = JSON.stringify(userDetails);
-        console.log(body);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.userDetailsSaveUrl, body, options)

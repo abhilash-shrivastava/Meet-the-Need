@@ -47,7 +47,7 @@ declare var Auth0Lock;
 
 export class AppComponent {
 
-    profile:any
+    profile:any;
     title = 'Meet The Need';
     errorMessage: string;
     status: string;

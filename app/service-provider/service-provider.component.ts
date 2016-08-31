@@ -12,9 +12,6 @@ import {tokenNotExpired} from 'angular2-jwt';
 import {GoogleApiService} from "../services/googleAPIService.service";
 
 
-//var fetch = require('node-fetch');
-
-
 @Component({
     selector: 'service-provider',
     templateUrl: 'app/service-provider/service-provider.component.html',

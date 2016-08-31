@@ -20,7 +20,6 @@ export class UserCRUDService{
     save (userDetails: UserDetails ): Observable<UserDetails> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(userDetails);
-        console.log(body);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
         let options = new RequestOptions({ headers: headers });
 

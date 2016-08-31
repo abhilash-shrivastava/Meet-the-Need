@@ -18,7 +18,6 @@ var service_provider_crud_service_1 = require('./../services/service-provider-cr
 require('./../rxjs-operators');
 var angular2_jwt_1 = require('angular2-jwt');
 var googleAPIService_service_1 = require("../services/googleAPIService.service");
-//var fetch = require('node-fetch');
 var ServiceProviderComponent = (function () {
     function ServiceProviderComponent(router, googleApi, serviceProviderCRUDService, routeParams) {
         this.router = router;
