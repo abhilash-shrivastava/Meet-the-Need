@@ -106,24 +106,34 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onAssignedServiceClick(){
+        this.closeNav()
+        this.status = null;
         this.id = null;
         this.getAssignedServiceRequests(this.profile);
     }
 
     onUnassignedServiceClick(){
+        this.closeNav()
+        this.status = null;
         this.getUnassignedServiceRequests(this.profile);
     }
 
     onAssignedSenderClick(){
+        this.closeNav()
+        this.status = null;
         this.id = null;
         this.getAssignedSenderRequests(this.profile);
     }
 
     onUnassignedSenderClick(){
+        this.closeNav()
+        this.status = null;
         this.getUnassignedSenderRequests(this.profile);
     }
 
     onReceivingRequestStatusClick(){
+        this.closeNav()
+        this.status = null;
         this.id = null;
         this.getParcelReceivingRequests(this.profile);
     }
@@ -181,7 +191,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
                         this.showDetails = true;
                         this.requestType = true;
-                        // callback;
+                        this.openNav();
                     }else{
                         delete this.parcelRequests;
                         delete this.unassignedServiceRequests;
@@ -236,6 +246,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
+                        this.openNav();
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
@@ -290,6 +301,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
                         delete this.assignedServiceRequests;
                         delete this.parcelRequests;
                         this.showDetails = true;
+                        this.openNav();
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;
@@ -352,5 +364,18 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
     loggedIn() {
         return tokenNotExpired();
+    }
+
+    openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+    }
+
+    closeNav() {
+        this.status = null;
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft= "0";
+        document.body.style.backgroundColor = "white";
     }
 }

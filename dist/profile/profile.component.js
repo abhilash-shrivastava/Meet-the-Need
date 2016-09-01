@@ -83,20 +83,30 @@ var ProfileComponent = (function () {
         }
     };
     ProfileComponent.prototype.onAssignedServiceClick = function () {
+        this.closeNav();
+        this.status = null;
         this.id = null;
         this.getAssignedServiceRequests(this.profile);
     };
     ProfileComponent.prototype.onUnassignedServiceClick = function () {
+        this.closeNav();
+        this.status = null;
         this.getUnassignedServiceRequests(this.profile);
     };
     ProfileComponent.prototype.onAssignedSenderClick = function () {
+        this.closeNav();
+        this.status = null;
         this.id = null;
         this.getAssignedSenderRequests(this.profile);
     };
     ProfileComponent.prototype.onUnassignedSenderClick = function () {
+        this.closeNav();
+        this.status = null;
         this.getUnassignedSenderRequests(this.profile);
     };
     ProfileComponent.prototype.onReceivingRequestStatusClick = function () {
+        this.closeNav();
+        this.status = null;
         this.id = null;
         this.getParcelReceivingRequests(this.profile);
     };
@@ -143,6 +153,7 @@ var ProfileComponent = (function () {
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = true;
+                _this.openNav();
             }
             else {
                 delete _this.parcelRequests;
@@ -195,6 +206,7 @@ var ProfileComponent = (function () {
                 delete _this.parcelReceivingRequests;
                 _this.showDetails = true;
                 _this.requestType = false;
+                _this.openNav();
             }
             else {
                 delete _this.unassignedServiceRequests;
@@ -246,6 +258,7 @@ var ProfileComponent = (function () {
                 delete _this.assignedServiceRequests;
                 delete _this.parcelRequests;
                 _this.showDetails = true;
+                _this.openNav();
             }
             else {
                 delete _this.unassignedServiceRequests;
@@ -304,6 +317,17 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.loggedIn = function () {
         return angular2_jwt_2.tokenNotExpired();
+    };
+    ProfileComponent.prototype.openNav = function () {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+    };
+    ProfileComponent.prototype.closeNav = function () {
+        this.status = null;
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+        document.body.style.backgroundColor = "white";
     };
     ProfileComponent = __decorate([
         core_1.Component({
