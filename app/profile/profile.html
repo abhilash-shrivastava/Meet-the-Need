@@ -57,7 +57,7 @@
             <a (click)="status = 'Parcel Received From Service Provider'">Parcel Received</a>
         </div>
 
-        <div *ngIf="assignedServiceRequests">
+        <div *ngIf="assignedServiceRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div *ngIf="request.status == status">
                 <h3>
@@ -107,7 +107,7 @@
 
     <div *ngIf="assignedServiceRequests" [hidden]="showDetails" class="form-style-10"><h3>No Assigned Service Requests</h3></div>
 
-    <div *ngIf="parcelRequests" >
+    <div *ngIf="parcelRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of parcelRequests | paginate: { itemsPerPage: 5, currentPage: p3 }" >
             <h3>
                 <panel *ngIf = "request.status == status" [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
@@ -167,7 +167,7 @@
     </div>
     <div *ngIf="parcelRequests" [hidden]="showDetails" class="form-style-10"><h3>No Parcel Requests</h3></div>
 
-    <div *ngIf="parcelReceivingRequests">
+    <div *ngIf="parcelReceivingRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of parcelReceivingRequests | paginate: { itemsPerPage: 5, currentPage: p4 }" >
             <div *ngIf = "request.status == status">
                 <h3>

@@ -321,7 +321,7 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.openNav = function () {
         document.getElementById("mySidenav").style.width = "250px";
         document.getElementById("main").style.marginLeft = "250px";
-        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.2)";
     };
     ProfileComponent.prototype.closeNav = function () {
         this.status = null;
