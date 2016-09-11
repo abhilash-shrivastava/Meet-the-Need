@@ -16,7 +16,7 @@ export class ParcelSenderCRUDService{
 
     constructor (private http: Http) {}
 
-    private parcelSenderDetailsSaveUrl = 'http://localhost:9000/order-confirm';
+    private parcelSenderDetailsSaveUrl = 'http://localhost:9000/provider-list';
     save (parcelSenderDetails: ParcelSenderDetails ): Observable<ParcelSenderDetails> {
         //console.log(serviceProviderDetails);
         let body = JSON.stringify(parcelSenderDetails);
@@ -38,6 +38,19 @@ export class ParcelSenderCRUDService{
 
         //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.getParcelSenderDetailsUrl, body, options)
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
+    private selectServiceProviderUrl = 'http://localhost:9000/select-provider';
+    selectServiceProvider (senderData ): Observable<{}> {
+        //console.log(serviceProviderDetails);
+        let body = JSON.stringify(senderData);
+        let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
+        let options = new RequestOptions({ headers: headers });
+
+        //noinspection TypeScriptUnresolvedFunction
+        return this.http.post(this.selectServiceProviderUrl, body, options)
             .map(res => res.json())
             .catch(this.handleError);
     }

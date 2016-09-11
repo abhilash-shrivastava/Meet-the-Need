@@ -6,7 +6,7 @@
 </head>
 <body>
 <div *ngIf="loggedIn()" [hidden] = "!isLoading" class="loader">Loading...</div>
-<div *ngIf="loggedIn()" [hidden]="submitted || isLoading">
+<div *ngIf="loggedIn()" [hidden]="submitted || isLoading || parcelOrderSelected">
     <div class="form-style-10">
         <h1>Details Needed<span>Please provide the following details to offer parcel service!</span></h1>
         <form (ngSubmit) = "onSubmit()" #serviceProviderDetailsForm="ngForm">
@@ -80,10 +80,11 @@
         </form>
     </div>
 </div>
-<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading">
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading || parcelOrderSelected">
     <h2>You submitted the service providing request successfully</h2>
     <div *ngIf="requests" [hidden]="!showDetails">
-        <h2>Following Parcel Request is Assigned to You</h2>
+        <h1>Found Matches</h1>
+        <h2>Please select the parcel order</h2>
         <ul *ngFor="let request of requests " class="form-style-10-assign">
             <h3>Request Details:</h3>
             <li>Parcel Details : {{request.parcelDisclosure}}</li>
@@ -101,10 +102,39 @@
             <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
             <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
             <li>City : {{request.deliveryCity}}</li>
+            <button class="resubmit-button" (click)="selectParcel(request)">Select</button>
         </ul>
     </div>
-    <div *ngIf="requests" [hidden]="showDetails"><h4>No Suitable Parcel Requests Found</h4></div>
-    <button class="resubmit-button" (click)="submitted=false">Submit Another Request</button>
+    <div *ngIf="requests" [hidden]="showDetails">
+        <h3>Service providing request submitted and No Suitable Parcel Order Match Found</h3>
+        <h2>Be patience, a parcel sender may request you.</h2>
+        <button class="resubmit-button" (click)="initializeFlag()">Submit Another Request</button>
+    </div>
+</div>
+
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!parcelOrderSelected || !submitted || isLoading">
+    <h2>You have selected the following service provider</h2>
+    <div *ngIf="requests" >
+            <ul *ngFor="let request of requests " class="form-style-10-assign">
+                <h3>Request Details:</h3>
+                <li>Parcel Details : {{request.parcelDisclosure}}</li>
+                <h4>Sender Details</h4>
+                <li>Sender Name : {{request.senderName}}</li>
+                <li>Sender Email : {{request.senderEmail}}</li>
+                <li>Sender Contact Number :   {{request.senderPhone}}</li>
+                <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
+                <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+                <li>City : {{request.currentCity}}</li>
+                <h4>Receiver Details</h4>
+                <li>Receiver Name : {{request.receiverName}}</li>
+                <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
+                <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
+                <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
+                <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
+                <li>City : {{request.deliveryCity}}</li>
+                <button class="resubmit-button" (click)="initializeFlag()">Submit Another Request</button>
+            </ul>
+    </div>
 </div>
 </body>
 </html>

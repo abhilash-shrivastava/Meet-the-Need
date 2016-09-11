@@ -13,7 +13,7 @@ export class ServiceProviderCRUDService{
 
     constructor (private http: Http) {}
 
-    private serviceProviderDetailsSaveUrl = 'http://localhost:9000/service-confirm';
+    private serviceProviderDetailsSaveUrl = 'http://localhost:9000/sender-list';
     save (serviceProviderDetails: ServiceProviderDetails ): Observable<ServiceProviderDetails> {
         let body = JSON.stringify(serviceProviderDetails);
         let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
@@ -34,6 +34,19 @@ export class ServiceProviderCRUDService{
 
         //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.getServiceProviderDetailsUrl, body, options)
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
+    private selectParcelOrderUrl = 'http://localhost:9000/select-parcel';
+    selectParcelOrder (senderData ): Observable<{}> {
+        //console.log(serviceProviderDetails);
+        let body = JSON.stringify(senderData);
+        let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
+        let options = new RequestOptions({ headers: headers });
+
+        //noinspection TypeScriptUnresolvedFunction
+        return this.http.post(this.selectParcelOrderUrl, body, options)
             .map(res => res.json())
             .catch(this.handleError);
     }

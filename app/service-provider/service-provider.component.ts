@@ -35,6 +35,7 @@ export class ServiceProviderComponent {
     isCurrentAddressLoading = false;
     fetchingDestinationAddress = false;
     isDestinationAddressLoading = false;
+    parcelOrderSelected = false;
 
     placeSearch: any;
     currentAddressAutocomplete: any;
@@ -83,6 +84,18 @@ export class ServiceProviderComponent {
                 private googleApi:GoogleApiService,
         private serviceProviderCRUDService: ServiceProviderCRUDService,
         private routeParams: RouteParams) {
+    }
+
+    selectParcel(parcel){
+        parcel['serviceProvider'] = this.model;
+        this.parcelOrderSelected = true;
+        this.selectParcelOrder(parcel)
+    }
+
+    initializeFlag(){
+        this.submitted = false;
+        this.parcelOrderSelected= false;
+        this.isLoading =false;
     }
 
     ngOnInit(): void {
@@ -235,6 +248,28 @@ export class ServiceProviderComponent {
                     setTimeout(() => {
                         this.isLoading = false;
                     }, 3000);
+                    if(this.requests.length > 0){
+                        this.showDetails = true;
+                    }else{
+                        if (this.profile["id"] != null){
+                            this.router.navigate( ['Profile'] );
+                        }
+                        this.showDetails = false;
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );
+
+    }
+
+    selectParcelOrder(senderData){
+        if (!senderData) { return; }
+        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+        this.serviceProviderCRUDService.selectParcelOrder(senderData)
+            .subscribe(
+                data  => {
+                    this.requests = [];
+                    this.requests = data;
                     if(this.requests.length > 0){
                         this.showDetails = true;
                     }else{

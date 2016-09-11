@@ -31,6 +31,8 @@ var ParcelSenderComponent = (function () {
         this.isCurrentAddressLoading = false;
         this.fetchingDeliveryAddress = false;
         this.isDeliveryAddressLoading = false;
+        this.serviceProviderSelected = false;
+        this.submitted = false;
         this.componentForm = {
             street_number: 'short_name',
             route: 'long_name',
@@ -40,7 +42,6 @@ var ParcelSenderComponent = (function () {
             postal_code: 'short_name'
         };
         this.states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
-        this.submitted = false;
     }
     ParcelSenderComponent.prototype.onSubmit = function () {
         console.log(this.model);
@@ -71,6 +72,16 @@ var ParcelSenderComponent = (function () {
         if (this.model !== null) {
             this.saveParcelSenderDetails(this.model);
         }
+    };
+    ParcelSenderComponent.prototype.selectProvider = function (provider) {
+        this.model['serviceProvider'] = provider;
+        this.serviceProviderSelected = true;
+        this.selectServiceProvider(this.model);
+    };
+    ParcelSenderComponent.prototype.initializeFlag = function () {
+        this.submitted = false;
+        this.serviceProviderSelected = false;
+        this.isLoading = false;
     };
     ParcelSenderComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -217,6 +228,28 @@ var ParcelSenderComponent = (function () {
             setTimeout(function () {
                 _this.isLoading = false;
             }, 3000);
+            _this.requests = [];
+            _this.requests = data;
+            if (_this.requests.length > 0) {
+                _this.showDetails = true;
+            }
+            else {
+                if (_this.profile["id"] != null) {
+                    _this.router.navigate(['Profile']);
+                }
+                _this.showDetails = false;
+            }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ParcelSenderComponent.prototype.selectServiceProvider = function (senderData) {
+        var _this = this;
+        if (!senderData) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+        this.parcelSenderCRUDService.selectServiceProvider(senderData)
+            .subscribe(function (data) {
+            _this.requests = [];
             _this.requests = data;
             if (_this.requests.length > 0) {
                 _this.showDetails = true;

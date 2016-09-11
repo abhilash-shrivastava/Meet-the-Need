@@ -18,8 +18,9 @@ var Observable_1 = require('rxjs/Observable');
 var ServiceProviderCRUDService = (function () {
     function ServiceProviderCRUDService(http) {
         this.http = http;
-        this.serviceProviderDetailsSaveUrl = 'http://localhost:9000/service-confirm';
+        this.serviceProviderDetailsSaveUrl = 'http://localhost:9000/sender-list';
         this.getServiceProviderDetailsUrl = 'http://localhost:9000/service-details';
+        this.selectParcelOrderUrl = 'http://localhost:9000/select-parcel';
     }
     ServiceProviderCRUDService.prototype.save = function (serviceProviderDetails) {
         var body = JSON.stringify(serviceProviderDetails);
@@ -37,6 +38,16 @@ var ServiceProviderCRUDService = (function () {
         var options = new http_1.RequestOptions({ headers: headers });
         //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.getServiceProviderDetailsUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    ServiceProviderCRUDService.prototype.selectParcelOrder = function (senderData) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(senderData);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        //noinspection TypeScriptUnresolvedFunction
+        return this.http.post(this.selectParcelOrderUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
