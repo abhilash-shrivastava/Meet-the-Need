@@ -21,8 +21,9 @@ var Observable_1 = require('rxjs/Observable');
 var ParcelSenderCRUDService = (function () {
     function ParcelSenderCRUDService(http) {
         this.http = http;
-        this.parcelSenderDetailsSaveUrl = 'http://localhost:9000/order-confirm';
+        this.parcelSenderDetailsSaveUrl = 'http://localhost:9000/provider-list';
         this.getParcelSenderDetailsUrl = 'http://localhost:9000/sender-details';
+        this.selectServiceProviderUrl = 'http://localhost:9000/select-provider';
     }
     ParcelSenderCRUDService.prototype.save = function (parcelSenderDetails) {
         //console.log(serviceProviderDetails);
@@ -41,6 +42,16 @@ var ParcelSenderCRUDService = (function () {
         var options = new http_1.RequestOptions({ headers: headers });
         //noinspection TypeScriptUnresolvedFunction
         return this.http.post(this.getParcelSenderDetailsUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    ParcelSenderCRUDService.prototype.selectServiceProvider = function (senderData) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(senderData);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        //noinspection TypeScriptUnresolvedFunction
+        return this.http.post(this.selectServiceProviderUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };

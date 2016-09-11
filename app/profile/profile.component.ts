@@ -54,12 +54,12 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
         this.destinationAddress = destinationAddress;
         
         this.status = status;
-        if (this.id !== id && status == 'Assigned To Service Provider'){
+        if (this.id !== id && status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender'){
             this.id = id;
             this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
             this.mapAddress = "Map Direction To Parcel Sender";
         }
-        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+        if (this.id !== id && (status === 'Parcel Given To Service Provider' || status ==='Parcel Collected From Sender' || status ==='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
             this.id = id;
             this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
             this.mapAddress = "Map Direction To Receiver"
@@ -74,7 +74,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
         this.destinationAddress = destinationAddress;
 
 
-        if (this.id !== id && status == 'Assigned To Service Provider'){
+        if (this.id !== id && (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender') ){
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction To Service Provider";
@@ -93,7 +93,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
 
-        if (this.id !== id && status == 'Assigned To Service Provider'){
+        if (this.id !== id && status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender'){
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction Between Service Provider and Parcel Sender";
@@ -141,7 +141,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     onStatusChangeClick(parcelId){
         this.changeParcelStatus({email: this.profile.email, parcelId: parcelId}, this.getAssignedSenderRequests(this.profile));
     }
-
+    
     onCancelClick(requestId, requestType){
         if (confirm("Cancel Request?")){
             if (requestType == 'Service'){
@@ -149,6 +149,17 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             if (requestType == 'Parcel'){
                 this.cancelRequest({requestId: requestId, requestType: requestType}, this.onUnassignedSenderClick())
+            }
+        }
+    }
+
+    onRejectClick(requestId, requestType){
+        if (confirm("Reject Request?")){
+            if (requestType == 'Service'){
+                this.rejectRequest({requestId: requestId, requestType: requestType}, this.onAssignedServiceClick())
+            }
+            if (requestType == 'Parcel'){
+                this.rejectRequest({requestId: requestId, requestType: requestType}, this.onAssignedSenderClick())
             }
         }
     }
@@ -356,6 +367,24 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                     if (this.res.role == 'Parcel'){
                         this.onUnassignedSenderClick();
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );
+    }
+
+    rejectRequest(data, callback){
+        if (!data.requestId || !data.requestType) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.rejectRequest(data)
+            .subscribe(
+                data  => {
+                    this.res = data;
+                    if (this.res.role == 'Service'){
+                        this.onAssignedServiceClick();
+                    }
+                    if (this.res.role == 'Parcel'){
+                        this.onAssignedSenderClick();
                     }
                 },
                 error =>  this.errorMessage = <any>error

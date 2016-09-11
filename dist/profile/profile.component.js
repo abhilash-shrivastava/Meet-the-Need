@@ -39,12 +39,12 @@ var ProfileComponent = (function () {
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
         this.status = status;
-        if (this.id !== id && status == 'Assigned To Service Provider') {
+        if (this.id !== id && status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender') {
             this.id = id;
             this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
             this.mapAddress = "Map Direction To Parcel Sender";
         }
-        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status == 'Parcel Collected From Sender' || status == 'Parcel Delivered To Receiver' || status == 'Parcel Received From Service Provider')) {
+        if (this.id !== id && (status === 'Parcel Given To Service Provider' || status === 'Parcel Collected From Sender' || status === 'Parcel Delivered To Receiver' || status == 'Parcel Received From Service Provider')) {
             this.id = id;
             this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
             this.mapAddress = "Map Direction To Receiver";
@@ -55,7 +55,7 @@ var ProfileComponent = (function () {
         this.currentSenderAddress = currentSenderAddress;
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
-        if (this.id !== id && status == 'Assigned To Service Provider') {
+        if (this.id !== id && (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')) {
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction To Service Provider";
@@ -71,7 +71,7 @@ var ProfileComponent = (function () {
         this.currentSenderAddress = currentSenderAddress;
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
-        if (this.id !== id && status == 'Assigned To Service Provider') {
+        if (this.id !== id && status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender') {
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction Between Service Provider and Parcel Sender";
@@ -120,6 +120,16 @@ var ProfileComponent = (function () {
             }
             if (requestType == 'Parcel') {
                 this.cancelRequest({ requestId: requestId, requestType: requestType }, this.onUnassignedSenderClick());
+            }
+        }
+    };
+    ProfileComponent.prototype.onRejectClick = function (requestId, requestType) {
+        if (confirm("Reject Request?")) {
+            if (requestType == 'Service') {
+                this.rejectRequest({ requestId: requestId, requestType: requestType }, this.onAssignedServiceClick());
+            }
+            if (requestType == 'Parcel') {
+                this.rejectRequest({ requestId: requestId, requestType: requestType }, this.onAssignedSenderClick());
             }
         }
     };
@@ -312,6 +322,23 @@ var ProfileComponent = (function () {
             }
             if (_this.res.role == 'Parcel') {
                 _this.onUnassignedSenderClick();
+            }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ProfileComponent.prototype.rejectRequest = function (data, callback) {
+        var _this = this;
+        if (!data.requestId || !data.requestType) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.rejectRequest(data)
+            .subscribe(function (data) {
+            _this.res = data;
+            if (_this.res.role == 'Service') {
+                _this.onAssignedServiceClick();
+            }
+            if (_this.res.role == 'Parcel') {
+                _this.onAssignedSenderClick();
             }
         }, function (error) { return _this.errorMessage = error; });
     };

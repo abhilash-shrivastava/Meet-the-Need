@@ -6,7 +6,7 @@
 </head>
 <body>
 <div *ngIf="loggedIn()" [hidden] = "!isLoading" class="loader">Loading...</div>
-<div *ngIf="loggedIn()" [hidden]="submitted || isLoading">
+<div *ngIf="loggedIn()" [hidden]="submitted || isLoading || serviceProviderSelected">
 <div class="form-style-10">
     <h1>Details Needed<span>Please provide the following details to send a parcel!</span></h1>
     <form (ngSubmit) = "onSubmit()" #parcelSenderDetailsForm = "ngForm">
@@ -82,13 +82,13 @@
     </form>
 </div>
 </div>
-<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading">
-    <h2>You submitted the parcel sending order successfully</h2>
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading || serviceProviderSelected">
     <div *ngIf="requests" [hidden]="!showDetails" >
-        <h2>Following Service Provider Request is Assigned to You</h2>
+        <h1>Found Matches</h1>
+        <h2>Please select the service provider</h2>
         <ul *ngFor="let request of requests " class="form-style-10-assign">
             <h3>Request Details:</h3>
-            <li>Parcel Dispatch Date:   {{request.journeyDate}}</li>
+            <li>Journey Date:   {{request.journeyDate}}</li>
             <h4>Service Provider Details:</h4>
             <li>Name :  <b>{{request.name}}</b></li>
             <li>Email Id : <b>{{request.email}}</b></li>
@@ -96,10 +96,32 @@
             <li>Address :  <b>{{request.currentAddreddaddressLine1}}</b></li>
             <li><b>{{request.currentAddreddaddressLine2}}</b></li>
             <li>City : {{request.currentCity}}</li>
+            <button class="resubmit-button" (click)="selectProvider(request)">Select</button>
         </ul>
     </div>
-    <div *ngIf="requests" [hidden]="showDetails"><h4>No Suitable Service Requests Found</h4></div>
-    <button class="resubmit-button" (click)="submitted=false">Send Another Parcel</button>
+    <div *ngIf="requests" [hidden]="showDetails">
+        <h3>Parcel sending request submitted and No Suitable Service Provider Match Found</h3>
+        <h2>Be patience, a service provider may request you.</h2>
+        <button class="resubmit-button" (click)="initializeFlag()">Send Another Parcel Request</button>
+    </div>
+</div>
+
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!serviceProviderSelected || !submitted || isLoading">
+    <h2>You have selected the following service provider</h2>
+    <div *ngIf="requests" >
+        <ul *ngFor="let request of requests " class="form-style-10-assign">
+            <h3>Request Details:</h3>
+            <li>Journey Date:   {{request.journeyDate}}</li>
+            <h4>Service Provider Details:</h4>
+            <li>Name :  <b>{{request.name}}</b></li>
+            <li>Email Id : <b>{{request.email}}</b></li>
+            <li>Contact Number : <b>{{request.phone}}</b></li>
+            <li>Address :  <b>{{request.currentAddreddaddressLine1}}</b></li>
+            <li><b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li>City : {{request.currentCity}}</li>
+            <button class="resubmit-button" (click)="initializeFlag()">Send Another Parcel Request</button>
+        </ul>
+    </div>
 </div>
 </body>
 </html>

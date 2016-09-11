@@ -48,13 +48,17 @@
     </div>
     <div *ngIf="unassignedServiceRequests" [hidden]="showDetails" class="form-style-10"><h3>No Unassigned Service Requests</h3></div>
 
-        <div id="mySidenav"  [hidden]="!showDetails"  class="sidenav">
+        <div id="mySidenav"  [hidden]="!showDetails "  class="sidenav">
             <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-            <a (click)="status = 'Assigned To Service Provider'">Just Assigned</a>
-            <a (click)="status = 'Parcel Given To Service Provider'">Parcel Given</a>
-            <a (click)="status = 'Parcel Collected From Sender'">Parcel Collected</a>
-            <a (click)="status = 'Parcel Delivered To Receiver'">Parcel Delivered</a>
-            <a (click)="status = 'Parcel Received From Service Provider'">Parcel Received</a>
+            <a *ngIf="parcelRequests" (click)="status = 'Pending Approval At Service Provider'; id=''">Pending Approval</a>
+            <a *ngIf="assignedServiceRequests" (click)="status = 'Pending Approval At Parcel Sender'; id=''">Pending Approval</a>
+            <a (click)="status = 'Assigned To Service Provider'; id=''">Just Assigned</a>
+            <a (click)="status = 'Parcel Given To Service Provider'; id=''">Parcel Given</a>
+            <a (click)="status = 'Parcel Collected From Sender'; id=''">Parcel Collected</a>
+            <a (click)="status = 'Parcel Delivered To Receiver'; id=''">Parcel Delivered</a>
+            <a (click)="status = 'Parcel Received From Service Provider'; id=''">Parcel Received</a>
+            <a *ngIf="parcelRequests" (click)="status = 'Pending Approval At Parcel Sender'; id=''">Approve Request</a>
+            <a *ngIf="assignedServiceRequests" (click)="status = 'Pending Approval At Service Provider'; id=''">Approve Request</a>
         </div>
 
         <div *ngIf="assignedServiceRequests" [hidden]="!showDetails">
@@ -96,6 +100,8 @@
                             <div id="{{request._id}}" class="map"></div>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered</button>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-cancel" (click)="onStatusChangeClick(request._id)">Approve</button>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-update" (click)="onRejectClick(request._id, 'Service')">Reject</button>
                         </div>
                     </panel>
                 </h3>
@@ -109,7 +115,7 @@
 
     <div *ngIf="parcelRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of parcelRequests | paginate: { itemsPerPage: 5, currentPage: p3 }" >
-            <h3>
+            <h3 >
                 <panel *ngIf = "request.status == status" [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
                        (click)="mapLoadAssignedParcel(request._id, request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity

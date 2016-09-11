@@ -32,8 +32,9 @@ export class ParcelSenderComponent {
     isCurrentAddressLoading = false;
     fetchingDeliveryAddress = false;
     isDeliveryAddressLoading = false;
+    serviceProviderSelected = false;
+    submitted = false;
 
-    placeSearch: any;
     currentAddressAutocomplete: any;
     deliveryAddressAutocomplete: any;
     componentForm = {
@@ -46,7 +47,6 @@ export class ParcelSenderComponent {
     };
     states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
 
-    submitted = false;
     onSubmit() {
         console.log(this.model);
         this.isLoading = true;
@@ -84,6 +84,18 @@ export class ParcelSenderComponent {
                  private googleApi:GoogleApiService,
         private parcelSenderCRUDService: ParcelSenderCRUDService,
         private routeParams: RouteParams) {
+    }
+
+    selectProvider(provider){
+        this.model['serviceProvider'] = provider;
+        this.serviceProviderSelected = true;
+        this.selectServiceProvider(this.model)
+    }
+
+    initializeFlag(){
+        this.submitted = false;
+        this.serviceProviderSelected= false;
+        this.isLoading =false;
     }
 
     ngOnInit(): void {
@@ -234,6 +246,29 @@ export class ParcelSenderComponent {
                     setTimeout(() => {
                         this.isLoading = false;
                     }, 3000);
+                    this.requests = [];
+                    this.requests = data;
+                    if(this.requests.length > 0){
+                        this.showDetails = true;
+                    }else{
+                        if (this.profile["id"] != null){
+                            this.router.navigate( ['Profile'] );
+                        }
+                        this.showDetails = false;
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );
+
+    }
+
+    selectServiceProvider(senderData){
+        if (!senderData) { return; }
+        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+        this.parcelSenderCRUDService.selectServiceProvider(senderData)
+            .subscribe(
+                data  => {
+                    this.requests = [];
                     this.requests = data;
                     if(this.requests.length > 0){
                         this.showDetails = true;
