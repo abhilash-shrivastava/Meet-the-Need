@@ -33,6 +33,7 @@ var ServiceProviderComponent = (function () {
         this.isCurrentAddressLoading = false;
         this.fetchingDestinationAddress = false;
         this.isDestinationAddressLoading = false;
+        this.parcelOrderSelected = false;
         this.componentForm = {
             street_number: 'short_name',
             route: 'long_name',
@@ -83,6 +84,16 @@ var ServiceProviderComponent = (function () {
         if (this.model !== null) {
             this.saveServiceProviderDetails(this.model);
         }
+    };
+    ServiceProviderComponent.prototype.selectParcel = function (parcel) {
+        parcel['serviceProvider'] = this.model;
+        this.parcelOrderSelected = true;
+        this.selectParcelOrder(parcel);
+    };
+    ServiceProviderComponent.prototype.initializeFlag = function () {
+        this.submitted = false;
+        this.parcelOrderSelected = false;
+        this.isLoading = false;
     };
     ServiceProviderComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -230,6 +241,27 @@ var ServiceProviderComponent = (function () {
             setTimeout(function () {
                 _this.isLoading = false;
             }, 3000);
+            if (_this.requests.length > 0) {
+                _this.showDetails = true;
+            }
+            else {
+                if (_this.profile["id"] != null) {
+                    _this.router.navigate(['Profile']);
+                }
+                _this.showDetails = false;
+            }
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    ServiceProviderComponent.prototype.selectParcelOrder = function (senderData) {
+        var _this = this;
+        if (!senderData) {
+            return;
+        }
+        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+        this.serviceProviderCRUDService.selectParcelOrder(senderData)
+            .subscribe(function (data) {
+            _this.requests = [];
+            _this.requests = data;
             if (_this.requests.length > 0) {
                 _this.showDetails = true;
             }

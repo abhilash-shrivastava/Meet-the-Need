@@ -145,7 +145,9 @@
                     <li >Parcel Status :  <b>{{request.status}}</b></li>
                         <h4>{{mapAddress}}</h4>
                         <div id="{{request._id}}" class="map"></div>
-                    <button [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
+                        <button [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
+                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-cancel" (click)="onStatusChangeClick(request._id)">Approve</button>
+                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-update" (click)="onRejectClick(request._id, 'Parcel')">Reject</button>
                     </div>
                 </panel>
                 <panel *ngIf = "!request.status" [title]="request.currentCity + '-' + request.deliveryCity">

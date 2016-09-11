@@ -46,12 +46,12 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 });
 
-app.use('/service-confirm', jwtCheck);
-app.post('/service-confirm', (req, res) => {
+app.use('/sender-list', jwtCheck);
+app.post('/sender-list', (req, res) => {
   res.connection.setTimeout(0);
-assignProvider(req.body, (responseToProvider) => {
-res.send(JSON.stringify(responseToProvider));
-});
+  getParcelSenderList(req.body, (responseToProvider) => {
+  res.send(JSON.stringify(responseToProvider));
+  });
 });
 
 app.use('/provider-list', jwtCheck);
@@ -79,6 +79,14 @@ app.post('/select-provider', (req, res) => {
   assignProviderForApproval(req.body, (responseToSender) => {
     res.send(JSON.stringify(responseToSender));
   });
+});
+
+app.use('/select-parcel', jwtCheck);
+app.post('/select-parcel', (req, res) => {
+  res.connection.setTimeout(0);
+  assignParcelForApproval(req.body, (responseToSender) => {
+  res.send(JSON.stringify(responseToSender));
+});
 });
 
 
@@ -249,6 +257,47 @@ var assignProvider =  function (data, callback) {
 };
 
 
+var assignParcelForApproval =  function (data, callback) {
+  if (data._id != null){
+    data._id = ObjectId(data._id);
+  }
+  data["status"] = "Pending Approval At Parcel Sender";
+  db.collection('providerAssigned').insertOne(data, (err, result) => {
+    if (err) return console.log(err);
+  responseToSender = [];
+  responseToSender.push(data);
+  callback(responseToSender);
+  sendAssignedEmailToProvider(data, data.serviceProvider);
+  sendAssignedEmailToSender (data, data.serviceProvider);
+  sendAssignedEmailToReceiver(data, data.serviceProvider);
+  data.serviceProvider.maxParcelWeight -= data.serviceProvider.parcelWeight;
+  data.serviceProvider.maxParcelHeight -= data.serviceProvider.parcelHeight;
+  data.serviceProvider.maxParcelLength -= data.serviceProvider.parcelLength;
+  data.serviceProvider.maxParcelWidth -= data.serviceProvider.parcelWidth;
+  if ((data.serviceProvider.maxParcelWeight < 1) || (data.serviceProvider.maxParcelHeight < 1) || (data.serviceProvider.maxParcelLength < 1) || (data.serviceProvider.maxParcelWidth < 1) ) {
+    db.collection('serviceProvider').deleteOne(
+      { "_id": data.serviceProvider._id },
+      function(err, results) {
+        console.log("Deleted from serviceProvider");
+        db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
+          console.log('saved to serviceProvided');
+        });
+      });
+  }else {
+    db.collection('serviceProvider').updateOne(
+      { "_id": data.serviceProvider._id },
+      {
+        $set: { "maxParcelWeight": data.serviceProvider.maxParcelWeight, "maxParcelHeight": data.serviceProvider.maxParcelHeight, "maxParcelLength": data.serviceProvider.maxParcelLength, "maxParcelWidth": data.serviceProvider.maxParcelWidth },
+      }, function(err, results) {
+        console.log('updated serviceProvider');
+        db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
+          console.log('saved to serviceProvided');
+        });
+      });
+  }
+});
+};
+
 
 
 var assignProviderForApproval =  function (data, callback) {
@@ -314,6 +363,38 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
       cursorone.each(function(err, provider){
         if (provider !== null){
           responseToSender.push(provider);
+          count--;
+          if (count === 0){
+            sendResponse(responseToSender);
+            cursorone.close();
+          }
+        }
+      })
+    }
+  })
+}
+
+var getParcelSenderList = function (serviceDetails,  sendResponse) {
+  responseToSender = [];
+  if (serviceDetails._id != null){
+    serviceDetails._id = ObjectId(data._id);
+  }
+  var cursorone = db.collection('parcelSender')
+      .find( { "currentCity": serviceDetails.currentCity, "deliveryCity": serviceDetails.destinationCity, "parcelWeight": { $lte: (serviceDetails.maxParcelWeight) }, "parcelHeight": { $lte: (serviceDetails.maxParcelHeight)}, "parcelLength": { $lte: (serviceDetails.maxParcelLength)}, "parcelWidth": { $lte: (serviceDetails.maxParcelWidth)}, "startDeliveryDate" : {$lte: serviceDetails.journeyDate}, "endDeliveryDate" : {$gte: serviceDetails.journeyDate}} ).sort({parcelWeight: -1})
+  cursorone.count(function (e, count) {
+
+    if (count === 0) {
+      db.collection('serviceProvider').save(data, (err, result) => {
+        if (err) return console.log(err);
+      responseToProvider = [];
+      sendResponse(responseToSender);
+      //sendRaisedEmailToProvider(data);
+      console.log("saved to serviceProvider");
+    })
+    }else {
+      cursorone.each(function(err, sender){
+        if (sender !== null){
+          responseToSender.push(sender);
           count--;
           if (count === 0){
             sendResponse(responseToSender);
