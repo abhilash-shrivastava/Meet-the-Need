@@ -26,6 +26,7 @@ var RequestsService = (function () {
         this.setParcelStatusUrl = 'http://localhost:9000/change-status';
         this.cancelRequestUrl = 'http://localhost:9000/cancel-request';
         this.updateRequestUrl = 'http://localhost:9000/update-request';
+        this.rejectRequestUrl = 'http://localhost:9000/reject-request';
     }
     RequestsService.prototype.getAssignedServiceRequests = function (data) {
         //console.log(serviceProviderDetails);
@@ -96,6 +97,15 @@ var RequestsService = (function () {
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.updateRequestUrl, body, options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    RequestsService.prototype.rejectRequest = function (data) {
+        //console.log(serviceProviderDetails);
+        var body = JSON.stringify(data);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer ' + localStorage.getItem('id_token') + '' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.rejectRequestUrl, body, options)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };

@@ -236,3 +236,23 @@ div button:focus {
 body {
     transition: background-color .5s;
 }
+
+.button-approve {
+    background: #0273D4;
+    color: white;
+    position: relative;
+    left: 15%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    margin: 30px;
+}
+
+.button-reject {
+    background: #0273D4;
+    color: white;
+    position: relative;
+    left: 60%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    margin: 30px;
+}

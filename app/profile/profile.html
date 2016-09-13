@@ -100,8 +100,8 @@
                             <div id="{{request._id}}" class="map"></div>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered</button>
-                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-cancel" (click)="onStatusChangeClick(request._id)">Approve</button>
-                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-update" (click)="onRejectClick(request._id, 'Service')">Reject</button>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-approve" (click)="onStatusChangeClick(request._id)">Approve</button>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-reject" (click)="onRejectClick(request._id, 'Service')">Reject</button>
                         </div>
                     </panel>
                 </h3>
@@ -146,8 +146,8 @@
                         <h4>{{mapAddress}}</h4>
                         <div id="{{request._id}}" class="map"></div>
                         <button [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
-                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-cancel" (click)="onStatusChangeClick(request._id)">Approve</button>
-                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-update" (click)="onRejectClick(request._id, 'Parcel')">Reject</button>
+                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-approve" (click)="onStatusChangeClick(request._id)">Approve</button>
+                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-reject" (click)="onRejectClick(request._id, 'Parcel')">Reject</button>
                     </div>
                 </panel>
                 <panel *ngIf = "!request.status" [title]="request.currentCity + '-' + request.deliveryCity">
