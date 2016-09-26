@@ -71,7 +71,8 @@ export class Panel {
             this.directionsDisplay, this.directionsService, this.markerArray, this.stepDisplay, this.map, address1, address2);
     }
 
-    getDistanceAndDuration(origin:any, destination: any, callback){
+    getDistanceAndDuration(origin:any, destination: any, req:any, callback){
+        console.log('hi')
         this.service = new google.maps.DistanceMatrixService;
         var distanceAndDuration = {};
         this.service.getDistanceMatrix({
@@ -89,7 +90,7 @@ export class Panel {
                 distanceAndDuration["distance"] = results[0].distance.text;
                 distanceAndDuration["duration"] = results[0].duration.text;
                 //noinspection TypeScriptUnresolvedVariable
-                callback(distanceAndDuration);
+                callback(req, distanceAndDuration);
             }
         });
     }

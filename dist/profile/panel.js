@@ -45,7 +45,8 @@ var Panel = (function () {
         // Display the route between the initial start and end selections.
         this.calculateAndDisplayRoute(this.directionsDisplay, this.directionsService, this.markerArray, this.stepDisplay, this.map, address1, address2);
     };
-    Panel.prototype.getDistanceAndDuration = function (origin, destination, callback) {
+    Panel.prototype.getDistanceAndDuration = function (origin, destination, req, callback) {
+        console.log('hi');
         this.service = new google.maps.DistanceMatrixService;
         var distanceAndDuration = {};
         this.service.getDistanceMatrix({
@@ -64,7 +65,7 @@ var Panel = (function () {
                 distanceAndDuration["distance"] = results[0].distance.text;
                 distanceAndDuration["duration"] = results[0].duration.text;
                 //noinspection TypeScriptUnresolvedVariable
-                callback(distanceAndDuration);
+                callback(req, distanceAndDuration);
             }
         });
     };

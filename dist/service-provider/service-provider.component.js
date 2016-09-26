@@ -116,23 +116,23 @@ var ServiceProviderComponent = (function () {
         this.getServiceProviderDetails(this.profile);
     };
     ServiceProviderComponent.prototype.distanceAndDuration = function (origin, destination, type) {
-        if (type === "Sender") {
-            this.panel.getDistanceAndDuration(origin, destination, function (distanceAndDurationToSender) {
-                console.log(distanceAndDurationToSender.distance);
-                return distanceAndDurationToSender;
-            });
-        }
-        else if (type === "Receiver") {
-        }
+        // if (type === "Sender"){
+        //     this.panel.getDistanceAndDuration(origin, destination, function (distanceAndDurationToSender: any) {
+        //         return distanceAndDurationToSender;
+        //     });
+        // }else if (type === "Receiver"){
+        //     // this.distanceAndDurationToReceiver = this.panel.getDistanceAndDuration(origin, destination);
+        // }
     };
     ServiceProviderComponent.prototype.addSenderDistanceAndDuration = function (requests) {
         for (var request in requests) {
+            var req = request;
             //noinspection TypeScriptUnresolvedVariable
             this.panel.getDistanceAndDuration(requests[request].currentAddreddaddressLine1 + ' ' + requests[request].currentAddreddaddressLine2 + ' ' + requests[request].currentCity
                 + ' ' + requests[request].currentState + ' ' + requests[request].currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
-                + ' ' + this.model.currentState + ' ' + this.model.currentZip, function (distanceAndDurationToSender) {
-                requests[request]["SenderDistnaceAndDuration"] = distanceAndDurationToSender;
-                console.log(requests[request]);
+                + ' ' + this.model.currentState + ' ' + this.model.currentZip, req, function (req, distanceAndDurationToSender) {
+                requests[req]["SenderDistnaceAndDuration"] = distanceAndDurationToSender;
+                console.log(req);
                 return distanceAndDurationToSender;
             });
         }
