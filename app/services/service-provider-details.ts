@@ -34,4 +34,9 @@ export class ServiceProviderDetails{
     currentCity: string;
     currentState: string;
     currentZip: string;
+    destinationAddreddaddressLine1: string;
+    destinationAddreddaddressLine2: string;
+    destinationCity: string;
+    destinationState: string;
+    destinationZip: string;
 }

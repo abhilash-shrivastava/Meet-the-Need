@@ -137,6 +137,19 @@ var ServiceProviderComponent = (function () {
             });
         }
     };
+    ServiceProviderComponent.prototype.addReceiverDistanceAndDuration = function (requests) {
+        for (var request in requests) {
+            var req = request;
+            //noinspection TypeScriptUnresolvedVariable
+            this.panel.getDistanceAndDuration(requests[request].deliveryAddreddaddressLine1 + ' ' + requests[request].deliveryAddreddaddressLine2 + ' ' + requests[request].deliveryCity
+                + ' ' + requests[request].deliveryState + ' ' + requests[request].deliveryZip, this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' + this.model.destinationCity
+                + ' ' + this.model.destinationState + ' ' + this.model.destinationZip, req, function (req, distanceAndDurationToSender) {
+                requests[req]["ReceiverDistnaceAndDuration"] = distanceAndDurationToSender;
+                console.log(req);
+                return distanceAndDurationToSender;
+            });
+        }
+    };
     ServiceProviderComponent.prototype.fillInAddress = function (addressType) {
         var _this = this;
         // Get the place details from the autocomplete object.
@@ -263,6 +276,7 @@ var ServiceProviderComponent = (function () {
             .subscribe(function (data) {
             _this.requests = data;
             _this.addSenderDistanceAndDuration(_this.requests);
+            _this.addReceiverDistanceAndDuration(_this.requests);
             setTimeout(function () {
                 _this.isLoading = false;
             }, 3000);
