@@ -32,6 +32,7 @@ var Panel = (function () {
         this.markerArray = [];
         // Instantiate a directions service.
         this.directionsService = new google.maps.DirectionsService;
+        this.geocoder = new google.maps.Geocoder();
         // Create a map and center it on Manhattan.
         this.map = new google.maps.Map(document.getElementById(id), {
             zoom: 13,
@@ -43,6 +44,43 @@ var Panel = (function () {
         this.stepDisplay = new google.maps.InfoWindow;
         // Display the route between the initial start and end selections.
         this.calculateAndDisplayRoute(this.directionsDisplay, this.directionsService, this.markerArray, this.stepDisplay, this.map, address1, address2);
+    };
+    Panel.prototype.getDistanceAndDuration = function (origin, destination, callback) {
+        this.service = new google.maps.DistanceMatrixService;
+        var distanceAndDuration = {};
+        this.service.getDistanceMatrix({
+            origins: [origin],
+            destinations: [destination],
+            travelMode: 'DRIVING',
+            unitSystem: google.maps.UnitSystem.IMPERIAL,
+            avoidHighways: false,
+            avoidTolls: false
+        }, function (response, status) {
+            if (status !== 'OK') {
+                alert('Error was: ' + status);
+            }
+            else {
+                var results = response.rows[0].elements;
+                distanceAndDuration["distance"] = results[0].distance.text;
+                distanceAndDuration["duration"] = results[0].duration.text;
+                //noinspection TypeScriptUnresolvedVariable
+                callback(distanceAndDuration);
+            }
+        });
+    };
+    Panel.prototype.codeAddress = function (address) {
+        var coordinates = {};
+        this.geocoder.geocode({ 'address': address }, function (results, status) {
+            if (status == 'OK') {
+                coordinates["lat"] = results[0].geometry.location.lat();
+                coordinates["lng"] = results[0].geometry.location.lng();
+            }
+            else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+        console.log(coordinates);
+        return coordinates;
     };
     Panel.prototype.calculateAndDisplayRoute = function (directionsDisplay, directionsService, markerArray, stepDisplay, map, address1, address2) {
         var _this = this;

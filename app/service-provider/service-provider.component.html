@@ -95,6 +95,8 @@
             <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
             <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
             <li>City : {{request.currentCity}}</li>
+            <li *ngIf="request.SenderDistnaceAndDuration">Distance To Sender: {{request.SenderDistnaceAndDuration.distance}}</li>
+            <li *ngIf="request.SenderDistnaceAndDuration">Duration To Sender: {{request.SenderDistnaceAndDuration.duration}}</li>
             <h4>Receiver Details</h4>
             <li>Receiver Name : {{request.receiverName}}</li>
             <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>

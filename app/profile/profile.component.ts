@@ -53,9 +53,9 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
         
-        this.status = status;
-        if (this.id !== id && status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender'){
+        if (this.id !== id && (status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')){
             this.id = id;
+            console.log('map loaded');
             this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
             this.mapAddress = "Map Direction To Parcel Sender";
         }
@@ -93,7 +93,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
 
-        if (this.id !== id && status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender'){
+        if (this.id !== id && (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')){
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction Between Service Provider and Parcel Sender";

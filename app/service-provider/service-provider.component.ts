@@ -10,13 +10,15 @@ import { ServiceProviderCRUDService } from './../services/service-provider-crud.
 import './../rxjs-operators';
 import {tokenNotExpired} from 'angular2-jwt';
 import {GoogleApiService} from "../services/googleAPIService.service";
+import {Panel} from "../profile/panel";
 
 
 @Component({
     selector: 'service-provider',
     templateUrl: 'app/service-provider/service-provider.component.html',
     styleUrls: ['app/service-provider/service-provider.component.css'],
-    providers: [ ServiceProviderCRUDService ]
+    providers: [ ServiceProviderCRUDService, Panel ],
+    directives: [Panel],
 })
 
 export class ServiceProviderComponent {
@@ -36,6 +38,8 @@ export class ServiceProviderComponent {
     fetchingDestinationAddress = false;
     isDestinationAddressLoading = false;
     parcelOrderSelected = false;
+    distanceAndDurationToSender: any;
+    distanceAndDurationToReceiver: any;
 
     placeSearch: any;
     currentAddressAutocomplete: any;
@@ -80,7 +84,7 @@ export class ServiceProviderComponent {
     }
     error: any;
     status: string;
-    constructor(private router: Router,
+    constructor(private router: Router, private panel: Panel,
                 private googleApi:GoogleApiService,
         private serviceProviderCRUDService: ServiceProviderCRUDService,
         private routeParams: RouteParams) {
@@ -120,6 +124,29 @@ export class ServiceProviderComponent {
         this.getServiceProviderDetails(this.profile);
     }
 
+    distanceAndDuration(origin: any, destination: any, type:any){
+        if (type === "Sender"){
+            this.panel.getDistanceAndDuration(origin, destination, function (distanceAndDurationToSender: any) {
+                console.log(distanceAndDurationToSender.distance);
+                return distanceAndDurationToSender;
+            });
+        }else if (type === "Receiver"){
+            // this.distanceAndDurationToReceiver = this.panel.getDistanceAndDuration(origin, destination);
+        }
+    }
+
+    addSenderDistanceAndDuration(requests: any){
+        for (var request in requests){
+            //noinspection TypeScriptUnresolvedVariable
+            this.panel.getDistanceAndDuration(requests[request].currentAddreddaddressLine1 + ' ' + requests[request].currentAddreddaddressLine2 + ' ' + requests[request].currentCity
+                + ' ' + requests[request].currentState + ' ' + requests[request].currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
+                + ' ' + this.model.currentState + ' ' + this.model.currentZip, function (distanceAndDurationToSender: any) {
+                requests[request]["SenderDistnaceAndDuration"] = distanceAndDurationToSender;
+                console.log(requests[request]);
+                return distanceAndDurationToSender;
+            });
+        }
+    }
     
     fillInAddress(addressType: string) {
         // Get the place details from the autocomplete object.
@@ -245,6 +272,7 @@ export class ServiceProviderComponent {
             .subscribe(
                 data  => {
                     this.requests = data;
+                    this.addSenderDistanceAndDuration(this.requests);
                     setTimeout(() => {
                         this.isLoading = false;
                     }, 3000);

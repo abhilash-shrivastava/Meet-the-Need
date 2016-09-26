@@ -18,9 +18,11 @@ var service_provider_crud_service_1 = require('./../services/service-provider-cr
 require('./../rxjs-operators');
 var angular2_jwt_1 = require('angular2-jwt');
 var googleAPIService_service_1 = require("../services/googleAPIService.service");
+var panel_1 = require("../profile/panel");
 var ServiceProviderComponent = (function () {
-    function ServiceProviderComponent(router, googleApi, serviceProviderCRUDService, routeParams) {
+    function ServiceProviderComponent(router, panel, googleApi, serviceProviderCRUDService, routeParams) {
         this.router = router;
+        this.panel = panel;
         this.googleApi = googleApi;
         this.serviceProviderCRUDService = serviceProviderCRUDService;
         this.routeParams = routeParams;
@@ -112,6 +114,28 @@ var ServiceProviderComponent = (function () {
             this.model["_id"] = id;
         }
         this.getServiceProviderDetails(this.profile);
+    };
+    ServiceProviderComponent.prototype.distanceAndDuration = function (origin, destination, type) {
+        if (type === "Sender") {
+            this.panel.getDistanceAndDuration(origin, destination, function (distanceAndDurationToSender) {
+                console.log(distanceAndDurationToSender.distance);
+                return distanceAndDurationToSender;
+            });
+        }
+        else if (type === "Receiver") {
+        }
+    };
+    ServiceProviderComponent.prototype.addSenderDistanceAndDuration = function (requests) {
+        for (var request in requests) {
+            //noinspection TypeScriptUnresolvedVariable
+            this.panel.getDistanceAndDuration(requests[request].currentAddreddaddressLine1 + ' ' + requests[request].currentAddreddaddressLine2 + ' ' + requests[request].currentCity
+                + ' ' + requests[request].currentState + ' ' + requests[request].currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
+                + ' ' + this.model.currentState + ' ' + this.model.currentZip, function (distanceAndDurationToSender) {
+                requests[request]["SenderDistnaceAndDuration"] = distanceAndDurationToSender;
+                console.log(requests[request]);
+                return distanceAndDurationToSender;
+            });
+        }
     };
     ServiceProviderComponent.prototype.fillInAddress = function (addressType) {
         var _this = this;
@@ -238,6 +262,7 @@ var ServiceProviderComponent = (function () {
         this.serviceProviderCRUDService.save(serviceProviderDetails)
             .subscribe(function (data) {
             _this.requests = data;
+            _this.addSenderDistanceAndDuration(_this.requests);
             setTimeout(function () {
                 _this.isLoading = false;
             }, 3000);
@@ -303,9 +328,10 @@ var ServiceProviderComponent = (function () {
             selector: 'service-provider',
             templateUrl: 'app/service-provider/service-provider.component.html',
             styleUrls: ['app/service-provider/service-provider.component.css'],
-            providers: [service_provider_crud_service_1.ServiceProviderCRUDService]
+            providers: [service_provider_crud_service_1.ServiceProviderCRUDService, panel_1.Panel],
+            directives: [panel_1.Panel],
         }), 
-        __metadata('design:paramtypes', [router_deprecated_1.Router, googleAPIService_service_1.GoogleApiService, service_provider_crud_service_1.ServiceProviderCRUDService, router_deprecated_1.RouteParams])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, panel_1.Panel, googleAPIService_service_1.GoogleApiService, service_provider_crud_service_1.ServiceProviderCRUDService, router_deprecated_1.RouteParams])
     ], ServiceProviderComponent);
     return ServiceProviderComponent;
 }());

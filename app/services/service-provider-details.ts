@@ -29,4 +29,9 @@ export class ServiceProviderDetails{
     maxParcelHeight: number;
     maxParcelLength: number;
     maxParcelWidth: number;
+    currentAddreddaddressLine1: string;
+    currentAddreddaddressLine2: string;
+    currentCity: string;
+    currentState: string;
+    currentZip: string;
 }
