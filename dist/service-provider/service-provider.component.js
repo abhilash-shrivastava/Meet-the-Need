@@ -115,15 +115,6 @@ var ServiceProviderComponent = (function () {
         }
         this.getServiceProviderDetails(this.profile);
     };
-    ServiceProviderComponent.prototype.distanceAndDuration = function (origin, destination, type) {
-        // if (type === "Sender"){
-        //     this.panel.getDistanceAndDuration(origin, destination, function (distanceAndDurationToSender: any) {
-        //         return distanceAndDurationToSender;
-        //     });
-        // }else if (type === "Receiver"){
-        //     // this.distanceAndDurationToReceiver = this.panel.getDistanceAndDuration(origin, destination);
-        // }
-    };
     ServiceProviderComponent.prototype.addSenderDistanceAndDuration = function (requests) {
         for (var request in requests) {
             var req = request;
@@ -131,7 +122,7 @@ var ServiceProviderComponent = (function () {
             this.panel.getDistanceAndDuration(requests[request].currentAddreddaddressLine1 + ' ' + requests[request].currentAddreddaddressLine2 + ' ' + requests[request].currentCity
                 + ' ' + requests[request].currentState + ' ' + requests[request].currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
                 + ' ' + this.model.currentState + ' ' + this.model.currentZip, req, function (req, distanceAndDurationToSender) {
-                requests[req]["SenderDistnaceAndDuration"] = distanceAndDurationToSender;
+                requests[req]["SenderDistanceAndDuration"] = distanceAndDurationToSender;
                 console.log(req);
                 return distanceAndDurationToSender;
             });
@@ -144,7 +135,7 @@ var ServiceProviderComponent = (function () {
             this.panel.getDistanceAndDuration(requests[request].deliveryAddreddaddressLine1 + ' ' + requests[request].deliveryAddreddaddressLine2 + ' ' + requests[request].deliveryCity
                 + ' ' + requests[request].deliveryState + ' ' + requests[request].deliveryZip, this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' + this.model.destinationCity
                 + ' ' + this.model.destinationState + ' ' + this.model.destinationZip, req, function (req, distanceAndDurationToSender) {
-                requests[req]["ReceiverDistnaceAndDuration"] = distanceAndDurationToSender;
+                requests[req]["ReceiverDistanceAndDuration"] = distanceAndDurationToSender;
                 console.log(req);
                 return distanceAndDurationToSender;
             });

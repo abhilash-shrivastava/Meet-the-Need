@@ -38,10 +38,6 @@ export class ServiceProviderComponent {
     fetchingDestinationAddress = false;
     isDestinationAddressLoading = false;
     parcelOrderSelected = false;
-    distanceAndDurationToSender: any;
-    distanceAndDurationToReceiver: any;
-
-    placeSearch: any;
     currentAddressAutocomplete: any;
     destinationAddressAutocomplete: any;
     componentForm = {
@@ -124,16 +120,6 @@ export class ServiceProviderComponent {
         this.getServiceProviderDetails(this.profile);
     }
 
-    distanceAndDuration(origin: any, destination: any, type:any){
-        // if (type === "Sender"){
-        //     this.panel.getDistanceAndDuration(origin, destination, function (distanceAndDurationToSender: any) {
-        //         return distanceAndDurationToSender;
-        //     });
-        // }else if (type === "Receiver"){
-        //     // this.distanceAndDurationToReceiver = this.panel.getDistanceAndDuration(origin, destination);
-        // }
-    }
-
     addSenderDistanceAndDuration(requests: any){
         for (var request in requests){
             var req = request
@@ -141,7 +127,7 @@ export class ServiceProviderComponent {
             this.panel.getDistanceAndDuration(requests[request].currentAddreddaddressLine1 + ' ' + requests[request].currentAddreddaddressLine2 + ' ' + requests[request].currentCity
                 + ' ' + requests[request].currentState + ' ' + requests[request].currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
                 + ' ' + this.model.currentState + ' ' + this.model.currentZip, req, function (req: any, distanceAndDurationToSender: any) {
-                requests[req]["SenderDistnaceAndDuration"] = distanceAndDurationToSender;
+                requests[req]["SenderDistanceAndDuration"] = distanceAndDurationToSender;
                 console.log(req);
                 return distanceAndDurationToSender;
             });
@@ -155,7 +141,7 @@ export class ServiceProviderComponent {
             this.panel.getDistanceAndDuration(requests[request].deliveryAddreddaddressLine1 + ' ' + requests[request].deliveryAddreddaddressLine2 + ' ' + requests[request].deliveryCity
                 + ' ' + requests[request].deliveryState + ' ' + requests[request].deliveryZip, this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' + this.model.destinationCity
                 + ' ' + this.model.destinationState + ' ' + this.model.destinationZip, req, function (req: any, distanceAndDurationToSender: any) {
-                requests[req]["ReceiverDistnaceAndDuration"] = distanceAndDurationToSender;
+                requests[req]["ReceiverDistanceAndDuration"] = distanceAndDurationToSender;
                 console.log(req);
                 return distanceAndDurationToSender;
             });

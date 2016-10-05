@@ -96,6 +96,9 @@
             <li>Address :  <b>{{request.currentAddreddaddressLine1}}</b></li>
             <li><b>{{request.currentAddreddaddressLine2}}</b></li>
             <li>City : {{request.currentCity}}</li>
+            <b><i>Distance and Time Required to Reach Provider from Current Address</i></b>
+            <li *ngIf="request.ProviderDistanceAndDuration">Distance : {{request.ProviderDistanceAndDuration.distance}}</li>
+            <li *ngIf="request.ProviderDistanceAndDuration">Time Required: {{request.ProviderDistanceAndDuration.duration}}</li>
             <button class="resubmit-button" (click)="selectProvider(request)">Select</button>
         </ul>
     </div>

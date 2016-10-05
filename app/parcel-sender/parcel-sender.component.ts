@@ -8,13 +8,15 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouteParams, Router } from '@angular/router-deprecated';
 import { ParcelSenderCRUDService } from './../services/parcel-sender-crud.service';
 import {GoogleApiService} from "../services/googleAPIService.service";
+import {Panel} from "../profile/panel";
 
 
 @Component({
     selector: 'parcel-sender',
     templateUrl: 'app/parcel-sender/parcel-sender.component.html',
     styleUrls: ['app/parcel-sender/parcel-sender.component.css'],
-    providers: [ ParcelSenderCRUDService ]
+    providers: [ ParcelSenderCRUDService, Panel ],
+    directives: [Panel],
 })
 
 export class ParcelSenderComponent {
@@ -80,7 +82,7 @@ export class ParcelSenderComponent {
     error: any;
 
     status: string;
-    constructor( private router: Router,
+    constructor( private router: Router, private panel: Panel,
                  private googleApi:GoogleApiService,
         private parcelSenderCRUDService: ParcelSenderCRUDService,
         private routeParams: RouteParams) {
@@ -118,6 +120,20 @@ export class ParcelSenderComponent {
             this.model["_id"] = id;
         }
         this.getParcelSenderDetails(this.profile);
+    }
+
+    addProviderDistanceAndDuration(requests: any){
+        for (var request in requests){
+            var req = request;
+            //noinspection TypeScriptUnresolvedVariable
+            this.panel.getDistanceAndDuration(requests[request].serviceProvider.currentAddreddaddressLine1 + ' ' + requests[request].serviceProvider.currentAddreddaddressLine2 + ' ' + requests[request].serviceProvider.currentCity
+                + ' ' + requests[request].serviceProvider.currentState + ' ' + requests[request].serviceProvider.currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
+                + ' ' + this.model.currentState + ' ' + this.model.currentZip, req, function (req: any, distanceAndDurationToSender: any) {
+                requests[req].serviceProvider["ProviderDistanceAndDuration"] = distanceAndDurationToSender;
+                console.log(req);
+                return distanceAndDurationToSender;
+            });
+        }
     }
 
     fillInAddress(addressType: string) {
@@ -248,6 +264,7 @@ export class ParcelSenderComponent {
                     }, 3000);
                     this.requests = [];
                     this.requests = data;
+                    this.addProviderDistanceAndDuration(this.requests);
                     if(this.requests.length > 0){
                         this.showDetails = true;
                     }else{

@@ -27,4 +27,9 @@ export class ParcelSenderDetails{
     parcelHeight: number;
     parcelLength: number;
     parcelWidth: number;
+    currentAddreddaddressLine1: string;
+    currentAddreddaddressLine2: string;
+    currentCity: string;
+    currentState: string;
+    currentZip: string;
 }

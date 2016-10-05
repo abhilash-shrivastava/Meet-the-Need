@@ -17,9 +17,11 @@ var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var parcel_sender_crud_service_1 = require('./../services/parcel-sender-crud.service');
 var googleAPIService_service_1 = require("../services/googleAPIService.service");
+var panel_1 = require("../profile/panel");
 var ParcelSenderComponent = (function () {
-    function ParcelSenderComponent(router, googleApi, parcelSenderCRUDService, routeParams) {
+    function ParcelSenderComponent(router, panel, googleApi, parcelSenderCRUDService, routeParams) {
         this.router = router;
+        this.panel = panel;
         this.googleApi = googleApi;
         this.parcelSenderCRUDService = parcelSenderCRUDService;
         this.routeParams = routeParams;
@@ -100,6 +102,19 @@ var ParcelSenderComponent = (function () {
             this.model["_id"] = id;
         }
         this.getParcelSenderDetails(this.profile);
+    };
+    ParcelSenderComponent.prototype.addProviderDistanceAndDuration = function (requests) {
+        for (var request in requests) {
+            var req = request;
+            //noinspection TypeScriptUnresolvedVariable
+            this.panel.getDistanceAndDuration(requests[request].serviceProvider.currentAddreddaddressLine1 + ' ' + requests[request].serviceProvider.currentAddreddaddressLine2 + ' ' + requests[request].serviceProvider.currentCity
+                + ' ' + requests[request].serviceProvider.currentState + ' ' + requests[request].serviceProvider.currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
+                + ' ' + this.model.currentState + ' ' + this.model.currentZip, req, function (req, distanceAndDurationToSender) {
+                requests[req].serviceProvider["ProviderDistanceAndDuration"] = distanceAndDurationToSender;
+                console.log(req);
+                return distanceAndDurationToSender;
+            });
+        }
     };
     ParcelSenderComponent.prototype.fillInAddress = function (addressType) {
         var _this = this;
@@ -230,6 +245,7 @@ var ParcelSenderComponent = (function () {
             }, 3000);
             _this.requests = [];
             _this.requests = data;
+            _this.addProviderDistanceAndDuration(_this.requests);
             if (_this.requests.length > 0) {
                 _this.showDetails = true;
             }
@@ -290,9 +306,10 @@ var ParcelSenderComponent = (function () {
             selector: 'parcel-sender',
             templateUrl: 'app/parcel-sender/parcel-sender.component.html',
             styleUrls: ['app/parcel-sender/parcel-sender.component.css'],
-            providers: [parcel_sender_crud_service_1.ParcelSenderCRUDService]
+            providers: [parcel_sender_crud_service_1.ParcelSenderCRUDService, panel_1.Panel],
+            directives: [panel_1.Panel],
         }), 
-        __metadata('design:paramtypes', [router_deprecated_1.Router, googleAPIService_service_1.GoogleApiService, parcel_sender_crud_service_1.ParcelSenderCRUDService, router_deprecated_1.RouteParams])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, panel_1.Panel, googleAPIService_service_1.GoogleApiService, parcel_sender_crud_service_1.ParcelSenderCRUDService, router_deprecated_1.RouteParams])
     ], ParcelSenderComponent);
     return ParcelSenderComponent;
 }());
