@@ -36,8 +36,10 @@ var ServiceProviderComponent = (function () {
         this.fetchingDestinationAddress = false;
         this.isDestinationAddressLoading = false;
         this.parcelOrderSelected = false;
-        this.itineraryCityArray = [];
-        this.itinerary = {};
+        this.itineraryCityToDestinationArray = [];
+        this.itineraryCityToCurrentArray = [];
+        this.itineraryToDestination = {};
+        this.itineraryToCurrent = {};
         this.componentForm = {
             street_number: 'short_name',
             route: 'long_name',
@@ -108,8 +110,10 @@ var ServiceProviderComponent = (function () {
             /** @type {!HTMLInputElement} */ (document.getElementById('currentaddressautocomplete')), { types: ['geocode'] });
             _this.destinationAddressAutocomplete = new google.maps.places.Autocomplete(
             /** @type {!HTMLInputElement} */ (document.getElementById('destinationaddressautocomplete')), { types: ['geocode'] });
-            _this.itineraryCityAutocomplete = new google.maps.places.Autocomplete(
+            _this.itineraryCityToDestinationAutocomplete = new google.maps.places.Autocomplete(
             /** @type {!HTMLInputElement} */ (document.getElementById('itinerarycitytodestinationautocomplete')), { types: ['geocode'] });
+            _this.itineraryCityToCurrentAutocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */ (document.getElementById('itinerarycitytocurrentautocomplete')), { types: ['geocode'] });
         });
         this.profile = JSON.parse(localStorage.getItem('profile'));
         var id = this.routeParams.get('id');
@@ -274,13 +278,13 @@ var ServiceProviderComponent = (function () {
                     center: _this.geolocation,
                     radius: position.coords.accuracy
                 });
-                _this.itineraryCityAutocomplete.setBounds(_this.circle.getBounds());
+                _this.itineraryCityToDestinationAutocomplete.setBounds(_this.circle.getBounds());
             });
         }
     };
     ServiceProviderComponent.prototype.addItineraryToDestination = function () {
-        this.itinerary = {};
-        var place = this.itineraryCityAutocomplete.getPlace();
+        this.itineraryToDestination = {};
+        var place = this.itineraryCityToDestinationAutocomplete.getPlace();
         // Get each component of the address from the place details
         // and fill the corresponding field on the form.
         if (place != null && place.address_components != null) {
@@ -289,19 +293,50 @@ var ServiceProviderComponent = (function () {
                 if (this.componentForm[addressType]) {
                     var val = place.address_components[i][this.componentForm[addressType]];
                     if (addressType == 'locality') {
-                        this.itinerary['city'] = val;
+                        this.itineraryToDestination['city'] = val;
                     }
                     else if (addressType == 'administrative_area_level_1') {
-                        this.itinerary['state'] = val;
+                        this.itineraryToDestination['state'] = val;
                     }
                     else if (addressType == 'postal_code') {
-                        this.itinerary['zip'] = val;
+                        this.itineraryToDestination['zip'] = val;
                     }
                 }
             }
-            this.itineraryCityArray.push(this.itinerary);
-            this.model.itineraryCitiesToDestination = this.itineraryCityArray;
+            this.itineraryCityToDestinationArray.push(this.itineraryToDestination);
+            this.model.itineraryCitiesToDestination = this.itineraryCityToDestinationArray;
             console.log(this.model.itineraryCitiesToDestination);
+            if (place.address_components.length > 0) {
+                setTimeout(function () {
+                    place['address_components'] = null;
+                }, 1);
+            }
+        }
+    };
+    ServiceProviderComponent.prototype.addItineraryToCurrent = function () {
+        this.itineraryToCurrent = {};
+        var place = this.itineraryCityToCurrentAutocomplete.getPlace();
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form.
+        if (place != null && place.address_components != null) {
+            for (var i = 0; i < place.address_components.length; i++) {
+                var addressType = place.address_components[i].types[0];
+                if (this.componentForm[addressType]) {
+                    var val = place.address_components[i][this.componentForm[addressType]];
+                    if (addressType == 'locality') {
+                        this.itineraryToCurrent['city'] = val;
+                    }
+                    else if (addressType == 'administrative_area_level_1') {
+                        this.itineraryToCurrent['state'] = val;
+                    }
+                    else if (addressType == 'postal_code') {
+                        this.itineraryToCurrent['zip'] = val;
+                    }
+                }
+            }
+            this.itineraryCityToCurrentArray.push(this.itineraryToCurrent);
+            this.model.itineraryCitiesToCurrent = this.itineraryCityToCurrentArray;
+            console.log(this.model.itineraryCitiesToCurrent);
             if (place.address_components.length > 0) {
                 setTimeout(function () {
                     place['address_components'] = null;

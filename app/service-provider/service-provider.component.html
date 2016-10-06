@@ -37,14 +37,14 @@
                 <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
             </form>
 
-            <div class="section"><span>4</span>Enter Itinerary Cities to Destination</div>
+            <div class="section"><span>3</span>Enter Itinerary Cities to Destination</div>
 
             <form >
                 <div>
                     <input id="itinerarycitytodestinationautocomplete"  placeholder="Enter City Name" type="text" >
                 </div>
                 <div>
-                    <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itinerary.pickupDate" (change)="addItineraryToDestination()"  #date/></label>
+                    <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToDestination.pickupDate" (change)="addItineraryToDestination()"  #date/></label>
                 </div>
                 <div *ngIf = "model.itineraryCitiesToDestination">
                     <ul *ngFor="let city of model.itineraryCitiesToDestination">
@@ -53,7 +53,7 @@
                 </div>
             </form>
 
-            <div class="section"><span>3</span>Enter Destination Address</div>
+            <div class="section"><span>4</span>Enter Destination Address</div>
 
             <form (ngSubmit) = "geolocate('Destination Address')" #destinationAddress="ngForm">
                 <div>
@@ -70,7 +70,23 @@
                 <input [hidden] = "true" type="submit" [disabled]="!destinationAddress.form.valid"/>
             </form>
 
-            <div class="section"><span>4</span>Date &amp; Time</div>
+            <div class="section"><span>5</span>Enter Itinerary Cities to Current</div>
+
+            <form >
+                <div>
+                    <input id="itinerarycitytocurrentautocomplete"  placeholder="Enter City Name" type="text" >
+                </div>
+                <div>
+                    <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToCurrent.pickupDate" (change)="addItineraryToCurrent()"  #date/></label>
+                </div>
+                <div *ngIf = "model.itineraryCitiesToCurrent">
+                    <ul *ngFor="let city of model.itineraryCitiesToCurrent">
+                        <li >{{city.city}}, {{city.state}} - {{city.pickupDate}}</li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="section"><span>6</span>Date &amp; Time</div>
             <div class="inner-wrap">
                 <label>Journey Date <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.journeyDate" required/></label>
                 <label>Availability Time</label>
@@ -78,7 +94,7 @@
                 <label>To  <input type="time" name="time"  placeholder="Hrs:Mins" [(ngModel)]="model.availabilityTo" required/></label>
             </div>
 
-            <div class="section"><span>5</span>Parcel Carrying Capacity</div>
+            <div class="section"><span>7</span>Parcel Carrying Capacity</div>
             <div class="inner-wrap">
                 <label>Max. Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.maxParcelWeight" required></label>
                 <label>Max Parcel Dimensions </label>

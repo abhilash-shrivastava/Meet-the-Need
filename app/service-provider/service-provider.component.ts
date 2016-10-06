@@ -40,9 +40,12 @@ export class ServiceProviderComponent {
     parcelOrderSelected = false;
     currentAddressAutocomplete: any;
     destinationAddressAutocomplete: any;
-    itineraryCityAutocomplete: any;
-    itineraryCityArray = [];
-    itinerary ={};
+    itineraryCityToDestinationAutocomplete: any;
+    itineraryCityToCurrentAutocomplete: any;
+    itineraryCityToDestinationArray = [];
+    itineraryCityToCurrentArray = [];
+    itineraryToDestination ={};
+    itineraryToCurrent ={};
     parcelCollectionDate:any;
     componentForm = {
     street_number: 'short_name',
@@ -113,8 +116,11 @@ export class ServiceProviderComponent {
             this.destinationAddressAutocomplete = new google.maps.places.Autocomplete(
                 /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('destinationaddressautocomplete')),
                 {types: ['geocode']});
-            this.itineraryCityAutocomplete = new google.maps.places.Autocomplete(
+            this.itineraryCityToDestinationAutocomplete = new google.maps.places.Autocomplete(
                 /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('itinerarycitytodestinationautocomplete')),
+                {types: ['geocode']});
+            this.itineraryCityToCurrentAutocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('itinerarycitytocurrentautocomplete')),
                 {types: ['geocode']});
         });
         
@@ -283,14 +289,14 @@ export class ServiceProviderComponent {
                     center: this.geolocation,
                     radius: position.coords.accuracy
                 });
-                    this.itineraryCityAutocomplete.setBounds(this.circle.getBounds());
+                    this.itineraryCityToDestinationAutocomplete.setBounds(this.circle.getBounds());
             });
         }
     }
     
     addItineraryToDestination(){
-        this.itinerary = {};
-        let place = this.itineraryCityAutocomplete.getPlace();
+        this.itineraryToDestination = {};
+        let place = this.itineraryCityToDestinationAutocomplete.getPlace();
         // Get each component of the address from the place details
         // and fill the corresponding field on the form.
         if (place != null && place.address_components != null) {
@@ -299,17 +305,47 @@ export class ServiceProviderComponent {
                 if (this.componentForm[addressType]) {
                     let val = place.address_components[i][this.componentForm[addressType]];
                     if (addressType == 'locality') {
-                        this.itinerary['city'] = val;
+                        this.itineraryToDestination['city'] = val;
                     } else if (addressType == 'administrative_area_level_1') {
-                        this.itinerary['state'] = val;
+                        this.itineraryToDestination['state'] = val;
                     } else if (addressType == 'postal_code') {
-                        this.itinerary['zip'] = val;
+                        this.itineraryToDestination['zip'] = val;
                     }
                 }
             }
-            this.itineraryCityArray.push(this.itinerary);
-            this.model.itineraryCitiesToDestination = this.itineraryCityArray;
+            this.itineraryCityToDestinationArray.push(this.itineraryToDestination);
+            this.model.itineraryCitiesToDestination = this.itineraryCityToDestinationArray;
             console.log(this.model.itineraryCitiesToDestination);
+            if (place.address_components.length > 0){
+                setTimeout(() => {
+                    place['address_components'] = null;
+                }, 1);
+            }
+        }
+    }
+
+    addItineraryToCurrent(){
+        this.itineraryToCurrent = {};
+        let place = this.itineraryCityToCurrentAutocomplete.getPlace();
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form.
+        if (place != null && place.address_components != null) {
+            for (let i = 0; i < place.address_components.length; i++) {
+                let addressType = place.address_components[i].types[0];
+                if (this.componentForm[addressType]) {
+                    let val = place.address_components[i][this.componentForm[addressType]];
+                    if (addressType == 'locality') {
+                        this.itineraryToCurrent['city'] = val;
+                    } else if (addressType == 'administrative_area_level_1') {
+                        this.itineraryToCurrent['state'] = val;
+                    } else if (addressType == 'postal_code') {
+                        this.itineraryToCurrent['zip'] = val;
+                    }
+                }
+            }
+            this.itineraryCityToCurrentArray.push(this.itineraryToCurrent);
+            this.model.itineraryCitiesToCurrent = this.itineraryCityToCurrentArray;
+            console.log(this.model.itineraryCitiesToCurrent);
             if (place.address_components.length > 0){
                 setTimeout(() => {
                     place['address_components'] = null;

@@ -40,4 +40,5 @@ export class ServiceProviderDetails{
     destinationState: string;
     destinationZip: string;
     itineraryCitiesToDestination : any;
+    itineraryCitiesToCurrent : any;
 }
