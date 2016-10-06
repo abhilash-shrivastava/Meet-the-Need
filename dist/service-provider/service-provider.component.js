@@ -59,7 +59,6 @@ var ServiceProviderComponent = (function () {
                 default: this.cities = [];
             }
         };
-        this.model.itineraryCity = [];
     }
     ServiceProviderComponent.prototype.onSubmit = function () {
         this.isLoading = true;

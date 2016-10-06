@@ -88,7 +88,6 @@ export class ServiceProviderComponent {
                 private googleApi:GoogleApiService,
         private serviceProviderCRUDService: ServiceProviderCRUDService,
         private routeParams: RouteParams) {
-        this.model.itineraryCity = [];
     }
 
     selectParcel(parcel){
