@@ -36,6 +36,8 @@ var ServiceProviderComponent = (function () {
         this.fetchingDestinationAddress = false;
         this.isDestinationAddressLoading = false;
         this.parcelOrderSelected = false;
+        this.itineraryCityArray = [];
+        this.itinerary = {};
         this.componentForm = {
             street_number: 'short_name',
             route: 'long_name',
@@ -57,6 +59,7 @@ var ServiceProviderComponent = (function () {
                 default: this.cities = [];
             }
         };
+        this.model.itineraryCity = [];
     }
     ServiceProviderComponent.prototype.onSubmit = function () {
         this.isLoading = true;
@@ -106,6 +109,8 @@ var ServiceProviderComponent = (function () {
             /** @type {!HTMLInputElement} */ (document.getElementById('currentaddressautocomplete')), { types: ['geocode'] });
             _this.destinationAddressAutocomplete = new google.maps.places.Autocomplete(
             /** @type {!HTMLInputElement} */ (document.getElementById('destinationaddressautocomplete')), { types: ['geocode'] });
+            _this.itineraryCityAutocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */ (document.getElementById('itinerarycityautocomplete')), { types: ['geocode'] });
         });
         this.profile = JSON.parse(localStorage.getItem('profile'));
         var id = this.routeParams.get('id');
@@ -255,6 +260,54 @@ var ServiceProviderComponent = (function () {
                     _this.fillInAddress(addressType);
                 }
             });
+        }
+    };
+    ServiceProviderComponent.prototype.itineraryCity = function () {
+        var _this = this;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                _this.geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                //noinspection TypeScriptValidateTypes
+                _this.circle = new google.maps.Circle({
+                    center: _this.geolocation,
+                    radius: position.coords.accuracy
+                });
+                _this.itineraryCityAutocomplete.setBounds(_this.circle.getBounds());
+            });
+        }
+    };
+    ServiceProviderComponent.prototype.addItinerary = function () {
+        this.itinerary = {};
+        var place = this.itineraryCityAutocomplete.getPlace();
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form.
+        if (place != null && place.address_components != null) {
+            for (var i = 0; i < place.address_components.length; i++) {
+                var addressType = place.address_components[i].types[0];
+                if (this.componentForm[addressType]) {
+                    var val = place.address_components[i][this.componentForm[addressType]];
+                    if (addressType == 'locality') {
+                        this.itinerary['city'] = val;
+                    }
+                    else if (addressType == 'administrative_area_level_1') {
+                        this.itinerary['state'] = val;
+                    }
+                    else if (addressType == 'postal_code') {
+                        this.itinerary['zip'] = val;
+                    }
+                }
+            }
+            this.itineraryCityArray.push(this.itinerary);
+            this.model.itineraryCity = this.itineraryCityArray;
+            console.log(this.model.itineraryCity);
+            if (place.address_components.length > 0) {
+                setTimeout(function () {
+                    place['address_components'] = null;
+                }, 1);
+            }
         }
     };
     ServiceProviderComponent.prototype.saveServiceProviderDetails = function (serviceProviderDetails) {

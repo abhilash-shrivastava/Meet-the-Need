@@ -40,6 +40,10 @@ export class ServiceProviderComponent {
     parcelOrderSelected = false;
     currentAddressAutocomplete: any;
     destinationAddressAutocomplete: any;
+    itineraryCityAutocomplete: any;
+    itineraryCityArray = [];
+    itinerary ={};
+    parcelCollectionDate:any;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -84,6 +88,7 @@ export class ServiceProviderComponent {
                 private googleApi:GoogleApiService,
         private serviceProviderCRUDService: ServiceProviderCRUDService,
         private routeParams: RouteParams) {
+        this.model.itineraryCity = [];
     }
 
     selectParcel(parcel){
@@ -108,6 +113,9 @@ export class ServiceProviderComponent {
                 {types: ['geocode']})
             this.destinationAddressAutocomplete = new google.maps.places.Autocomplete(
                 /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('destinationaddressautocomplete')),
+                {types: ['geocode']});
+            this.itineraryCityAutocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('itinerarycityautocomplete')),
                 {types: ['geocode']});
         });
         
@@ -231,7 +239,6 @@ export class ServiceProviderComponent {
     circle: any;
     geolocation: any
     geolocate(addressType : string) {
-
         if (addressType == "Current Address"){
             this.isCurrentAddressLoading = true;
             this.fetchingCurrentAddress = false;
@@ -262,6 +269,53 @@ export class ServiceProviderComponent {
                 }
 
             });
+        }
+    }
+
+    itineraryCity() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                //noinspection TypeScriptValidateTypes
+                this.circle = new google.maps.Circle({
+                    center: this.geolocation,
+                    radius: position.coords.accuracy
+                });
+                    this.itineraryCityAutocomplete.setBounds(this.circle.getBounds());
+            });
+        }
+    }
+    
+    addItinerary(){
+        this.itinerary = {};
+        let place = this.itineraryCityAutocomplete.getPlace();
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form.
+        if (place != null && place.address_components != null) {
+            for (let i = 0; i < place.address_components.length; i++) {
+                let addressType = place.address_components[i].types[0];
+                if (this.componentForm[addressType]) {
+                    let val = place.address_components[i][this.componentForm[addressType]];
+                    if (addressType == 'locality') {
+                        this.itinerary['city'] = val;
+                    } else if (addressType == 'administrative_area_level_1') {
+                        this.itinerary['state'] = val;
+                    } else if (addressType == 'postal_code') {
+                        this.itinerary['zip'] = val;
+                    }
+                }
+            }
+            this.itineraryCityArray.push(this.itinerary);
+            this.model.itineraryCity = this.itineraryCityArray;
+            console.log(this.model.itineraryCity);
+            if (place.address_components.length > 0){
+                setTimeout(() => {
+                    place['address_components'] = null;
+                }, 1);
+            }
         }
     }
     
