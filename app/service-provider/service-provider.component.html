@@ -41,13 +41,13 @@
 
             <form >
                 <div>
-                    <input id="itinerarycityautocomplete"  placeholder="Enter City Name" type="text" >
+                    <input id="itinerarycitytodestinationautocomplete"  placeholder="Enter City Name" type="text" >
                 </div>
                 <div>
-                    <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itinerary.pickupDate" (change)="addItinerary(parcelCollectionDate)"  #date/></label>
+                    <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itinerary.pickupDate" (change)="addItineraryToDestination()"  #date/></label>
                 </div>
-                <div *ngIf = "model.itineraryCity">
-                    <ul *ngFor="let city of model.itineraryCity">
+                <div *ngIf = "model.itineraryCitiesToDestination">
+                    <ul *ngFor="let city of model.itineraryCitiesToDestination">
                         <li >{{city.city}}, {{city.state}} - {{city.pickupDate}}</li>
                     </ul>
                 </div>

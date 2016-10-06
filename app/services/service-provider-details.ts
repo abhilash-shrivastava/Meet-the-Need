@@ -39,5 +39,5 @@ export class ServiceProviderDetails{
     destinationCity: string;
     destinationState: string;
     destinationZip: string;
-    itineraryCity : any;
+    itineraryCitiesToDestination : any;
 }

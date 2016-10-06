@@ -115,7 +115,7 @@ export class ServiceProviderComponent {
                 /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('destinationaddressautocomplete')),
                 {types: ['geocode']});
             this.itineraryCityAutocomplete = new google.maps.places.Autocomplete(
-                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('itinerarycityautocomplete')),
+                /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('itinerarycitytodestinationautocomplete')),
                 {types: ['geocode']});
         });
         
@@ -289,7 +289,7 @@ export class ServiceProviderComponent {
         }
     }
     
-    addItinerary(){
+    addItineraryToDestination(){
         this.itinerary = {};
         let place = this.itineraryCityAutocomplete.getPlace();
         // Get each component of the address from the place details
@@ -309,8 +309,8 @@ export class ServiceProviderComponent {
                 }
             }
             this.itineraryCityArray.push(this.itinerary);
-            this.model.itineraryCity = this.itineraryCityArray;
-            console.log(this.model.itineraryCity);
+            this.model.itineraryCitiesToDestination = this.itineraryCityArray;
+            console.log(this.model.itineraryCitiesToDestination);
             if (place.address_components.length > 0){
                 setTimeout(() => {
                     place['address_components'] = null;

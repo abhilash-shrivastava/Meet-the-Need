@@ -110,7 +110,7 @@ var ServiceProviderComponent = (function () {
             _this.destinationAddressAutocomplete = new google.maps.places.Autocomplete(
             /** @type {!HTMLInputElement} */ (document.getElementById('destinationaddressautocomplete')), { types: ['geocode'] });
             _this.itineraryCityAutocomplete = new google.maps.places.Autocomplete(
-            /** @type {!HTMLInputElement} */ (document.getElementById('itinerarycityautocomplete')), { types: ['geocode'] });
+            /** @type {!HTMLInputElement} */ (document.getElementById('itinerarycitytodestinationautocomplete')), { types: ['geocode'] });
         });
         this.profile = JSON.parse(localStorage.getItem('profile'));
         var id = this.routeParams.get('id');
@@ -279,7 +279,7 @@ var ServiceProviderComponent = (function () {
             });
         }
     };
-    ServiceProviderComponent.prototype.addItinerary = function () {
+    ServiceProviderComponent.prototype.addItineraryToDestination = function () {
         this.itinerary = {};
         var place = this.itineraryCityAutocomplete.getPlace();
         // Get each component of the address from the place details
@@ -301,8 +301,8 @@ var ServiceProviderComponent = (function () {
                 }
             }
             this.itineraryCityArray.push(this.itinerary);
-            this.model.itineraryCity = this.itineraryCityArray;
-            console.log(this.model.itineraryCity);
+            this.model.itineraryCitiesToDestination = this.itineraryCityArray;
+            console.log(this.model.itineraryCitiesToDestination);
             if (place.address_components.length > 0) {
                 setTimeout(function () {
                     place['address_components'] = null;
