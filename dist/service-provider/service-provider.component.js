@@ -131,7 +131,6 @@ var ServiceProviderComponent = (function () {
                 + ' ' + requests[request].currentState + ' ' + requests[request].currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
                 + ' ' + this.model.currentState + ' ' + this.model.currentZip, req, function (req, distanceAndDurationToSender) {
                 requests[req]["SenderDistanceAndDuration"] = distanceAndDurationToSender;
-                console.log(req);
                 return distanceAndDurationToSender;
             });
         }
@@ -144,7 +143,6 @@ var ServiceProviderComponent = (function () {
                 + ' ' + requests[request].deliveryState + ' ' + requests[request].deliveryZip, this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' + this.model.destinationCity
                 + ' ' + this.model.destinationState + ' ' + this.model.destinationZip, req, function (req, distanceAndDurationToSender) {
                 requests[req]["ReceiverDistanceAndDuration"] = distanceAndDurationToSender;
-                console.log(req);
                 return distanceAndDurationToSender;
             });
         }
@@ -283,6 +281,7 @@ var ServiceProviderComponent = (function () {
         }
     };
     ServiceProviderComponent.prototype.addItineraryToDestination = function () {
+        var _this = this;
         this.itineraryToDestination = {};
         var place = this.itineraryCityToDestinationAutocomplete.getPlace();
         // Get each component of the address from the place details
@@ -305,15 +304,17 @@ var ServiceProviderComponent = (function () {
             }
             this.itineraryCityToDestinationArray.push(this.itineraryToDestination);
             this.model.itineraryCitiesToDestination = this.itineraryCityToDestinationArray;
-            console.log(this.model.itineraryCitiesToDestination);
             if (place.address_components.length > 0) {
                 setTimeout(function () {
                     place['address_components'] = null;
+                    _this.itineraryToDestination = {};
+                    _this.searchAddress = "";
                 }, 1);
             }
         }
     };
     ServiceProviderComponent.prototype.addItineraryToCurrent = function () {
+        var _this = this;
         this.itineraryToCurrent = {};
         var place = this.itineraryCityToCurrentAutocomplete.getPlace();
         // Get each component of the address from the place details
@@ -340,6 +341,8 @@ var ServiceProviderComponent = (function () {
             if (place.address_components.length > 0) {
                 setTimeout(function () {
                     place['address_components'] = null;
+                    _this.itineraryToCurrent = {};
+                    _this.searchAddress = "";
                 }, 1);
             }
         }

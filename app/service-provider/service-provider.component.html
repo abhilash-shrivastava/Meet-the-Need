@@ -41,12 +41,13 @@
 
             <form >
                 <div>
-                    <input id="itinerarycitytodestinationautocomplete"  placeholder="Enter City Name" type="text" >
+                    <input id="itinerarycitytodestinationautocomplete" [(ngModel)]="searchAddress" placeholder="Add City in Destination Itinerary" type="text" >
                 </div>
                 <div>
                     <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToDestination.pickupDate" (change)="addItineraryToDestination()"  #date/></label>
                 </div>
                 <div *ngIf = "model.itineraryCitiesToDestination">
+                    <h4>Travel Itinerary to Destination Trip</h4>
                     <ul *ngFor="let city of model.itineraryCitiesToDestination">
                         <li >{{city.city}}, {{city.state}} - {{city.pickupDate}}</li>
                     </ul>
@@ -74,12 +75,13 @@
 
             <form >
                 <div>
-                    <input id="itinerarycitytocurrentautocomplete"  placeholder="Enter City Name" type="text" >
+                    <input id="itinerarycitytocurrentautocomplete" [(ngModel)]="searchAddress"  placeholder="Add City in Return Itinerary" type="text" >
                 </div>
                 <div>
                     <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToCurrent.pickupDate" (change)="addItineraryToCurrent()"  #date/></label>
                 </div>
                 <div *ngIf = "model.itineraryCitiesToCurrent">
+                    <h4>Travel Itinerary to Return Trip</h4>
                     <ul *ngFor="let city of model.itineraryCitiesToCurrent">
                         <li >{{city.city}}, {{city.state}} - {{city.pickupDate}}</li>
                     </ul>

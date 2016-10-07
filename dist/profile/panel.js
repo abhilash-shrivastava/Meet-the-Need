@@ -46,7 +46,6 @@ var Panel = (function () {
         this.calculateAndDisplayRoute(this.directionsDisplay, this.directionsService, this.markerArray, this.stepDisplay, this.map, address1, address2);
     };
     Panel.prototype.getDistanceAndDuration = function (origin, destination, req, callback) {
-        console.log('hi');
         this.service = new google.maps.DistanceMatrixService;
         var distanceAndDuration = {};
         this.service.getDistanceMatrix({
@@ -80,7 +79,6 @@ var Panel = (function () {
                 alert('Geocode was not successful for the following reason: ' + status);
             }
         });
-        console.log(coordinates);
         return coordinates;
     };
     Panel.prototype.calculateAndDisplayRoute = function (directionsDisplay, directionsService, markerArray, stepDisplay, map, address1, address2) {

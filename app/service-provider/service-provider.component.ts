@@ -46,7 +46,7 @@ export class ServiceProviderComponent {
     itineraryCityToCurrentArray = [];
     itineraryToDestination ={};
     itineraryToCurrent ={};
-    parcelCollectionDate:any;
+    searchAddress : any;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -141,7 +141,6 @@ export class ServiceProviderComponent {
                 + ' ' + requests[request].currentState + ' ' + requests[request].currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
                 + ' ' + this.model.currentState + ' ' + this.model.currentZip, req, function (req: any, distanceAndDurationToSender: any) {
                 requests[req]["SenderDistanceAndDuration"] = distanceAndDurationToSender;
-                console.log(req);
                 return distanceAndDurationToSender;
             });
         }
@@ -155,7 +154,6 @@ export class ServiceProviderComponent {
                 + ' ' + requests[request].deliveryState + ' ' + requests[request].deliveryZip, this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' + this.model.destinationCity
                 + ' ' + this.model.destinationState + ' ' + this.model.destinationZip, req, function (req: any, distanceAndDurationToSender: any) {
                 requests[req]["ReceiverDistanceAndDuration"] = distanceAndDurationToSender;
-                console.log(req);
                 return distanceAndDurationToSender;
             });
         }
@@ -315,10 +313,11 @@ export class ServiceProviderComponent {
             }
             this.itineraryCityToDestinationArray.push(this.itineraryToDestination);
             this.model.itineraryCitiesToDestination = this.itineraryCityToDestinationArray;
-            console.log(this.model.itineraryCitiesToDestination);
             if (place.address_components.length > 0){
                 setTimeout(() => {
                     place['address_components'] = null;
+                    this.itineraryToDestination = {};
+                    this.searchAddress = "";
                 }, 1);
             }
         }
@@ -349,6 +348,8 @@ export class ServiceProviderComponent {
             if (place.address_components.length > 0){
                 setTimeout(() => {
                     place['address_components'] = null;
+                    this.itineraryToCurrent = {};
+                    this.searchAddress = "";
                 }, 1);
             }
         }

@@ -344,7 +344,7 @@ var assignProviderForApproval =  function (data, callback) {
 var getServiceProviderList = function (parcelDetails,  sendResponse) {
   responseToSender = [];
   if (parcelDetails._id != null){
-    parcelDetails._id = ObjectId(data._id);
+    parcelDetails._id = ObjectId(parcelDetails._id);
   }
   var cursorone = db.collection('serviceProvider')
     .find( { "currentCity": parcelDetails.currentCity, "destinationCity": parcelDetails.deliveryCity, "maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }, "maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}, "maxParcelLength": { $gte: (parcelDetails.parcelLength)}, "maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}, "journeyDate" : { $gte: new Date().toISOString().split('T')[0], $gte: parcelDetails.startDeliveryDate, $lte: parcelDetails.endDeliveryDate} } ).sort({maxParcelWeight: + 1});
@@ -352,7 +352,7 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
   cursorone.count(function (e, count) {
 
     if (count === 0) {
-      db.collection('parcelSender').save(data, (err, result) => {
+      db.collection('parcelSender').save(parcelDetails, (err, result) => {
         if (err) return console.log(err);
       responseToProvider = [];
       sendResponse(responseToSender);
@@ -375,17 +375,20 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
 }
 
 var getParcelSenderList = function (serviceDetails,  sendResponse) {
-  console.log(serviceDetails);
   responseToSender = [];
+  var cities = [];
   if (serviceDetails._id != null){
-    serviceDetails._id = ObjectId(data._id);
+    serviceDetails._id = ObjectId(serviceDetails._id);
   }
+  for (var index in serviceDetails.itineraryCitiesToDestination){
+    cities.push(serviceDetails.itineraryCitiesToDestination[index].city);
+  }
+  console.log(cities);
   var cursorone = db.collection('parcelSender')
-      .find( { "currentCity": serviceDetails.currentCity, "deliveryCity": serviceDetails.destinationCity, "parcelWeight": { $lte: (serviceDetails.maxParcelWeight) }, "parcelHeight": { $lte: (serviceDetails.maxParcelHeight)}, "parcelLength": { $lte: (serviceDetails.maxParcelLength)}, "parcelWidth": { $lte: (serviceDetails.maxParcelWidth)}, "startDeliveryDate" : {$lte: serviceDetails.journeyDate}, "endDeliveryDate" : {$gte: serviceDetails.journeyDate}} ).sort({parcelWeight: -1})
+      .find( {$or: [{ "currentCity": serviceDetails.currentCity},  { "currentCity": { $in: cities}}], "deliveryCity": serviceDetails.destinationCity, "parcelWeight": { $lte: (serviceDetails.maxParcelWeight) }, "parcelHeight": { $lte: (serviceDetails.maxParcelHeight)}, "parcelLength": { $lte: (serviceDetails.maxParcelLength)}, "parcelWidth": { $lte: (serviceDetails.maxParcelWidth)}, "startDeliveryDate" : {$lte: serviceDetails.journeyDate}, "endDeliveryDate" : {$gte: serviceDetails.journeyDate}} ).sort({parcelWeight: -1})
   cursorone.count(function (e, count) {
-
     if (count === 0) {
-      db.collection('serviceProvider').save(data, (err, result) => {
+      db.collection('serviceProvider').save(serviceDetails, (err, result) => {
         if (err) return console.log(err);
       responseToProvider = [];
       sendResponse(responseToSender);

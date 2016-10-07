@@ -72,7 +72,6 @@ export class Panel {
     }
 
     getDistanceAndDuration(origin:any, destination: any, req:any, callback){
-        console.log('hi')
         this.service = new google.maps.DistanceMatrixService;
         var distanceAndDuration = {};
         this.service.getDistanceMatrix({
@@ -105,7 +104,6 @@ export class Panel {
                 alert('Geocode was not successful for the following reason: ' + status);
             }
         });
-        console.log(coordinates);
         return coordinates;
     }
 
