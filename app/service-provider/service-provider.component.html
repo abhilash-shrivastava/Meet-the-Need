@@ -27,8 +27,8 @@
                     <input id="currentaddressautocomplete"  placeholder="Enter your address" type="text" >
                 </div>
                 <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
-                <div *ngIf ="model.currentAddreddaddressLine1" *ngIf = "model.currentCity" *ngIf ="model.currentState" class="inner-wrap" >
-                    <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required></label>
+                <div *ngIf = "model.currentCity" class="inner-wrap" >
+                    <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" ></label>
                     <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddreddaddressLine2" ></label>
                     <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
                     <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
@@ -37,14 +37,14 @@
                 <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
             </form>
 
-            <div class="section"><span>3</span>Enter Itinerary Cities to Destination</div>
+            <div  class="section"><span>3</span>Enter Itinerary Cities to Destination</div>
 
             <form >
                 <div>
                     <input id="itinerarycitytodestinationautocomplete" [(ngModel)]="searchAddress" placeholder="Add City in Destination Itinerary" type="text" >
                 </div>
                 <div>
-                    <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToDestination.pickupDate" (change)="addItineraryToDestination()"  #date/></label>
+                    <label>Parcel Pickup Date<input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToDestination.pickupDate" (change)="addItineraryToDestination()"  #date/></label>
                 </div>
                 <div *ngIf = "model.itineraryCitiesToDestination">
                     <h4>Travel Itinerary to Destination Trip</h4>
@@ -61,8 +61,8 @@
                     <input id="destinationaddressautocomplete"  placeholder="Enter your address" type="text" >
                 </div>
                 <div *ngIf="loggedIn()" [hidden] = "!isDestinationAddressLoading" class="loader">Loading...</div>
-                <div *ngIf = "model.destinationAddreddaddressLine1" *ngIf = "model.destinationCity" *ngIf = "model.destinationState" class="inner-wrap">
-                    <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" required></label>
+                <div  *ngIf = "model.destinationCity" class="inner-wrap">
+                    <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" ></label>
                     <label>Address line 2 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine2" ></label>
                     <label>State <input type="text" [(ngModel)]="model.destinationState" required></label>
                     <label>City <input type = "text" [(ngModel)]="model.destinationCity" required></label>
@@ -71,14 +71,17 @@
                 <input [hidden] = "true" type="submit" [disabled]="!destinationAddress.form.valid"/>
             </form>
 
-            <div class="section"><span>5</span>Enter Itinerary Cities to Current</div>
+            <input [(ngModel)] = "returnTrip" type="checkbox" name="field7"><b>Look parcel request for return trip.</b>
 
-            <form >
+
+            <div [hidden]="!returnTrip" class="section"><span>5</span>Enter Itinerary Cities to Current</div>
+
+            <form [hidden]="!returnTrip">
                 <div>
                     <input id="itinerarycitytocurrentautocomplete" [(ngModel)]="searchAddress"  placeholder="Add City in Return Itinerary" type="text" >
                 </div>
                 <div>
-                    <label>Date You Will be able to pick up Parcel <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToCurrent.pickupDate" (change)="addItineraryToCurrent()"  #date/></label>
+                    <label>Parcel Pickup Date <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToCurrent.pickupDate" (change)="addItineraryToCurrent()"  #date/></label>
                 </div>
                 <div *ngIf = "model.itineraryCitiesToCurrent">
                     <h4>Travel Itinerary to Return Trip</h4>
@@ -146,8 +149,8 @@
         </ul>
     </div>
     <div *ngIf="requests" [hidden]="showDetails">
-        <h3>Service providing request submitted and No Suitable Parcel Order Match Found</h3>
-        <h2>Be patience, a parcel sender may request you.</h2>
+        <h2>Service providing request submitted and No Suitable Parcel Order Match Found</h2>
+        <h3>Be patience, a parcel sender may request you.</h3>
         <button class="resubmit-button" (click)="initializeFlag()">Submit Another Request</button>
     </div>
 </div>

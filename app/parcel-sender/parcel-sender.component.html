@@ -33,8 +33,8 @@
                 <input id="currentaddressautocomplete"  placeholder="Enter your address" type="text" >
             </div>
             <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
-            <div *ngIf ="model.currentAddreddaddressLine1" *ngIf = "model.currentCity" *ngIf ="model.currentState" class="inner-wrap">
-                <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" required></label>
+            <div  *ngIf = "model.currentCity" class="inner-wrap">
+                <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" ></label>
                 <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddreddaddressLine2" ></label>
                 <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
                 <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
@@ -50,8 +50,8 @@
                 <input id="deliveryaddressautocomplete"  placeholder="Enter your address" type="text" >
             </div>
             <div *ngIf="loggedIn()" [hidden] = "!isDeliveryAddressLoading" class="loader">Loading...</div>
-            <div *ngIf ="model.deliveryAddreddaddressLine1" *ngIf = "model.deliveryCity" *ngIf = "model.deliveryState" class="inner-wrap">
-                <label>Address line 1 <input type="text" [(ngModel)]="model.deliveryAddreddaddressLine1" required></label>
+            <div  *ngIf = "model.deliveryCity" class="inner-wrap">
+                <label>Address line 1 <input type="text" [(ngModel)]="model.deliveryAddreddaddressLine1" ></label>
                 <label>Address line 2 <input type="text" [(ngModel)]="model.deliveryAddreddaddressLine2" ></label>
                 <label>State <input type="text" [(ngModel)]="model.deliveryState" required></label>
                 <label>City <input type = "text" [(ngModel)]="model.deliveryCity" required></label>

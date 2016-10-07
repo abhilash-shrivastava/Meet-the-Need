@@ -47,6 +47,7 @@ export class ServiceProviderComponent {
     itineraryToDestination ={};
     itineraryToCurrent ={};
     searchAddress : any;
+    returnTrip = false;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -57,6 +58,7 @@ export class ServiceProviderComponent {
     };
     
     onSubmit() {
+        console.log(this.returnTrip);
         this.isLoading = true;
         this.submitted = true;
         if (this.profile["id"] != null){
@@ -417,6 +419,8 @@ export class ServiceProviderComponent {
                         delete this.data[0]['_id']
                         this.model = this.data[0];
                     }
+                    this.model.itineraryCitiesToDestination="";
+                    this.model.itineraryCitiesToCurrent="";
                 },
                 error =>  this.errorMessage = <any>error
             );

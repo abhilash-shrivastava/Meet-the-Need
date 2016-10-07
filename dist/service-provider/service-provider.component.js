@@ -40,6 +40,7 @@ var ServiceProviderComponent = (function () {
         this.itineraryCityToCurrentArray = [];
         this.itineraryToDestination = {};
         this.itineraryToCurrent = {};
+        this.returnTrip = false;
         this.componentForm = {
             street_number: 'short_name',
             route: 'long_name',
@@ -63,6 +64,7 @@ var ServiceProviderComponent = (function () {
         };
     }
     ServiceProviderComponent.prototype.onSubmit = function () {
+        console.log(this.returnTrip);
         this.isLoading = true;
         this.submitted = true;
         if (this.profile["id"] != null) {
@@ -410,6 +412,8 @@ var ServiceProviderComponent = (function () {
                 delete _this.data[0]['_id'];
                 _this.model = _this.data[0];
             }
+            _this.model.itineraryCitiesToDestination = "";
+            _this.model.itineraryCitiesToCurrent = "";
         }, function (error) { return _this.errorMessage = error; });
     };
     ServiceProviderComponent.prototype.loggedIn = function () {

@@ -376,16 +376,23 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
 
 var getParcelSenderList = function (serviceDetails,  sendResponse) {
   responseToSender = [];
-  var cities = [];
+  var connectingCitiesToDestination = [];
+  var connectingCitiesToReturn = [];
   if (serviceDetails._id != null){
     serviceDetails._id = ObjectId(serviceDetails._id);
   }
-  for (var index in serviceDetails.itineraryCitiesToDestination){
-    cities.push(serviceDetails.itineraryCitiesToDestination[index].city);
+  if (serviceDetails.itineraryCitiesToDestination.length > 0){
+    for (var index in serviceDetails.itineraryCitiesToDestination){
+      connectingCitiesToDestination.push(serviceDetails.itineraryCitiesToDestination[index].city);
+    }
   }
-  console.log(cities);
+  if (serviceDetails.itineraryCitiesToCurrent.length > 0){
+    for (var index in serviceDetails.itineraryCitiesToCurrent){
+      connectingCitiesToReturn.push(serviceDetails.itineraryCitiesToCurrent[index].city);
+    }
+  }
   var cursorone = db.collection('parcelSender')
-      .find( {$or: [{ "currentCity": serviceDetails.currentCity},  { "currentCity": { $in: cities}}], "deliveryCity": serviceDetails.destinationCity, "parcelWeight": { $lte: (serviceDetails.maxParcelWeight) }, "parcelHeight": { $lte: (serviceDetails.maxParcelHeight)}, "parcelLength": { $lte: (serviceDetails.maxParcelLength)}, "parcelWidth": { $lte: (serviceDetails.maxParcelWidth)}, "startDeliveryDate" : {$lte: serviceDetails.journeyDate}, "endDeliveryDate" : {$gte: serviceDetails.journeyDate}} ).sort({parcelWeight: -1})
+      .find( {$or: [{ "currentCity": serviceDetails.currentCity}, { "currentCity": serviceDetails.destinationCity} , { "currentCity": { $in: connectingCitiesToDestination}}, { "currentCity": { $in: connectingCitiesToReturn}}], $or: [{ "deliveryCity": serviceDetails.destinationCity}, { "deliveryCity": serviceDetails.currentCity} ,{ "deliveryCity": { $in: connectingCitiesToDestination}}, { "deliveryCity": { $in: connectingCitiesToReturn}}], "parcelWeight": { $lte: (serviceDetails.maxParcelWeight) }, "parcelHeight": { $lte: (serviceDetails.maxParcelHeight)}, "parcelLength": { $lte: (serviceDetails.maxParcelLength)}, "parcelWidth": { $lte: (serviceDetails.maxParcelWidth)}, "startDeliveryDate" : {$lte: serviceDetails.journeyDate}, "endDeliveryDate" : {$gte: serviceDetails.journeyDate}} ).sort({parcelWeight: -1})
   cursorone.count(function (e, count) {
     if (count === 0) {
       db.collection('serviceProvider').save(serviceDetails, (err, result) => {
